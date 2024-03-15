@@ -103,5 +103,7 @@
   }
   .lead-table-container tbody tr {
     border-top: 20px solid #f0f1f3;
+    /* margin: 20px 0; */
+    /* cursor: pointer; */
   }
 }

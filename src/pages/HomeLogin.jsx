@@ -27,23 +27,25 @@ const HomeLogin = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          emailId: formData.email,
+          email_id: formData.email,
           password: formData.password,
         }),
       });
 
       const data = await response.json();
-      const { accessToken, role_type } = data;
+      const { accessToken, role_type } = data.data;
       localStorage.setItem("token", accessToken);
 
+      console.log(role_type);
+
       switch (role_type) {
-        case "admin":
+        case "SUPER ADMIN":
           navigate("/admin/dashboard");
           break;
-        case "sales":
+        case "SALES PERSON":
           navigate("/sales/dashboard");
           break;
-        case "channel":
+        case "CHANNEL PARTNER":
           navigate("/channel/dashboard");
           break;
         default:
@@ -86,6 +88,7 @@ const HomeLogin = () => {
               value={formData.password}
               onChange={onChangeInput}
               name="password"
+              autoComplete="on"
             />
           </div>
           <div className="form_check">
