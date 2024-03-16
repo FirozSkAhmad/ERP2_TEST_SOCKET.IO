@@ -15,7 +15,7 @@ const CpHistoryCard = ({ channelPartnerID, cpHistoryCardDetails, onClose }) => {
     const projectType = cardData.projectType;
 
     switch (projectType) {
-      case "Apartments":
+      case "Apartment":
         return (
           <>
             <div className="cp-data-field">

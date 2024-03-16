@@ -16,7 +16,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
     const projectType = cardData.projectType;
 
     switch (projectType) {
-      case "Apartments":
+      case "Apartment":
         return (
           <>
             <div className="sp-data-field">

@@ -36,8 +36,6 @@ const HomeLogin = () => {
       const { accessToken, role_type } = data.data;
       localStorage.setItem("token", accessToken);
 
-      console.log(role_type);
-
       switch (role_type) {
         case "SUPER ADMIN":
           navigate("/admin/dashboard");

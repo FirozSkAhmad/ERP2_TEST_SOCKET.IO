@@ -14,7 +14,7 @@ import AddProject from "../components/admin/AddProject";
 
 const ManagerDash = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedButton, setSelectedButton] = useState("Apartments");
+  const [selectedButton, setSelectedButton] = useState("Apartment");
   const [selectedRole, setSelectedRole] = useState("Super Admin");
   const [showPopUp, setShowPopUp] = useState("");
   const [showStatusOverview, setShowStatusOverview] = useState(false);
@@ -104,7 +104,7 @@ const ManagerDash = () => {
           id=""
           onChange={(e) => handleButtonClick(e.target.value)}
         >
-          <option value="Apartments">Apartments</option>
+          <option value="Apartment">Apartments</option>
           <option value="Villas">Villas</option>
           <option value="Plots">Plots</option>
           <option value="Farm lands">Farm lands</option>
@@ -116,9 +116,9 @@ const ManagerDash = () => {
             <button
               style={{
                 backgroundColor:
-                  selectedButton === "Apartments" ? "#1366d9" : "",
+                  selectedButton === "Apartment" ? "#1366d9" : "",
               }}
-              onClick={() => handleButtonClick("Apartments")}
+              onClick={() => handleButtonClick("Apartment")}
             >
               Apartments
             </button>

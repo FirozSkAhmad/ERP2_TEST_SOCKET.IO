@@ -14,7 +14,7 @@ import AddProject from "../components/admin/AddProject";
 
 const AdminDash = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedButton, setSelectedButton] = useState("Apartments");
+  const [selectedButton, setSelectedButton] = useState("Apartment");
   const [selectedRole, setSelectedRole] = useState("Super Admin");
   const [showPopUp, setShowPopUp] = useState("");
   const [showStatusOverview, setShowStatusOverview] = useState(false);
@@ -116,9 +116,9 @@ const AdminDash = () => {
             <button
               style={{
                 backgroundColor:
-                  selectedButton === "Apartments" ? "#1366d9" : "",
+                  selectedButton === "Apartment" ? "#1366d9" : "",
               }}
-              onClick={() => handleButtonClick("Apartments")}
+              onClick={() => handleButtonClick("Apartment")}
             >
               Apartments
             </button>

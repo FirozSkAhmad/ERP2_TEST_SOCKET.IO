@@ -68,7 +68,7 @@ const OnBoarding = () => {
                             <label htmlFor="proj-type">Project Type *</label>
                             <select id="proj-type" value={onBoardData.proj_type} onChange={handleProjectChange}>
                                 <option value="" style={{ fontSize: "14px" }}>Select your option</option>
-                                <option value="Apartments" style={{ fontSize: "14px" }}>Apartments</option>
+                                <option value="Apartment" style={{ fontSize: "14px" }}>Apartments</option>
                                 <option value="Villas" style={{ fontSize: "14px" }}>Villas</option>
                                 <option value="Plots" style={{ fontSize: "14px" }}>Plots</option>
                                 <option value="Farm lands" style={{ fontSize: "14px" }}>Farm Lands</option>

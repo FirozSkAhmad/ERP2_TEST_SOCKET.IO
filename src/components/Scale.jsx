@@ -23,7 +23,6 @@ const Scale = ({ selectedButton }) => {
         }
         const responseData = await response.json();
         setScaleData(responseData);
-        console.log(scaleData);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -32,7 +31,6 @@ const Scale = ({ selectedButton }) => {
     };
 
     fetchData();
-    console.log(selectedButton);
   }, [selectedButton]);
   return (
     <div className="scale">
