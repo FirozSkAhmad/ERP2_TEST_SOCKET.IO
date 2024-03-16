@@ -25,29 +25,33 @@ const History = () => {
     // useEffect(() => {
     //     setClients(clientData)
     // }, [])
+  const BaseURL = "https://erp-phase2-bck.onrender.com";
 
-    useEffect(() => {
-        const fetchHistory = async () => {
-            try {
-                const accessToken = localStorage.getItem("token");
-                const response = await fetch(`${BASEURL}/history/getHistory` , {
-                    headers: {
-                        "Authorization": `Bearer ${accessToken}`,
-                      },
-                })
-                if (!response.ok) {
-                    throw new Error('Failed to fetch sales history data');
-                }
-                const result = await response.json();
-                setClients(result.history);
-                console.log(result);
-            } catch (error) {
-                console.error('Error fetching sales history data:', error);
-            }
-        };  
+  useEffect(() => {
+    const fetchHistory = async () => {
+      try {
+        const accessToken = localStorage.getItem("token");
+        const response = await fetch(
+          `${BaseURL}/history/getHistory`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Network error. Failed to fetch sales history data.");
+        }
+        const result = await response.json();
+        setClients(result.history);
+        console.log(result.history);
+      } catch (error) {
+        console.error("Error fetching sales history data:", error);
+      }
+    };
 
-        fetchHistory();
-    }, []);
+    fetchHistory();
+  }, []);
 
     const toggleModal = () => {
         setIsOpen(!isOpen); // Toggle modal visibility
@@ -68,18 +72,18 @@ const History = () => {
     const handleHistoryClick = async (receiptId, projectType) => {
         try {
             const accessToken = localStorage.getItem("token");
-            const response = await fetch(`${BASEURL}/history/getPraticularHistoryDetails?receipt_id=${receiptId}&projectType=${projectType}`, {
+            const response = await fetch(`${BaseURL}/history/getPraticularHistoryDetails?receipt_id=${receiptId}&projectType=${projectType}`, {
                 headers: {
                   "Authorization": `Bearer ${accessToken}`,
             },
         });
         if (!response.ok) {
-            throw new Error('Failed to fetch particular history details');
+            throw new Error('Network error. Failed to fetch particular history details.');
           }
     
           const result = await response.json();
-          setSelectedHistory(result);
-          console.log(result);
+          setSelectedHistory(result.Details);
+        //   console.log(result.Details);
         } catch (error) {
           console.error('Error fetching history card data:', error);
         }
@@ -135,7 +139,7 @@ const History = () => {
                                     <td>{client.project.project_id}</td>
                                     <td>{client.project.project_type}</td>
                                     {viewportWidth >= 1024 && <td>{client.commission.total_commission}</td>}
-                                    {viewportWidth >= 1024 && <td>{client.commission.commission_received_till_now}</td>}
+                                    {viewportWidth >= 1024 && <td>{client.commission.commission_recived_till_now}</td>}
                                 </tr>
                             ))}
                         </tbody>
