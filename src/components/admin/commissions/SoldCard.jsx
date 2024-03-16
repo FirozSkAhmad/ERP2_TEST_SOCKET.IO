@@ -14,7 +14,7 @@ const SoldCard = ({ salesPersonID, soldCardDetails, onClose }) => {
 
 
         switch (projectType) {
-          case 'Apartments':
+          case 'APARTMENT':
             return (
               <>
                 <div className="rec-data-field">
@@ -103,7 +103,7 @@ const SoldCard = ({ salesPersonID, soldCardDetails, onClose }) => {
                 </div>
               </>
             );
-          case 'Villas':
+          case 'VILLA':
             return (
               <>
                 <div className="rec-data-field">
@@ -189,7 +189,7 @@ const SoldCard = ({ salesPersonID, soldCardDetails, onClose }) => {
                 {/* Render fields for Villas type */}
               </>
             );
-          case 'Plots':
+          case 'PLOT':
             return (
               <>
                 <div className="rec-data-field">
@@ -275,7 +275,7 @@ const SoldCard = ({ salesPersonID, soldCardDetails, onClose }) => {
                 {/* Render fields for Plots type */}
               </>
             );
-          case 'Farm lands':
+          case 'FARM_LAND':
             return (
               <>
                 <div className="rec-data-field">

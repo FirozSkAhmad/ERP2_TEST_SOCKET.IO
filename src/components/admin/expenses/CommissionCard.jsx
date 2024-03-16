@@ -13,7 +13,7 @@ const CommissionCard = ({commissionHolderID, commissionCardDetails, onClose}) =>
       const projectType = cardData.projectType;
 
         switch (projectType) {
-          case 'Apartments':
+          case 'APARTMENT':
             return (
               <>
                 <div className="sp-data-field">
@@ -98,7 +98,7 @@ const CommissionCard = ({commissionHolderID, commissionCardDetails, onClose}) =>
                 </div>
               </>
             );
-          case 'Villas':
+          case 'VILLA':
             return (
               <>
                 <div className="sp-data-field">
@@ -180,7 +180,7 @@ const CommissionCard = ({commissionHolderID, commissionCardDetails, onClose}) =>
                 {/* Render fields for Villas type */}
               </>
             );
-          case 'Plots':
+          case 'PLOT':
             return (
               <>
                 <div className="sp-data-field">
@@ -262,7 +262,7 @@ const CommissionCard = ({commissionHolderID, commissionCardDetails, onClose}) =>
                 {/* Render fields for Plots type */}
               </>
             );
-          case 'Farm lands':
+          case 'FARM_LAND':
             return (
               <>
                 <div className="sp-data-field">
