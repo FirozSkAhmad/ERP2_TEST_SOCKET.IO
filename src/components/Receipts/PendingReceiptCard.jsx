@@ -11,7 +11,7 @@ const PendingReceiptCard = ({ projectID, receiptsData, onClose }) => {
 
   const renderFields = () => {
     switch (receiptData.projectType) {
-      case "Apartment":
+      case "APARTMENT":
         return (
           <>
             <div className="rec-data-field">
@@ -205,7 +205,7 @@ const PendingReceiptCard = ({ projectID, receiptsData, onClose }) => {
             </div>
           </>
         );
-      case "Villas":
+      case "VILLA":
         return (
           <>
             <div className="rec-data-field">
@@ -391,7 +391,7 @@ const PendingReceiptCard = ({ projectID, receiptsData, onClose }) => {
             {/* Render fields for Villas type */}
           </>
         );
-      case "Plots":
+      case "PLOT":
         return (
           <>
             <div className="rec-data-field">
@@ -577,7 +577,7 @@ const PendingReceiptCard = ({ projectID, receiptsData, onClose }) => {
             {/* Render fields for Plots type */}
           </>
         );
-      case "Farm lands":
+      case "FARM_LAND":
         return (
           <>
             <div className="rec-data-field">

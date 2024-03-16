@@ -10,7 +10,7 @@ const AddProject = ({ selectedType, onClose }) => {
     };
 
     const inputFieldsMap = {
-        Apartments: [
+        "APARTMENT": [
           {
             label: "Project Type",
             id: "type",
@@ -37,7 +37,7 @@ const AddProject = ({ selectedType, onClose }) => {
             placeholder: "Enter flat number",
           },
         ],
-        Villas: [
+        "VILLA": [
           {
             label: "Project Type",
             id: "type",
@@ -58,7 +58,7 @@ const AddProject = ({ selectedType, onClose }) => {
             placeholder: "Enter villa number",
           },
         ],
-        Plots: [
+        "PLOT": [
           {
             label: "Project Type",
             id: "type",
@@ -79,7 +79,7 @@ const AddProject = ({ selectedType, onClose }) => {
             placeholder: "Enter plot number",
           },
         ],
-        "Farm lands": [
+        "FARM_LAND": [
           {
             label: "Project Type",
             id: "type",

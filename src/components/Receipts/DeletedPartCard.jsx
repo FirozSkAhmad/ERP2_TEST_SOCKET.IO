@@ -14,7 +14,7 @@ const DeletedPartCard = ({ receiptID, partPaymentsData, onClose }) => {
     const projectType = partPaymentData.projectType;
 
     switch (projectType) {
-      case "Apartment":
+      case "APARTMENT":
         return (
           <>
             <div className="rec-data-field">
@@ -163,7 +163,7 @@ const DeletedPartCard = ({ receiptID, partPaymentsData, onClose }) => {
             </div>
           </>
         );
-      case "Villas":
+      case "VILLA":
         return (
           <>
             <div className="rec-data-field">
@@ -304,7 +304,7 @@ const DeletedPartCard = ({ receiptID, partPaymentsData, onClose }) => {
             {/* Render fields for Villas type */}
           </>
         );
-      case "Plots":
+      case "PLOT":
         return (
           <>
             <div className="rec-data-field">
@@ -445,7 +445,7 @@ const DeletedPartCard = ({ receiptID, partPaymentsData, onClose }) => {
             {/* Render fields for Plots type */}
           </>
         );
-      case "Farm lands":
+      case "FARM_LAND":
         return (
           <>
             <div className="rec-data-field">
