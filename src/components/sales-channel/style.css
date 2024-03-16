@@ -79,60 +79,6 @@
   width: 150px;
 }
 
-/* History Card */
-
-.his-det {
-  width: 340px;
-  background: white;
-  border-radius: 8px;
-  position: fixed; /* Keep the modal fixed */
-  top: 50%; /* Center vertically */
-  left: 50%; /* Center horizontally */
-  transform: translate(-50%, -50%);
-  z-index: 1;
-}
-
-.his-sec {
-  padding: 25px;
-}
-
-.his-det-head h3 {
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 24px;
-  color: #121212;
-  margin-top: 0;
-  text-align: center;
-}
-
-.his-data-feild {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.his-data-feild label {
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 12px;
-  color: #707070;
-  width: 150px;
-}
-
-.his-data-feild input {
-  font-size: 12px;
-  font-weight: 400;
-  color: #858d9d;
-  border-radius: 8px;
-  border: 1px solid #d0d5dd;
-  padding: 5px 5px;
-  /* width: 55%; */
-}
-
-.his-data-feild input:focus {
-  outline: none;
-}
-
 @media screen and (min-width: 1024px) {
   .his-det {
     width: 550px;
