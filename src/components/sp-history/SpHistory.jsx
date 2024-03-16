@@ -11,6 +11,7 @@ import SpHistoryCard from "./SpHistoryCard";
 import spHistoryCardData from "../../data/spHistoryCardData";
 import NavBar from "../NavBar";
 import WebMenu from "../menu/WebMenu";
+import BASEURL from "../../data/baseurl";
 
 const SpHistory = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -28,6 +29,29 @@ const SpHistory = () => {
   useEffect(() => {
     setHistory(spHistoryData);
   }, []);
+
+  // useEffect(() => {
+  //   const fetchHistory = async () => {
+  //       try {
+  //           const accessToken = localStorage.getItem("token");
+  //           const response = await fetch(`${BASEURL}/history/getCommissionHolderslist?role_type=SALES PERSON` , {
+  //               headers: {
+  //                   "Authorization": `Bearer ${accessToken}`,
+  //                 },
+  //           })
+  //           if (!response.ok) {
+  //               throw new Error('Failed to fetch sales person history data');
+  //           }
+  //           const result = await response.json();
+  //           setHistory(result.data);
+  //           console.log(result);
+  //       } catch (error) {
+  //           console.error('Error fetching sales person history data:', error);
+  //       }
+  //   };  
+
+  //   fetchHistory();
+  // }, []);
 
   const toggleModal = () => {
     setIsOpen(!isOpen); // Toggle modal visibility

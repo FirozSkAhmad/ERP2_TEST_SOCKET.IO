@@ -8,6 +8,7 @@ import NavBar from "../NavBar";
 import clientData from '../../data/clientData'
 import HistoryCard from "./HistoryCard";
 import historyData from "../../data/historyData";
+import BASEURL from "../../data/baseurl";
 
 const History = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -21,9 +22,32 @@ const History = () => {
   };
 
 
+    // useEffect(() => {
+    //     setClients(clientData)
+    // }, [])
+
     useEffect(() => {
-        setClients(clientData)
-    }, [])
+        const fetchHistory = async () => {
+            try {
+                const accessToken = localStorage.getItem("token");
+                const response = await fetch(`${BASEURL}/history/getHistory` , {
+                    headers: {
+                        "Authorization": `Bearer ${accessToken}`,
+                      },
+                })
+                if (!response.ok) {
+                    throw new Error('Failed to fetch sales history data');
+                }
+                const result = await response.json();
+                setClients(result.history);
+                console.log(result);
+            } catch (error) {
+                console.error('Error fetching sales history data:', error);
+            }
+        };  
+
+        fetchHistory();
+    }, []);
 
     const toggleModal = () => {
         setIsOpen(!isOpen); // Toggle modal visibility
@@ -41,9 +65,24 @@ const History = () => {
         };
     }, []);
 
-    const handleHistoryClick = (projectID) => {
-        const history = historyData.find(item => item.projectID === projectID);
-        setSelectedHistory(history);
+    const handleHistoryClick = async (receiptId, projectType) => {
+        try {
+            const accessToken = localStorage.getItem("token");
+            const response = await fetch(`${BASEURL}/history/getPraticularHistoryDetails?receipt_id=${receiptId}&projectType=${projectType}`, {
+                headers: {
+                  "Authorization": `Bearer ${accessToken}`,
+            },
+        });
+        if (!response.ok) {
+            throw new Error('Failed to fetch particular history details');
+          }
+    
+          const result = await response.json();
+          setSelectedHistory(result);
+          console.log(result);
+        } catch (error) {
+          console.error('Error fetching history card data:', error);
+        }
     };
 
     const handleCloseHistoryCard = () => {
@@ -91,12 +130,12 @@ const History = () => {
                         </thead>
                         <tbody>
                             {clients.map((client) => (
-                                <tr key={client.projectID} onClick={() => handleHistoryClick(client.projectID)}>
-                                    <td>{client.clientName}</td>
-                                    <td>{client.projectID}</td>
-                                    <td>{client.projectType}</td>
-                                    {viewportWidth >= 1024 && <td>{client.totalCommission}</td>}
-                                    {viewportWidth >= 1024 && <td>{client.commissionReceived}</td>}
+                                <tr key={client.receipt_id} onClick={() => handleHistoryClick(client.receipt_id, client.project.project_type)}>
+                                    <td>{client.client_name}</td>
+                                    <td>{client.project.project_id}</td>
+                                    <td>{client.project.project_type}</td>
+                                    {viewportWidth >= 1024 && <td>{client.commission.total_commission}</td>}
+                                    {viewportWidth >= 1024 && <td>{client.commission.commission_received_till_now}</td>}
                                 </tr>
                             ))}
                         </tbody>
