@@ -9,7 +9,7 @@ const DeletedReceiptsCard = ({ projectID, deletedReceiptsData, onClose }) => {
 
   const renderFields = () => {
     switch (deletedReceiptData.projectType) {
-      case "Apartment":
+      case "APARTMENT":
         return (
           <>
             <div className="rec-data-field">
@@ -171,7 +171,7 @@ const DeletedReceiptsCard = ({ projectID, deletedReceiptsData, onClose }) => {
             </div>
           </>
         );
-      case "Villas":
+      case "VILLA":
         return (
           <>
             <div className="rec-data-field">
@@ -325,7 +325,7 @@ const DeletedReceiptsCard = ({ projectID, deletedReceiptsData, onClose }) => {
             {/* Render fields for Villas type */}
           </>
         );
-      case "Plots":
+      case "PLOT":
         return (
           <>
             <div className="rec-data-field">
@@ -479,7 +479,7 @@ const DeletedReceiptsCard = ({ projectID, deletedReceiptsData, onClose }) => {
             {/* Render fields for Plots type */}
           </>
         );
-      case "Farm lands":
+      case "FARM_LAND":
         return (
           <>
             <div className="rec-data-field">

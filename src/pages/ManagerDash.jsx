@@ -14,7 +14,7 @@ import AddProject from "../components/admin/AddProject";
 
 const ManagerDash = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedButton, setSelectedButton] = useState("Apartment");
+  const [selectedButton, setSelectedButton] = useState("APARTMENT");
   const [selectedRole, setSelectedRole] = useState("Super Admin");
   const [showPopUp, setShowPopUp] = useState("");
   const [showStatusOverview, setShowStatusOverview] = useState(false);
@@ -104,10 +104,10 @@ const ManagerDash = () => {
           id=""
           onChange={(e) => handleButtonClick(e.target.value)}
         >
-          <option value="Apartment">Apartments</option>
-          <option value="Villas">Villas</option>
-          <option value="Plots">Plots</option>
-          <option value="Farm lands">Farm lands</option>
+          <option value="APARTMENT">Apartments</option>
+          <option value="VILLA">Villas</option>
+          <option value="PLOT">Plots</option>
+          <option value="FARM_LAND">Farm lands</option>
         </select>
       </div>
       <div className="dash_data">
@@ -116,9 +116,9 @@ const ManagerDash = () => {
             <button
               style={{
                 backgroundColor:
-                  selectedButton === "Apartment" ? "#1366d9" : "",
+                  selectedButton === "APARTMENT" ? "#1366d9" : "",
               }}
-              onClick={() => handleButtonClick("Apartment")}
+              onClick={() => handleButtonClick("APARTMENT")}
             >
               Apartments
             </button>
@@ -126,9 +126,9 @@ const ManagerDash = () => {
           <div className="type-btn">
             <button
               style={{
-                backgroundColor: selectedButton === "Villas" ? "#1366d9" : "",
+                backgroundColor: selectedButton === "VILLA" ? "#1366d9" : "",
               }}
-              onClick={() => handleButtonClick("Villas")}
+              onClick={() => handleButtonClick("VILLA")}
             >
               Villas
             </button>
@@ -136,9 +136,9 @@ const ManagerDash = () => {
           <div className="type-btn">
             <button
               style={{
-                backgroundColor: selectedButton === "Plots" ? "#1366d9" : "",
+                backgroundColor: selectedButton === "PLOT" ? "#1366d9" : "",
               }}
-              onClick={() => handleButtonClick("Plots")}
+              onClick={() => handleButtonClick("PLOT")}
             >
               Plots
             </button>
@@ -147,9 +147,9 @@ const ManagerDash = () => {
             <button
               style={{
                 backgroundColor:
-                  selectedButton === "Farm lands" ? "#1366d9" : "",
+                  selectedButton === "FARM_LAND" ? "#1366d9" : "",
               }}
-              onClick={() => handleButtonClick("Farm lands")}
+              onClick={() => handleButtonClick("FARM_LAND")}
             >
               Farm lands
             </button>

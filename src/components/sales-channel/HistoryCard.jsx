@@ -6,7 +6,7 @@ const HistoryCard = ({ history, onClose }) => {
 
     const renderFields = () => {
         switch (history.projectType) {
-          case 'Apartment':
+          case 'APARTMENT':
             return (
               <>
                 <div className="his-data-feild">
@@ -67,7 +67,7 @@ const HistoryCard = ({ history, onClose }) => {
                 </div>
               </>
             );
-          case 'Villa':
+          case 'VILLA':
             return (
               <>
               <div className="his-data-feild">
@@ -126,7 +126,7 @@ const HistoryCard = ({ history, onClose }) => {
                 {/* Render fields for Villa type */}
               </>
             );
-          case 'Plot':
+          case 'PLOT':
             return (
               <>
               <div className="his-data-feild">
@@ -185,7 +185,7 @@ const HistoryCard = ({ history, onClose }) => {
                 {/* Render fields for Plot type */}
               </>
             );
-          case 'Farm land':
+          case 'FARM_LAND':
             return (
               <>
               <div className="his-data-feild">

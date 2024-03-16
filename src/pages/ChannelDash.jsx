@@ -9,7 +9,7 @@ import NavBar from "../components/NavBar";
 
 const ChannelDash = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("Apartment");
+  const [selectedOption, setSelectedOption] = useState("APARTMENT");
 
   const handleSelectChange = (event) => {
     setSelectedOption(event.target.value);
@@ -51,19 +51,19 @@ const ChannelDash = () => {
           value={selectedOption}
           onChange={handleSelectChange}
         >
-          <option value="Apartments">Apartments</option>
-          <option value="Villas">Villas</option>
-          <option value="Plots">Plots</option>
-          <option value="Farm lands">Farm lands</option>
+          <option value="APARTMENT">Apartments</option>
+          <option value="VILLA">Villas</option>
+          <option value="PLOT">Plots</option>
+          <option value="FARM_LAND">Farm lands</option>
         </select>
       </div>
       <div className="sales-type">
         <div className="type-btn">
           <button
             style={{
-              backgroundColor: selectedOption === "Apartment" ? "#1366d9" : "",
+              backgroundColor: selectedOption === "APARTMENT" ? "#1366d9" : "",
             }}
-            onClick={() => handleButtonClick("Apartment")}
+            onClick={() => handleButtonClick("APARTMENT")}
           >
             Apartments
           </button>
@@ -71,9 +71,9 @@ const ChannelDash = () => {
         <div className="type-btn">
           <button
             style={{
-              backgroundColor: selectedOption === "Villas" ? "#1366d9" : "",
+              backgroundColor: selectedOption === "VILLA" ? "#1366d9" : "",
             }}
-            onClick={() => handleButtonClick("Villas")}
+            onClick={() => handleButtonClick("VILLA")}
           >
             Villas
           </button>
@@ -81,9 +81,9 @@ const ChannelDash = () => {
         <div className="type-btn">
           <button
             style={{
-              backgroundColor: selectedOption === "Plots" ? "#1366d9" : "",
+              backgroundColor: selectedOption === "PLOT" ? "#1366d9" : "",
             }}
-            onClick={() => handleButtonClick("Plots")}
+            onClick={() => handleButtonClick("PLOT")}
           >
             Plots
           </button>
@@ -91,9 +91,9 @@ const ChannelDash = () => {
         <div className="type-btn">
           <button
             style={{
-              backgroundColor: selectedOption === "Farm lands" ? "#1366d9" : "",
+              backgroundColor: selectedOption === "FARM_LAND" ? "#1366d9" : "",
             }}
-            onClick={() => handleButtonClick("Farm lands")}
+            onClick={() => handleButtonClick("FARM_LAND")}
           >
             Farm lands
           </button>

@@ -68,13 +68,13 @@ const OnBoarding = () => {
                             <label htmlFor="proj-type">Project Type *</label>
                             <select id="proj-type" value={onBoardData.proj_type} onChange={handleProjectChange}>
                                 <option value="" style={{ fontSize: "14px" }}>Select your option</option>
-                                <option value="Apartment" style={{ fontSize: "14px" }}>Apartments</option>
-                                <option value="Villas" style={{ fontSize: "14px" }}>Villas</option>
-                                <option value="Plots" style={{ fontSize: "14px" }}>Plots</option>
-                                <option value="Farm lands" style={{ fontSize: "14px" }}>Farm Lands</option>
+                                <option value="APARTMENT" style={{ fontSize: "14px" }}>Apartments</option>
+                                <option value="VILLA" style={{ fontSize: "14px" }}>Villas</option>
+                                <option value="PLOT" style={{ fontSize: "14px" }}>Plots</option>
+                                <option value="FARM_LAND" style={{ fontSize: "14px" }}>Farm Lands</option>
                             </select>
                         </div>
-                        {onBoardData.proj_type === 'Apartments' && (
+                        {onBoardData.proj_type === 'APARTMENT' && (
                             <>
                                 <div className="board-field">
                                     <label htmlFor="proj-name">Project Name *</label>
@@ -139,7 +139,7 @@ const OnBoarding = () => {
                                 </div>
                             </>
                         )}
-                        {onBoardData.proj_type === 'Villas' && (
+                        {onBoardData.proj_type === 'VILLA' && (
                             <>
                                 <div className="board-field">
                                     <label htmlFor="proj-name">Project Name *</label>
@@ -200,7 +200,7 @@ const OnBoarding = () => {
                                 </div>
                             </>
                         )}
-                        {onBoardData.proj_type === 'Plots' && (
+                        {onBoardData.proj_type === 'PLOT' && (
                             <>
                                 <div className="board-field">
                                     <label htmlFor="proj-name">Project Name *</label>
@@ -261,7 +261,7 @@ const OnBoarding = () => {
                                 </div>
                             </>
                         )}
-                        {onBoardData.proj_type === 'Farm lands' && (
+                        {onBoardData.proj_type === 'FARM_LAND' && (
                             <>
                                 <div className="board-field">
                                     <label htmlFor="proj-name">Project Name *</label>

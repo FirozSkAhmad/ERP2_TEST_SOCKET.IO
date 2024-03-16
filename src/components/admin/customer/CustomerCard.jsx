@@ -8,7 +8,7 @@ const CustomerCard = ({projectID, customers, onClose}) => {
 
     const renderFields = () => {
         switch (receiptData.projectType) {
-          case 'Apartments':
+          case 'APARTMENT':
             return (
               <>
                 <div className="cus-data-field">
@@ -109,7 +109,7 @@ const CustomerCard = ({projectID, customers, onClose}) => {
                 )}
               </>
             );
-          case 'Villas':
+          case 'VILLA':
             return (
               <>
                 <div className="cus-data-field">
@@ -207,7 +207,7 @@ const CustomerCard = ({projectID, customers, onClose}) => {
                 {/* Render fields for Villas type */}
               </>
             );
-          case 'Plots':
+          case 'PLOT':
             return (
               <>
                 <div className="cus-data-field">
@@ -305,7 +305,7 @@ const CustomerCard = ({projectID, customers, onClose}) => {
                 {/* Render fields for Plots type */}
               </>
             );
-          case 'Farm lands':
+          case 'FARM_LAND':
             return (
               <>
                 <div className="cus-data-field">

@@ -90,18 +90,18 @@ const Table = ({ selectedButton }) => {
 
   const renderColumns = () => {
     switch (selectedButton) {
-      case "Apartments":
+      case "APARTMENT":
         return (
           <>
             <th className="tower-number">Tower Number</th>
             <th className="flat-number">Flat Number</th>
           </>
         );
-      case "Villas":
+      case "VILLA":
         return <th className="villa-number">Villa Number</th>;
-      case "Plots":
+      case "PLOT":
         return <th className="plot-number">Plot Number</th>;
-      case "Farm lands":
+      case "FARM_LAND":
         return (
           <>
             <th className="plot-number">Plot Number</th>
@@ -115,17 +115,17 @@ const Table = ({ selectedButton }) => {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case "Available":
+      case "AVAILABLE":
         return "#10A760";
-      case "Sold":
+      case "SOLD":
         return "#FF0000";
-      case "Token":
+      case "TOKEN":
         return "#E19133";
-      case "Advance":
+      case "ADVANCE":
         return "#3D4DD6";
-      case "Block":
+      case "BLOCK":
         return "#9C9C9C";
-      case "Part-Payment":
+      case "PART PAYMENT":
         return "#515151";
       default:
         return "";
@@ -175,7 +175,7 @@ const Table = ({ selectedButton }) => {
             <tbody>
               {displayedProjects.map((project) => (
                 <tr
-                  key={project.projectID}
+                  key={project.project_id}
                   className={selectedButton.toLowerCase() + "-row"}
                 >
                   <td onClick={() => handleCellClick(project)}>
@@ -189,19 +189,19 @@ const Table = ({ selectedButton }) => {
                     {project.pid}
                   </td>
 
-                  {viewportWidth >= 1024 && selectedButton === "Apartments" && (
+                  {viewportWidth >= 1024 && selectedButton === "APARTMENT" && (
                     <>
                       <td className="tower-number">{project.tower_number}</td>
                       <td className="flat-number">{project.flat_number}</td>
                     </>
                   )}
-                  {viewportWidth >= 1024 && selectedButton === "Villas" && (
+                  {viewportWidth >= 1024 && selectedButton === "VILLA" && (
                     <td className="villa-number">{project.villaNumber}</td>
                   )}
-                  {viewportWidth >= 1024 && selectedButton === "Plots" && (
+                  {viewportWidth >= 1024 && selectedButton === "PLOT" && (
                     <td className="plot-number">{project.plotNumber}</td>
                   )}
-                  {viewportWidth >= 1024 && selectedButton === "Farm lands" && (
+                  {viewportWidth >= 1024 && selectedButton === "FARM_LAND" && (
                     <>
                       <td className="plot-number">{project.plotNumber}</td>
                       <td className="sq-yards">{project.sqYards}</td>

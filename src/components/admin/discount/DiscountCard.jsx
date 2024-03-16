@@ -7,7 +7,7 @@ const DiscountCard = ({ projectID, onClose }) => {
 
     const renderFields = () => {
         switch (receiptData.projectType) {
-          case 'Apartments':
+          case 'APARTMENT':
             return (
               <>
                 <div className="disc-data-field">
@@ -60,7 +60,7 @@ const DiscountCard = ({ projectID, onClose }) => {
                 </div>
               </>
             );
-          case 'Villas':
+          case 'VILLA':
             return (
               <>
                 <div className="disc-data-field">
@@ -109,7 +109,7 @@ const DiscountCard = ({ projectID, onClose }) => {
                 </div>
               </>
             );
-          case 'Plots':
+          case 'PLOT':
             return (
               <>
                 <div className="disc-data-field">
@@ -158,7 +158,7 @@ const DiscountCard = ({ projectID, onClose }) => {
                 </div>
               </>
             );
-          case 'Farm lands':
+          case 'FARM_LAND':
             return (
               <>
                 <div className="disc-data-field">
