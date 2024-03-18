@@ -54,7 +54,7 @@ const Table = ({ selectedButton }) => {
         (project) => project.project_type === selectedButton.toUpperCase()
       )
     );
-  }, [selectedButton]);
+  }, [selectedButton, scaleData]);
 
   useEffect(() => {
     const handleResize = () => {
