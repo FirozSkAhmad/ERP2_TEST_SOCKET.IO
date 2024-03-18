@@ -71,6 +71,10 @@ const Table = ({ selectedButton }) => {
     setShowAddProjectForm(true);
   };
 
+  const handleCloseProject = () => {
+    setShowAddProjectForm(false);
+  };
+
   const handleUpload = () => {
     setShowUploadForm(true);
   };
@@ -235,7 +239,12 @@ const Table = ({ selectedButton }) => {
           </button>
         </div>
       </div>
-      {showAddProjectForm && <AddProject selectedType={selectedButton} />}
+      {showAddProjectForm && (
+        <AddProject
+          selectedType={selectedButton}
+          onClose={handleCloseProject}
+        />
+      )}
       {showUploadForm && <UploadForm selectedType={selectedButton} />}
       {showProjectDetails && (
         <ProjectDetails
