@@ -22,7 +22,7 @@ const Scale = ({ selectedButton }) => {
           throw new Error("Network response was not ok");
         }
         const responseData = await response.json();
-        setScaleData(responseData);
+        setScaleData(responseData.data);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -39,42 +39,42 @@ const Scale = ({ selectedButton }) => {
           <div className="scale_Items">
             <p className="item-heading one">Available</p>
             <div className="item-count">
-              <span>{scaleData?.data?.AVAILABLE}</span>
+              <span>{scaleData?.AVAILABLE}</span>
               <span>{selectedButton}</span>
             </div>
           </div>
           <div className="scale_Items">
             <p className="item-heading two">Token</p>
             <div className="item-count">
-              <span>{scaleData?.data?.TOKEN}</span>
+              <span>{scaleData?.TOKEN}</span>
               <span>{selectedButton}</span>
             </div>
           </div>
           <div className="scale_Items">
             <p className="item-heading three">Advance</p>
             <div className="item-count">
-              <span>{scaleData?.data?.ADVANCE}</span>
+              <span>{scaleData?.ADVANCE}</span>
               <span>{selectedButton}</span>
             </div>
           </div>
           <div className="scale_Items">
             <p className="item-heading four">Part-Payment</p>
             <div className="item-count">
-              <span>{scaleData?.data?.PART_PAYMENT}</span>
+              <span>{scaleData?.PART_PAYMENT}</span>
               <span>{selectedButton}</span>
             </div>
           </div>
           <div className="scale_Items">
             <p className="item-heading five">Block</p>
             <div className="item-count">
-              <span>{scaleData?.data?.BLOCK}</span>
+              <span>{scaleData?.BLOCK}</span>
               <span>{selectedButton}</span>
             </div>
           </div>
           <div className="scale_Items">
             <p className="item-heading six">Sold</p>
             <div className="item-count">
-              <span>{scaleData?.data?.SOLD}</span>
+              <span>{scaleData?.SOLD}</span>
               <span>{selectedButton}</span>
             </div>
           </div>
