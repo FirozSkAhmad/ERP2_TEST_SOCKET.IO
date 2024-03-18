@@ -5,33 +5,29 @@ import AddProject from "./admin/AddProject";
 import ProjectDetails from "./sales-channel/ProjectDetails";
 import UploadForm from "./admin/UploadForm";
 
-const Table = ({ selectedButton }) => {
+const Table = ({ selectedButton, url }) => {
   const [projects, setProjects] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [showAddProjectForm, setShowAddProjectForm] = useState(false);
   const [showUploadForm, setShowUploadForm] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
   const [showProjectDetails, setShowProjectDetails] = useState(false);
-  const [viewportWidth, setViewportWidth] = useState(window.innerWidth); // Track viewport width
+  const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
 
   const maxRowsPerPage = 10;
 
   const [scaleData, setScaleData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const BaseURL = "https://erp-phase2-bck.onrender.com";
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const accessToken = localStorage.getItem("token");
-        const response = await fetch(
-          `${BaseURL}/project/getProjectsData?project_type=${selectedButton}`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
+        const response = await fetch(url, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
@@ -50,7 +46,7 @@ const Table = ({ selectedButton }) => {
 
   useEffect(() => {
     setProjects(
-      scaleData.filter(
+      scaleData?.filter(
         (project) => project.project_type === selectedButton.toUpperCase()
       )
     );
@@ -134,7 +130,7 @@ const Table = ({ selectedButton }) => {
 
   const startIndex = (currentPage - 1) * maxRowsPerPage;
   const endIndex = startIndex + maxRowsPerPage;
-  const displayedProjects = projects.slice(startIndex, endIndex);
+  const displayedProjects = projects?.slice(startIndex, endIndex);
 
   const handleNextPage = () => {
     setCurrentPage((prevPage) => prevPage + 1);
@@ -173,7 +169,7 @@ const Table = ({ selectedButton }) => {
               </tr>
             </thead>
             <tbody>
-              {displayedProjects.map((project) => (
+              {displayedProjects?.map((project) => (
                 <tr
                   key={project.project_id}
                   className={selectedButton.toLowerCase() + "-row"}
@@ -226,11 +222,11 @@ const Table = ({ selectedButton }) => {
             Previous
           </button>
           <span>
-            Page {currentPage} of {Math.ceil(projects.length / maxRowsPerPage)}
+            Page {currentPage} of {Math.ceil(projects?.length / maxRowsPerPage)}
           </span>
           <button
             onClick={handleNextPage}
-            disabled={endIndex >= projects.length}
+            disabled={endIndex >= projects?.length}
           >
             Next
           </button>
