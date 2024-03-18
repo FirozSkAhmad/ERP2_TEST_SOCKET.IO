@@ -480,13 +480,15 @@ const OnBoarding = () => {
                                     </select>
                                 </div>
                                 <div className="board-field">
-                                    <div><label id="status-label" htmlFor="status">Status *</label></div>
+                                    <div>
+                                        <label id="status-label" htmlFor="status">Status *</label>
+                                    </div>
                                     <div className="status">
-                                        <input type="radio" id="status" value="Token" onChange={handleStatusChange} checked={onBoardData.status === 'Token'} />
+                                        <input type="radio" id="token" value="Token" onChange={handleStatusChange} checked={onBoardData.status === 'Token'} />
                                         <label htmlFor="token">Token</label>
-                                        <input type="radio" id="status" value="Advance" onChange={handleStatusChange} checked={onBoardData.status === 'Advance'}/>
+                                        <input type="radio" id="advance" value="Advance" onChange={handleStatusChange} checked={onBoardData.status === 'Advance'}/>
                                         <label htmlFor="advance">Advance</label>
-                                        <input type="radio" id="status" value="Blocked" onChange={handleStatusChange} checked={onBoardData.status === 'Blocked'} />
+                                        <input type="radio" id="blocked" value="Blocked" onChange={handleStatusChange} checked={onBoardData.status === 'Blocked'} />
                                         <label htmlFor="blocked">Block</label>
                                     </div>
                                 </div>
@@ -559,11 +561,11 @@ const OnBoarding = () => {
                                 <div className="board-field">
                                     <div><label id="status-label" htmlFor="status">Status *</label></div>
                                     <div className="status">
-                                        <input type="radio" id="status" value="Token" onChange={handleStatusChange} checked={onBoardData.status === 'Token'} />
+                                        <input type="radio" id="token" value="Token" onChange={handleStatusChange} checked={onBoardData.status === 'Token'} />
                                         <label htmlFor="token">Token</label>
-                                        <input type="radio" id="status" value="Advance" onChange={handleStatusChange} checked={onBoardData.status === 'Advance'}/>
+                                        <input type="radio" id="advance" value="Advance" onChange={handleStatusChange} checked={onBoardData.status === 'Advance'}/>
                                         <label htmlFor="advance">Advance</label>
-                                        <input type="radio" id="status" value="Blocked" onChange={handleStatusChange} checked={onBoardData.status === 'Blocked'} />
+                                        <input type="radio" id="blocked" value="Blocked" onChange={handleStatusChange} checked={onBoardData.status === 'Blocked'} />
                                         <label htmlFor="blocked">Block</label>
                                     </div>
                                 </div>
@@ -636,11 +638,11 @@ const OnBoarding = () => {
                                 <div className="board-field">
                                     <div><label id="status-label" htmlFor="status">Status *</label></div>
                                     <div className="status">
-                                        <input type="radio" id="status" value="Token" onChange={handleStatusChange} checked={onBoardData.status === 'Token'} />
+                                        <input type="radio" id="token" value="Token" onChange={handleStatusChange} checked={onBoardData.status === 'Token'} />
                                         <label htmlFor="token">Token</label>
-                                        <input type="radio" id="status" value="Advance" onChange={handleStatusChange} checked={onBoardData.status === 'Advance'}/>
+                                        <input type="radio" id="advance" value="Advance" onChange={handleStatusChange} checked={onBoardData.status === 'Advance'}/>
                                         <label htmlFor="advance">Advance</label>
-                                        <input type="radio" id="status" value="Blocked" onChange={handleStatusChange} checked={onBoardData.status === 'Blocked'} />
+                                        <input type="radio" id="blocked" value="Blocked" onChange={handleStatusChange} checked={onBoardData.status === 'Blocked'} />
                                         <label htmlFor="blocked">Block</label>
                                     </div>
                                 </div>
@@ -722,11 +724,11 @@ const OnBoarding = () => {
                                 <div className="board-field">
                                     <div><label id="status-label" htmlFor="status">Status *</label></div>
                                     <div className="status">
-                                        <input type="radio" id="status" value="Token" onChange={handleStatusChange} checked={onBoardData.status === 'Token'} />
+                                        <input type="radio" id="token" value="Token" onChange={handleStatusChange} checked={onBoardData.status === 'Token'} />
                                         <label htmlFor="token">Token</label>
-                                        <input type="radio" id="status" value="Advance" onChange={handleStatusChange} checked={onBoardData.status === 'Advance'}/>
+                                        <input type="radio" id="advance" value="Advance" onChange={handleStatusChange} checked={onBoardData.status === 'Advance'}/>
                                         <label htmlFor="advance">Advance</label>
-                                        <input type="radio" id="status" value="Blocked" onChange={handleStatusChange} checked={onBoardData.status === 'Blocked'} />
+                                        <input type="radio" id="blocked" value="Blocked" onChange={handleStatusChange} checked={onBoardData.status === 'Blocked'} />
                                         <label htmlFor="blocked">Block</label>
                                     </div>
                                 </div>
