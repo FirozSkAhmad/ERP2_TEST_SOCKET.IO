@@ -11,7 +11,6 @@ import SpHistoryCard from "./SpHistoryCard";
 import spHistoryCardData from "../../data/spHistoryCardData";
 import NavBar from "../NavBar";
 import WebMenu from "../menu/WebMenu";
-import BASEURL from "../../data/baseurl";
 
 const SpHistory = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,43 +25,66 @@ const SpHistory = () => {
     setSpHistoryCardDetails(spHistoryCardData);
   }, []);
 
-  useEffect(() => {
-    setHistory(spHistoryData);
-  }, []);
-
   // useEffect(() => {
-  //   const fetchHistory = async () => {
-  //       try {
-  //           const accessToken = localStorage.getItem("token");
-  //           const response = await fetch(`${BASEURL}/history/getCommissionHolderslist?role_type=SALES PERSON` , {
-  //               headers: {
-  //                   "Authorization": `Bearer ${accessToken}`,
-  //                 },
-  //           })
-  //           if (!response.ok) {
-  //               throw new Error('Failed to fetch sales person history data');
-  //           }
-  //           const result = await response.json();
-  //           setHistory(result.data);
-  //           console.log(result);
-  //       } catch (error) {
-  //           console.error('Error fetching sales person history data:', error);
-  //       }
-  //   };  
-
-  //   fetchHistory();
+  //   setHistory(spHistoryData);
   // }, []);
 
   const toggleModal = () => {
     setIsOpen(!isOpen); // Toggle modal visibility
   };
 
-  const handleRowClick = (salesPersonID) => {
+  const BaseURL = "https://erp-phase2-bck.onrender.com";
+
+  // API to fetch Sales Person data
+
+  useEffect(() => {
+    const fetchHistory = async () => {
+        try {
+            const accessToken = localStorage.getItem("token");
+            const response = await fetch(`${BaseURL}/history/getCommissionHolderslist?role_type=SALES PERSON`, {
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`,
+                },
+            });
+            if (!response.ok) {
+                throw new Error('Network error. Failed to fetch sales person history data');
+            }
+            const result = await response.json();
+            setHistory(result.data);
+            console.log(result.data);
+        } catch (error) {
+            console.error('Error fetching sales person history data:', error);
+        }
+    };  
+
+    fetchHistory();
+  }, []);
+
+  // API to fetch Sales Person history data and Row click
+
+  const handleRowClick = async (salesPersonID) => {
     setSelectedRow(salesPersonID); // Update selected salesperson ID
-    const data = spClientData.filter(
-      (item) => item.salesPersonID === salesPersonID
-    );
-    setClientData(data); // Set client data for selected salesperson
+
+    try {
+        const accessToken = localStorage.getItem("token");
+        const response = await fetch(`${BaseURL}/history/getPraticularCommissionHolderHistory?commission_holder_id=${salesPersonID}`, {
+            headers: {
+                "Authorization": `Bearer ${accessToken}`,
+            },
+        });
+        if (!response.ok) {
+            throw new Error('Network error. Failed to fetch sales person history dropdown data');
+        }
+        const result = await response.json();
+        setClientData(result.data);
+        console.log(result.data);
+    } catch (error) {
+        console.error('Error fetching sales person history dropdown data:', error);
+    }
+  };
+  
+  const handleCloseDropdown = () => {
+    setSelectedRow(null);
   };
 
   useEffect(() => {
@@ -77,13 +99,27 @@ const SpHistory = () => {
     };
   }, []);
 
-  const handleCloseDropdown = () => {
-    setSelectedRow(null);
-  };
 
-  const handleDropDownRowClick = (salesPersonID) => {
-    setSelectedSalesPersonId(salesPersonID);
+  const handleDropDownRowClick = async (receiptId, projectType) => {
+    try {
+      const accessToken = localStorage.getItem("token");
+      const response = await fetch(`${BaseURL}/history/getPraticularHistoryDetails?receipt_id=${receiptId}&projectType=${projectType}`, {
+          headers: {
+            "Authorization": `Bearer ${accessToken}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Network error. Failed to fetch SP history card details.');
+    }
+
+    const result = await response.json();
+      setSelectedSalesPersonId(result.Details);
+      console.log(result.Details);
+    } catch (error) {
+      console.error('Error fetching SP history card data:', error);
+    }
   };
+// setSelectedSalesPersonId(salesPersonID);
 
   const handleCloseSpHistoryCard = () => {
     setSelectedSalesPersonId(false);
@@ -110,20 +146,20 @@ const SpHistory = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {clientData.map((client, index) => (
+                  {clientData.map((client) => (
                     <tr
-                      key={index}
+                      key={client.receipt_id}
                       onClick={() =>
-                        handleDropDownRowClick(client.salesPersonID)
+                        handleDropDownRowClick(client.receipt_id, client.project.project_type)
                       }
                     >
-                      <td>{client.clientName}</td>
-                      <td>{client.projectID}</td>
-                      {viewportWidth >= 1024 && <td>{client.projectType}</td>}
+                      <td>{client.client_name}</td>
+                      <td>{client.project.project_id}</td>
+                      {viewportWidth >= 1024 && <td>{client.project.project_type}</td>}
                       {viewportWidth >= 1024 && (
-                        <td>{client.totalCommission}</td>
+                        <td>{client.commission.total_commission}</td>
                       )}
-                      <td>{client.commissionReceived}</td>
+                      <td>{client.commission.commission_recived_till_now}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -168,20 +204,20 @@ const SpHistory = () => {
             </tr>
           </thead>
           <tbody>
-            {history.map((his) => (
-              <React.Fragment key={his.salesPersonID}>
+            {history.map((his, index) => (
+              <React.Fragment key={his.commission_holder_id}>
                 <tr
-                  key={his.salesPersonID}
-                  onClick={() => handleRowClick(his.salesPersonID)}
+                  key={his.commission_holder_id}
+                  onClick={() => handleRowClick(his.commission_holder_id)}
                 >
-                  <td>{his.sno}</td>
-                  <td>{his.salesPersonID}</td>
+                  <td>{index + 1}</td>
+                  <td>{his.commission_holder_id}</td>
                   <td className="row-down">
-                    {his.salesPersonName}
+                    {his.commission_holder_name}
                     <img src={exportIcon} alt="Export" />
                   </td>
                 </tr>
-                {selectedRow === his.salesPersonID && renderDropdown()}
+                {selectedRow === his.commission_holder_id && renderDropdown()}
               </React.Fragment>
             ))}
           </tbody>
@@ -190,13 +226,13 @@ const SpHistory = () => {
       <NavBar />
       <WebMenu />
       <MobileModal isOpen={isOpen} onClose={toggleModal} />
-      {selectedSalesPersonId && (
+      {/* {selectedSalesPersonId && (
         <SpHistoryCard
-          salesPersonID={selectedSalesPersonId}
+          salesPersonID={selectedSalesPersonId.user.sales_person_id}
           spHistoryCardDetails={spHistoryCardDetails}
           onClose={handleCloseSpHistoryCard}
         />
-      )}
+      )} */}
     </div>
   );
 };
