@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./webMenu.css";
 import home from "../../assets/home.svg";
 import approval from "../../assets/approval.svg";
@@ -10,11 +10,14 @@ import history from "../../assets/history.svg";
 import receipts from "../../assets/receipts.svg";
 import customer from "../../assets/customer.svg";
 import logout from "../../assets/logout.svg";
+import sharedContext from "../../context/SharedContext";
 
-const WebMenu = ({ roleType }) => {
+const WebMenu = () => {
+  const {roleType} = useContext(sharedContext);
   const renderMenuItems = () => {
+    console.log(roleType);
     switch (roleType) {
-      case "Sales Person":
+      case "SALES PERSON":
         return (
           <>
             <li>
@@ -43,7 +46,7 @@ const WebMenu = ({ roleType }) => {
             </li>
           </>
         );
-      case "Manager":
+      case "MANAGER":
         return (
           <>
             <li>
@@ -88,7 +91,7 @@ const WebMenu = ({ roleType }) => {
             </li>
           </>
         );
-      case "Channel Person":
+      case "CHANNEL PARTNER":
         return (
           <>
             <li>
@@ -117,7 +120,7 @@ const WebMenu = ({ roleType }) => {
             </li>
           </>
         );
-      case "Super Admin":
+      case "SUPER ADMIN":
         return (
           <>
             <li>
