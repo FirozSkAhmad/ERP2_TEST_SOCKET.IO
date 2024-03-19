@@ -14,6 +14,9 @@ import sharedContext from "../../context/SharedContext";
 
 const WebMenu = () => {
   const {roleType} = useContext(sharedContext);
+
+  if(!roleType) return null;
+  
   const renderMenuItems = () => {
     console.log(roleType);
     switch (roleType) {
