@@ -37,7 +37,6 @@ const Table = ({ selectedButton }) => {
         }
         const responseData = await response.json();
         setScaleData(responseData.data);
-        console.log(responseData.data);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -54,7 +53,7 @@ const Table = ({ selectedButton }) => {
         (project) => project.project_type === selectedButton.toUpperCase()
       )
     );
-  }, [selectedButton]);
+  }, [selectedButton, scaleData]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -70,6 +69,10 @@ const Table = ({ selectedButton }) => {
 
   const handleAddProject = () => {
     setShowAddProjectForm(true);
+  };
+
+  const handleCloseProject = () => {
+    setShowAddProjectForm(false);
   };
 
   const handleUpload = () => {
@@ -236,7 +239,12 @@ const Table = ({ selectedButton }) => {
           </button>
         </div>
       </div>
-      {showAddProjectForm && <AddProject selectedType={selectedButton} />}
+      {showAddProjectForm && (
+        <AddProject
+          selectedType={selectedButton}
+          onClose={handleCloseProject}
+        />
+      )}
       {showUploadForm && <UploadForm selectedType={selectedButton} />}
       {showProjectDetails && (
         <ProjectDetails

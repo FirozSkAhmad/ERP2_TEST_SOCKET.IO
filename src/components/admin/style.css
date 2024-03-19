@@ -96,8 +96,8 @@
   padding: 10px;
   border: 1px solid #f0f1f3;
   border-radius: 4px;
-  color: #858d9d;
-  background: #fff;
+  color: white;
+  background: red;
 }
 
 .add-btn button {
