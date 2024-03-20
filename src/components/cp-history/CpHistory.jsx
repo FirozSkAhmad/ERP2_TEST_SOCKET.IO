@@ -100,7 +100,7 @@ const CpHistory = () => {
   const handleDropDownRowClick = async (receiptId, projectType) => {
     try {
       const accessToken = localStorage.getItem("token");
-      const response = await fetch(`${BaseURL}/history/getPraticularHistoryDetails?receipt_id=${receiptId}&projectType=${projectType}`, {
+      const response = await fetch(`${BaseURL}/history/getPraticularHistoryDetails?commissionHolderId=${selectedRow}&receipt_id=${receiptId}&projectType=${projectType}`, {
           headers: {
             "Authorization": `Bearer ${accessToken}`,
       },
@@ -227,13 +227,12 @@ const CpHistory = () => {
       <NavBar />
       <WebMenu />
       <MobileModal isOpen={isOpen} onClose={toggleModal} />
-      {/* {selectedChannelPartnerId && (
+      {selectedChannelPartnerId && (
         <CpHistoryCard
-          channelPartnerID={selectedChannelPartnerId}
-          cpHistoryCardDetails={cpHistoryCardDetails}
+          history={selectedChannelPartnerId}
           onClose={handleCloseSpHistoryCard}
         />
-      )} */}
+      )}
     </div>
   );
 };

@@ -1,48 +1,27 @@
 import React from "react";
 import logo from "../../assets/logo.svg";
 import close from "../../assets/menuClose.svg";
-import spHistoryCardData from "../../data/spHistoryCardData";
 
-const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
-  const cardData = spHistoryCardDetails.find(
-    (data) => data.salesPersonID === salesPersonID
-  );
-  console.log(cardData);
-  const commissionLeft = cardData.totalCommission - cardData.commissionReceived;
-
-  if (!cardData) return null;
+const SpHistoryCard = ({ history, onClose }) => {
+  console.log(history);
+  
+  const commissionLeft = (history.commission.total_commission - history.commission.commission_recived_till_now);
 
   const renderFields = () => {
-    const projectType = cardData.projectType;
+    if (!history) return null;
+
+    const projectType = history.project.project_type; 
 
     switch (projectType) {
       case "APARTMENT":
         return (
           <>
             <div className="sp-data-field">
-              <label htmlFor="invoiceNumber">Invoice Number</label>
-              <input
-                type="text"
-                id="invoiceNumber"
-                defaultValue={cardData.invoiceNumber}
-                readOnly
-              />
-            </div>
-            <div className="sp-data-field">
-              <label htmlFor="dateOfOnboard">Date</label>
-              <input
-                type="text"
-                id="dateOfOnboard"
-                defaultValue={cardData.date}
-                readOnly
-              />
-            </div>
-            <div className="sp-data-field">
               <label htmlFor="salesPersonID">Sales Person ID</label>
               <input
                 type="text"
                 id="salesPersonID"
-                defaultValue={cardData.salesPersonID}
+                defaultValue={history.user.sales_person_id}
                 readOnly
               />
             </div>
@@ -51,7 +30,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="salesPersonName"
-                defaultValue={cardData.salesPersonName}
+                defaultValue={history.user.sales_person_name}
                 readOnly
               />
             </div>
@@ -60,7 +39,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="clientName"
-                defaultValue={cardData.clientName}
+                defaultValue={history.client_name}
                 readOnly
               />
             </div>
@@ -69,7 +48,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="clientPhone"
-                defaultValue={cardData.clientPhone}
+                defaultValue={history.client_phn_no}
                 readOnly
               />
             </div>
@@ -78,7 +57,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="aadhaarNumber"
-                defaultValue={cardData.aadhaarNumber}
+                defaultValue={history.client_adhar_no}
                 readOnly
               />
             </div>
@@ -87,7 +66,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="commissionType"
-                defaultValue={cardData.commissionType}
+                defaultValue={history.commission.type_of_commission}
                 readOnly
               />
             </div>
@@ -96,7 +75,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="projectName"
-                defaultValue={cardData.projectName}
+                defaultValue={history.project.project_name}
                 readOnly
               />
             </div>
@@ -105,7 +84,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="projectType"
-                defaultValue={cardData.projectType}
+                defaultValue={history.project.project_type}
                 readOnly
               />
             </div>
@@ -114,7 +93,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="towerNumber"
-                defaultValue={cardData.towerNumber}
+                defaultValue={history.project.tower_number}
                 readOnly
               />
             </div>
@@ -123,7 +102,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="flatNumber"
-                defaultValue={cardData.flatNumber}
+                defaultValue={history.project.flat_number}
                 readOnly
               />
             </div>
@@ -132,7 +111,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="priceOfProperty"
-                defaultValue={cardData.priceOfProperty}
+                defaultValue={history.PropertyDetail.property_price}
               />
             </div>
             <div className="sp-data-field">
@@ -140,28 +119,16 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="status"
-                defaultValue={cardData.status}
+                defaultValue={history.project.status}
                 readOnly
               />
             </div>
-            {/* {cardData.status === 'Block' && (
-                  <>
-                    <div className="sp-data-field">
-                      <label htmlFor="blockedDays">No. of Blocked Days</label>
-                      <input type="text" id="blockedDays" defaultValue={cardData.blockedDays} readOnly />
-                    </div>
-                    <div className="sp-data-field">
-                      <label htmlFor="daysLeft">No. of Days Left</label>
-                      <input type="text" id="daysLeft" defaultValue={cardData.daysLeft} readOnly />
-                    </div>
-                  </>
-                )} */}
             <div className="sp-data-field">
               <label htmlFor="totalCommission">Total Commission</label>
               <input
                 type="text"
                 id="totalCommission"
-                defaultValue={cardData.totalCommission}
+                defaultValue={history.commission.total_commission}
                 readOnly
               />
             </div>
@@ -172,7 +139,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="commissionReceived"
-                defaultValue={cardData.commissionReceived}
+                defaultValue={history.commission.commission_recived_till_now}
                 readOnly
               />
             </div>
@@ -191,29 +158,11 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
         return (
           <>
             <div className="sp-data-field">
-              <label htmlFor="invoiceNumber">Invoice Number</label>
-              <input
-                type="text"
-                id="invoiceNumber"
-                defaultValue={cardData.invoiceNumber}
-                readOnly
-              />
-            </div>
-            <div className="sp-data-field">
-              <label htmlFor="dateOfOnboard">Date</label>
-              <input
-                type="text"
-                id="dateOfOnboard"
-                defaultValue={cardData.date}
-                readOnly
-              />
-            </div>
-            <div className="sp-data-field">
               <label htmlFor="salesPersonID">Sales Person ID</label>
               <input
                 type="text"
                 id="salesPersonID"
-                defaultValue={cardData.salesPersonID}
+                defaultValue={history.user.sales_person_id}
                 readOnly
               />
             </div>
@@ -222,7 +171,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="salesPersonName"
-                defaultValue={cardData.salesPersonName}
+                defaultValue={history.user.sales_person_name}
                 readOnly
               />
             </div>
@@ -231,7 +180,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="clientName"
-                defaultValue={cardData.clientName}
+                defaultValue={history.client_name}
                 readOnly
               />
             </div>
@@ -240,7 +189,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="clientPhone"
-                defaultValue={cardData.clientPhone}
+                defaultValue={history.client_phn_no}
                 readOnly
               />
             </div>
@@ -249,7 +198,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="aadhaarNumber"
-                defaultValue={cardData.aadhaarNumber}
+                defaultValue={history.client_adhar_no}
                 readOnly
               />
             </div>
@@ -258,7 +207,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="commissionType"
-                defaultValue={cardData.commissionType}
+                defaultValue={history.commission.type_of_commission}
                 readOnly
               />
             </div>
@@ -267,7 +216,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="projectName"
-                defaultValue={cardData.projectName}
+                defaultValue={history.project.project_name}
                 readOnly
               />
             </div>
@@ -276,7 +225,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="projectType"
-                defaultValue={cardData.projectType}
+                defaultValue={history.project.project_type}
                 readOnly
               />
             </div>
@@ -285,7 +234,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="villaNumber"
-                defaultValue={cardData.villaNumber}
+                defaultValue={history.project.villa_number}
                 readOnly
               />
             </div>
@@ -294,7 +243,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="priceOfProperty"
-                defaultValue={cardData.priceOfProperty}
+                defaultValue={history.PropertyDetail.property_price}
               />
             </div>
             <div className="sp-data-field">
@@ -302,28 +251,16 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="status"
-                defaultValue={cardData.status}
+                defaultValue={history.project.status}
                 readOnly
               />
             </div>
-            {/* {cardData.status === 'Block' && (
-                  <>
-                    <div className="sp-data-field">
-                      <label htmlFor="blockedDays">No. of Blocked Days</label>
-                      <input type="text" id="blockedDays" defaultValue={cardData.blockedDays} readOnly />
-                    </div>
-                    <div className="sp-data-field">
-                      <label htmlFor="daysLeft">No. of Days Left</label>
-                      <input type="text" id="daysLeft" defaultValue={cardData.daysLeft} readOnly />
-                    </div>
-                  </>
-                )} */}
             <div className="sp-data-field">
               <label htmlFor="totalCommission">Total Commission</label>
               <input
                 type="text"
                 id="totalCommission"
-                defaultValue={cardData.totalCommission}
+                defaultValue={history.commission.total_commission}
                 readOnly
               />
             </div>
@@ -334,7 +271,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="commissionReceived"
-                defaultValue={cardData.commissionReceived}
+                defaultValue={history.commission.commission_recived_till_now}
                 readOnly
               />
             </div>
@@ -354,29 +291,11 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
         return (
           <>
             <div className="sp-data-field">
-              <label htmlFor="invoiceNumber">Invoice Number</label>
-              <input
-                type="text"
-                id="invoiceNumber"
-                defaultValue={cardData.invoiceNumber}
-                readOnly
-              />
-            </div>
-            <div className="sp-data-field">
-              <label htmlFor="dateOfOnboard">Date</label>
-              <input
-                type="text"
-                id="dateOfOnboard"
-                defaultValue={cardData.date}
-                readOnly
-              />
-            </div>
-            <div className="sp-data-field">
               <label htmlFor="salesPersonID">Sales Person ID</label>
               <input
                 type="text"
                 id="salesPersonID"
-                defaultValue={cardData.salesPersonID}
+                defaultValue={history.user.sales_person_id}
                 readOnly
               />
             </div>
@@ -385,7 +304,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="salesPersonName"
-                defaultValue={cardData.salesPersonName}
+                defaultValue={history.user.sales_person_name}
                 readOnly
               />
             </div>
@@ -394,7 +313,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="clientName"
-                defaultValue={cardData.clientName}
+                defaultValue={history.client_name}
                 readOnly
               />
             </div>
@@ -403,7 +322,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="clientPhone"
-                defaultValue={cardData.clientPhone}
+                defaultValue={history.client_phn_no}
                 readOnly
               />
             </div>
@@ -412,7 +331,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="aadhaarNumber"
-                defaultValue={cardData.aadhaarNumber}
+                defaultValue={history.client_adhar_no}
                 readOnly
               />
             </div>
@@ -421,7 +340,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="commissionType"
-                defaultValue={cardData.commissionType}
+                defaultValue={history.commission.type_of_commission}
                 readOnly
               />
             </div>
@@ -430,7 +349,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="projectName"
-                defaultValue={cardData.projectName}
+                defaultValue={history.project.project_name}
                 readOnly
               />
             </div>
@@ -439,7 +358,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="projectType"
-                defaultValue={cardData.projectType}
+                defaultValue={history.project.project_type}
                 readOnly
               />
             </div>
@@ -448,7 +367,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="plotNumber"
-                defaultValue={cardData.plotNumber}
+                defaultValue={history.project.plot_number}
                 readOnly
               />
             </div>
@@ -457,7 +376,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="priceOfProperty"
-                defaultValue={cardData.priceOfProperty}
+                defaultValue={history.PropertyDetail.property_price}
               />
             </div>
             <div className="sp-data-field">
@@ -465,28 +384,16 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="status"
-                defaultValue={cardData.status}
+                defaultValue={history.project.status}
                 readOnly
               />
             </div>
-            {/* {cardData.status === 'Block' && (
-                  <>
-                    <div className="sp-data-field">
-                      <label htmlFor="blockedDays">No. of Blocked Days</label>
-                      <input type="text" id="blockedDays" defaultValue={cardData.blockedDays} readOnly />
-                    </div>
-                    <div className="sp-data-field">
-                      <label htmlFor="daysLeft">No. of Days Left</label>
-                      <input type="text" id="daysLeft" defaultValue={cardData.daysLeft} readOnly />
-                    </div>
-                  </>
-                )} */}
             <div className="sp-data-field">
               <label htmlFor="totalCommission">Total Commission</label>
               <input
                 type="text"
                 id="totalCommission"
-                defaultValue={cardData.totalCommission}
+                defaultValue={history.commission.total_commission}
                 readOnly
               />
             </div>
@@ -497,7 +404,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="commissionReceived"
-                defaultValue={cardData.commissionReceived}
+                defaultValue={history.commission.commission_recived_till_now}
                 readOnly
               />
             </div>
@@ -517,29 +424,11 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
         return (
           <>
             <div className="sp-data-field">
-              <label htmlFor="invoiceNumber">Invoice Number</label>
-              <input
-                type="text"
-                id="invoiceNumber"
-                defaultValue={cardData.invoiceNumber}
-                readOnly
-              />
-            </div>
-            <div className="sp-data-field">
-              <label htmlFor="dateOfOnboard">Date</label>
-              <input
-                type="text"
-                id="dateOfOnboard"
-                defaultValue={cardData.date}
-                readOnly
-              />
-            </div>
-            <div className="sp-data-field">
               <label htmlFor="salesPersonID">Sales Person ID</label>
               <input
                 type="text"
                 id="salesPersonID"
-                defaultValue={cardData.salesPersonID}
+                defaultValue={history.user.sales_person_id}
                 readOnly
               />
             </div>
@@ -548,7 +437,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="salesPersonName"
-                defaultValue={cardData.salesPersonName}
+                defaultValue={history.user.sales_person_name}
                 readOnly
               />
             </div>
@@ -557,7 +446,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="clientName"
-                defaultValue={cardData.clientName}
+                defaultValue={history.client_name}
                 readOnly
               />
             </div>
@@ -566,7 +455,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="clientPhone"
-                defaultValue={cardData.clientPhone}
+                defaultValue={history.client_phn_no}
                 readOnly
               />
             </div>
@@ -575,7 +464,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="aadhaarNumber"
-                defaultValue={cardData.aadhaarNumber}
+                defaultValue={history.client_adhar_no}
                 readOnly
               />
             </div>
@@ -584,7 +473,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="commissionType"
-                defaultValue={cardData.commissionType}
+                defaultValue={history.commission.type_of_commission}
                 readOnly
               />
             </div>
@@ -593,7 +482,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="projectName"
-                defaultValue={cardData.projectName}
+                defaultValue={history.project.project_name}
                 readOnly
               />
             </div>
@@ -602,7 +491,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="projectType"
-                defaultValue={cardData.projectType}
+                defaultValue={history.project.project_type}
                 readOnly
               />
             </div>
@@ -611,7 +500,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="plotNumber"
-                defaultValue={cardData.plotNumber}
+                defaultValue={history.project.plot_number}
                 readOnly
               />
             </div>
@@ -620,7 +509,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="sqYards"
-                defaultValue={cardData.sqYards}
+                defaultValue={history.project.sq_yards}
                 readOnly
               />
             </div>
@@ -629,7 +518,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="priceOfProperty"
-                defaultValue={cardData.priceOfProperty}
+                defaultValue={history.PropertyDetail.property_price}
               />
             </div>
             <div className="sp-data-field">
@@ -637,28 +526,16 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="status"
-                defaultValue={cardData.status}
+                defaultValue={history.project.status}
                 readOnly
               />
             </div>
-            {/* {cardData.status === 'Block' && (
-                  <>
-                    <div className="sp-data-field">
-                      <label htmlFor="blockedDays">No. of Blocked Days</label>
-                      <input type="text" id="blockedDays" defaultValue={cardData.blockedDays} readOnly />
-                    </div>
-                    <div className="sp-data-field">
-                      <label htmlFor="daysLeft">No. of Days Left</label>
-                      <input type="text" id="daysLeft" defaultValue={cardData.daysLeft} readOnly />
-                    </div>
-                  </>
-                )} */}
             <div className="sp-data-field">
               <label htmlFor="totalCommission">Total Commission</label>
               <input
                 type="text"
                 id="totalCommission"
-                defaultValue={cardData.totalCommission}
+                defaultValue={history.commission.total_commission}
                 readOnly
               />
             </div>
@@ -669,7 +546,7 @@ const SpHistoryCard = ({ salesPersonID, spHistoryCardDetails, onClose }) => {
               <input
                 type="text"
                 id="commissionReceived"
-                defaultValue={cardData.commissionReceived}
+                defaultValue={history.commission.commission_recived_till_now}
                 readOnly
               />
             </div>

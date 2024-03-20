@@ -5,10 +5,7 @@ import menu from "../../assets/menu.svg";
 import close from "../../assets/menuClose.svg";
 import exportIcon from "../../assets/export.svg";
 import MobileModal from "../menu/MobileModal";
-import spHistoryData from "../../data/spHistoryData";
-import spClientData from "../../data/spClientData";
 import SpHistoryCard from "./SpHistoryCard";
-import spHistoryCardData from "../../data/spHistoryCardData";
 import NavBar from "../NavBar";
 import WebMenu from "../menu/WebMenu";
 
@@ -18,16 +15,7 @@ const SpHistory = () => {
   const [selectedRow, setSelectedRow] = useState(null);
   const [clientData, setClientData] = useState([]);
   const [selectedSalesPersonId, setSelectedSalesPersonId] = useState(null);
-  const [spHistoryCardDetails, setSpHistoryCardDetails] = useState([]);
   const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
-
-  useEffect(() => {
-    setSpHistoryCardDetails(spHistoryCardData);
-  }, []);
-
-  // useEffect(() => {
-  //   setHistory(spHistoryData);
-  // }, []);
 
   const toggleModal = () => {
     setIsOpen(!isOpen); // Toggle modal visibility
@@ -103,7 +91,7 @@ const SpHistory = () => {
   const handleDropDownRowClick = async (receiptId, projectType) => {
     try {
       const accessToken = localStorage.getItem("token");
-      const response = await fetch(`${BaseURL}/history/getPraticularHistoryDetails?receipt_id=${receiptId}&projectType=${projectType}`, {
+      const response = await fetch(`${BaseURL}/history/getPraticularHistoryDetails?commissionHolderId=${selectedRow}&receipt_id=${receiptId}&projectType=${projectType}`, {
           headers: {
             "Authorization": `Bearer ${accessToken}`,
       },
@@ -226,13 +214,12 @@ const SpHistory = () => {
       <NavBar />
       <WebMenu />
       <MobileModal isOpen={isOpen} onClose={toggleModal} />
-      {/* {selectedSalesPersonId && (
+      {selectedSalesPersonId && (
         <SpHistoryCard
-          salesPersonID={selectedSalesPersonId.user.sales_person_id}
-          spHistoryCardDetails={spHistoryCardDetails}
+          history={selectedSalesPersonId}
           onClose={handleCloseSpHistoryCard}
         />
-      )} */}
+      )}
     </div>
   );
 };
