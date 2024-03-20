@@ -33,8 +33,10 @@ const HomeLogin = () => {
       });
 
       const data = await response.json();
-      const { accessToken, role_type } = data.data;
+      const { accessToken, role_type, user_id } = data.data;
       localStorage.setItem("token", accessToken);
+
+      localStorage.setItem("user_id", user_id);
 
       switch (role_type) {
         case "SUPER ADMIN":

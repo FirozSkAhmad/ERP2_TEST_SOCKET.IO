@@ -10,8 +10,10 @@ const HistoryCard = ({ history, onClose }) => {
   
   const renderFields = () => {
       if (!history) return null;
+
+      const projectType = history.project.project_type;
       
-        switch (history.project.project_type) {
+        switch (projectType) {
           case 'APARTMENT':
             return (
               <>
