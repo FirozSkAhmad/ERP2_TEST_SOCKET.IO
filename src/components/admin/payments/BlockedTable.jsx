@@ -1,68 +1,127 @@
-import React, { useEffect, useState } from "react";
-import partPaymentData from "../../../data/partPaymentsData";
-import partPaymentsCardData from "../../../data/partPaymentsCardData";
+import React, { useEffect, useState, useContext } from "react";
+import sharedContext from "../../../context/SharedContext";
+import Loader from "../../Loader";
 import BlockedCard from "./BlockedCard";
 
 const BlockedTable = () => {
-    const [blockedData, setBlockedData] = useState([]);
-    const [selectedRow, setSelectedRow] = useState(null);
-    const [blockedCardDetails, setBlockedCardDetails] = useState([]);
-    const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
+  const [blockedData, setBlockedData] = useState([]);
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
+  const { setLoader, loader } = useContext(sharedContext);
 
-    useEffect(() => {
-        setBlockedCardDetails(partPaymentsCardData)
-    }, [])
+  const makeRequest = async (url, options) => {
+    const response = await fetch(url, options);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+  };
 
-    useEffect(() => {
-        setBlockedData(partPaymentData);
-    }, []);
+  const fetchBlockedList = async () => {
+    setLoader(true);
+    setBlockedData([]);
+    try {
+      // Token should be retrieved securely, e.g., from an environment variable or secure storage
+      const token =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MDkyNzQ3NzAsImV4cCI6MTc0MDgzMjM3MCwiYXVkIjoiMTpTVVBFUiBBRE1JTiIsImlzcyI6InZyY2FwcGxpY2F0aW9uIn0.dC7WAsdD5-leh-c3v-Xjmi-abnFTfgx6d9uvYf60Jck";
+      const headers = new Headers({
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      });
 
-    useEffect(() => {
-        const handleResize = () => {
-          setViewportWidth(window.innerWidth);
-        };
-      
-        window.addEventListener('resize', handleResize); // Listen for viewport width changes
-      
-        return () => {
-          window.removeEventListener('resize', handleResize); // Cleanup
-        };
-    }, []);
+      const requestOptions = {
+        method: "GET",
+        headers: headers,
+        redirect: "follow",
+      };
 
-    const handleRowClick = (projectID) => {
-        setSelectedRow(projectID);
+      const result = await makeRequest(
+        `http://localhost:4200/payments/getPaymentsList?statusFilter=BLOCK`,
+        requestOptions
+      );
+
+      setBlockedData(result.data);
+    } catch (error) {
+      console.error("Error fetching pending receipts list:", error);
+    } finally {
+      setLoader(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchBlockedList();
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setViewportWidth(window.innerWidth);
     };
 
-    const handleCloseBlockedCard = () => {
-        setSelectedRow(false);
+    window.addEventListener("resize", handleResize); // Listen for viewport width changes
+
+    return () => {
+      window.removeEventListener("resize", handleResize); // Cleanup
     };
+  }, []);
+
+  const handleRowClick = (receiptID) => {
+    setSelectedRow(receiptID);
+  };
+
+  const handleCloseBlockedCard = () => {
+    setSelectedRow(false);
+  };
 
   return (
-    <div className="com-table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Project ID</th>
-                                {viewportWidth >= 1024 && <th>Project Name</th>}
-                                {viewportWidth >= 1024 && <th>Project Type</th>}
-                                <th>Client Name</th>
-                                <th>Blocked Days</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {blockedData.map(data => (
-                                <tr key={data.projectID} onClick={() => handleRowClick(data.projectID)}>
-                                    <td>{data.projectID}</td>
-                                    {viewportWidth >= 1024 && <td>{data.projectName}</td>}
-                                    {viewportWidth >= 1024 && <td>{data.projectType}</td>}
-                                    <td>{data.clientName}</td>
-                                    <td>{data.blockedDays}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                    {selectedRow && <BlockedCard projectID={selectedRow} blockedCardDetails={blockedCardDetails} onClose={handleCloseBlockedCard} />}
-                </div>
+    <>
+      <Loader />
+      {blockedData.length !== 0 ? (
+        <div className="com-table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Project ID</th>
+                {viewportWidth >= 1024 && <th>Project Name</th>}
+                {viewportWidth >= 1024 && <th>Project Type</th>}
+                <th>Client Name</th>
+                <th>Blocked Days</th>
+              </tr>
+            </thead>
+            <tbody>
+              {blockedData.map((data) => (
+                <tr
+                  key={data.receipt_id}
+                  onClick={() => handleRowClick(data.receipt_id)}
+                >
+                  <td>{data.project.project_id}</td>
+                  {viewportWidth >= 1024 && (
+                    <td>{data.project.project_name}</td>
+                  )}
+                  {viewportWidth >= 1024 && (
+                    <td>{data.project.project_type}</td>
+                  )}
+                  <td>{data.client_name}</td>
+                  <td>
+                    {data.PropertyDetail.BlockedProject.no_of_days_blocked}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {selectedRow && (
+            <BlockedCard
+              receiptID={selectedRow}
+              fetchBlockedList={fetchBlockedList}
+              onClose={handleCloseBlockedCard}
+            />
+          )}
+        </div>
+      ) : loader == false ? (
+        <div className="com-table-container">No data to show</div>
+      ) : (
+        ""
+      )}
+    </>
   );
 };
 
