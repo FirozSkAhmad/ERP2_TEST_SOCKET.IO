@@ -2,8 +2,7 @@ import React from "react";
 import './payrollCard.css';
 import { useNavigate } from "react-router-dom";
 
-const ManageRoleInput = () => {
-    const navigate = useNavigate();
+const ManageRoleInput = ({onClose}) => {
 
     const BaseURL = "https://erp-phase2-bck.onrender.com";
 
@@ -27,11 +26,11 @@ const ManageRoleInput = () => {
             throw new Error("Network error. Network response was not ok");
         }
         console.log("Successfully added new role",  roleType);
+        onClose();
         } catch (error) {
           console.error("Error submitting new role type:", error);
         }
 
-        navigate("/admin/payroll");
     };
 
   return (

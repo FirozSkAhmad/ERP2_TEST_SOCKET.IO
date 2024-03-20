@@ -99,7 +99,7 @@ const PayRollCard = () => {
             incentives: "",
             salary: ""
         });
-        
+
         } catch (error) {
           console.error("Error submitting payroll  form:", error);
         }
@@ -160,7 +160,7 @@ const PayRollCard = () => {
                 </div>
             </div>
         </div>
-        {showManageInput && <ManageRoleInput />}
+        {showManageInput && <ManageRoleInput onClose={() => setShowManageInput(false)} />}
         <NavBar />
         <WebMenu />
         <MobileModal isOpen={isOpen} onClose={toggleModal}/>
