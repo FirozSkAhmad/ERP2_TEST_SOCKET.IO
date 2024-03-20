@@ -1,6 +1,5 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import sharedContext from "../context/SharedContext";
 
 const HomeLogin = () => {
   const [formData, setFormData] = useState({
@@ -11,8 +10,6 @@ const HomeLogin = () => {
   const BaseUrl = "https://erp-phase2-bck.onrender.com";
 
   const navigate = useNavigate();
-
-  const {setRoleType} = useContext(sharedContext)
 
   const onChangeInput = (e) => {
     const { name, value, type, checked } = e.target;
@@ -38,7 +35,8 @@ const HomeLogin = () => {
       const data = await response.json();
       const { accessToken, role_type } = data.data;
       localStorage.setItem("token", accessToken);
-      setRoleType(role_type);
+
+      localStorage.setItem("role_type", role_type);
 
       switch (role_type) {
         case "SUPER ADMIN":

@@ -4,10 +4,9 @@ import SharedContext from './SharedContext'
 const SharedState = (props) => {
 
   const [loader, setLoader] = useState(false);
-  const [roleType, setRoleType] = useState("");
 
   return (
-    <SharedContext.Provider value={{ 'loader': loader, 'setLoader': setLoader, 'roleType': roleType, 'setRoleType': setRoleType }}>{
+    <SharedContext.Provider value={{ 'loader': loader, 'setLoader': setLoader }}>{
       props.children
     }</SharedContext.Provider>
   )

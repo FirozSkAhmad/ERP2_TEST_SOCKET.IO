@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import "./webMenu.css";
 import home from "../../assets/home.svg";
 import approval from "../../assets/approval.svg";
@@ -10,15 +10,15 @@ import history from "../../assets/history.svg";
 import receipts from "../../assets/receipts.svg";
 import customer from "../../assets/customer.svg";
 import logout from "../../assets/logout.svg";
-import sharedContext from "../../context/SharedContext";
 
 const WebMenu = () => {
-  const {roleType} = useContext(sharedContext);
 
-  if(!roleType) return null;
-  
   const renderMenuItems = () => {
+    const roleType = localStorage.getItem("role_type");
     console.log(roleType);
+
+    if(!roleType) return null;
+    
     switch (roleType) {
       case "SALES PERSON":
         return (
