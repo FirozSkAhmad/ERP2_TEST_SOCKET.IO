@@ -1,15 +1,45 @@
-import React, { useEffect, useState } from "react";
-import expensesMiscelData from "../../data/expensesMiscelData";
+import React, { useContext, useEffect, useState } from "react";
+import sharedContext from "../../context/SharedContext";
+import Loader from "../Loader";
 
 const MiscellaneousTable = () => {
+  const { setLoader, loader } = useContext(sharedContext);
   const [miscellaneousData, setMiscellaneousData] = useState([]);
 
+  const BaseURL = "https://erp-phase2-bck.onrender.com";
+
   useEffect(() => {
-    setMiscellaneousData(expensesMiscelData);
+    const fetchMiscellaneousData = async () => {
+      setLoader(true);
+      setMiscellaneousData([]);
+        try {
+            const accessToken = localStorage.getItem("token");
+            const response = await fetch(`${BaseURL}/expenses/getExpenses?expensesFilter=MISCELLANEOUS`, {
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`,
+                },
+            });
+            if (!response.ok) {
+                throw new Error('Network error. Failed to fetch salary table data');
+            }
+            const result = await response.json();
+            setMiscellaneousData(result.data);
+            console.log(result.data);
+        } catch (error) {
+            console.error('Error fetching salary table data:', error);
+        } finally {
+          setLoader(false);
+        }
+    };  
+
+    fetchMiscellaneousData();
   }, []);
 
   return (
-    <div className="miscel-table-container">
+    <>
+    <Loader />
+    {miscellaneousData.length !== 0 ? (
+      <div className="miscel-table-container">
       <table>
         <thead>
           <tr>
@@ -28,7 +58,12 @@ const MiscellaneousTable = () => {
           ))}
         </tbody>
       </table>
-    </div>
+    </div>) : loader == false ? (
+      "No data to show"
+    ): (
+      ""
+    )}
+    </>
   );
 };
 

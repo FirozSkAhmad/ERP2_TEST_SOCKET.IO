@@ -2,61 +2,37 @@ import React from "react";
 import logo from "../../assets/logo.svg";
 import close from "../../assets/menuClose.svg";
 
-const CommissionCard = ({
-  commissionHolderID,
-  commissionCardDetails,
-  onClose,
-}) => {
-  const cardData = commissionCardDetails.find(
-    (data) => data.commissionHolderID === commissionHolderID
-  );
+const CommissionCard = ({cardData, onClose }) => {
   console.log(cardData);
-  const commissionLeft = cardData.totalCommission - cardData.commissionReceived;
-
-  if (!cardData) return null;
+  
+  const commissionLeft = (cardData.commission.total_commission - cardData.commission.commission_recived_till_now);
 
   const renderFields = () => {
-    const projectType = cardData.projectType;
+    if (!cardData) return null;
+
+    const projectType = cardData.project.project_type;
 
     switch (projectType) {
       case "Apartment":
         return (
           <>
             <div className="sp-data-field">
-              <label htmlFor="invoiceNumber">Invoice Number</label>
-              <input
-                type="text"
-                id="invoiceNumber"
-                defaultValue={cardData.invoiceNumber}
-                readOnly
-              />
-            </div>
-            <div className="sp-data-field">
-              <label htmlFor="dateOfOnboard">Date</label>
-              <input
-                type="text"
-                id="dateOfOnboard"
-                defaultValue={cardData.date}
-                readOnly
-              />
-            </div>
-            <div className="sp-data-field">
-              <label htmlFor="commissionHolderID">Commission Holder ID</label>
+              <label htmlFor="commissionHolderID">Sales Person ID</label>
               <input
                 type="text"
                 id="commissionHolderID"
-                defaultValue={cardData.commissionHolderID}
+                defaultValue={cardData.user.sales_person_id}
                 readOnly
               />
             </div>
             <div className="sp-data-field">
               <label htmlFor="commissionHolderName">
-                Commission Holder Name
+                Sales Person Name
               </label>
               <input
                 type="text"
                 id="commissionHolderName"
-                defaultValue={cardData.commissionHolderName}
+                defaultValue={cardData.user.sales_person_name}
                 readOnly
               />
             </div>
@@ -65,7 +41,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="clientName"
-                defaultValue={cardData.clientName}
+                defaultValue={cardData.client_name}
                 readOnly
               />
             </div>
@@ -74,7 +50,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="clientPhone"
-                defaultValue={cardData.clientPhone}
+                defaultValue={cardData.client_phn_no}
                 readOnly
               />
             </div>
@@ -83,7 +59,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="aadhaarNumber"
-                defaultValue={cardData.aadhaarNumber}
+                defaultValue={cardData.client_adhar_no}
                 readOnly
               />
             </div>
@@ -92,7 +68,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="commissionType"
-                defaultValue={cardData.commissionType}
+                defaultValue={cardData.commission.type_of_commission}
                 readOnly
               />
             </div>
@@ -101,7 +77,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="projectName"
-                defaultValue={cardData.projectName}
+                defaultValue={cardData.project.project_name}
                 readOnly
               />
             </div>
@@ -110,7 +86,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="projectType"
-                defaultValue={cardData.projectType}
+                defaultValue={cardData.project.project_type}
                 readOnly
               />
             </div>
@@ -119,7 +95,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="towerNumber"
-                defaultValue={cardData.towerNumber}
+                defaultValue={cardData.project.tower_number}
                 readOnly
               />
             </div>
@@ -128,7 +104,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="flatNumber"
-                defaultValue={cardData.flatNumber}
+                defaultValue={cardData.project.flat_number}
                 readOnly
               />
             </div>
@@ -137,7 +113,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="priceOfProperty"
-                defaultValue={cardData.priceOfProperty}
+                defaultValue={cardData.PropertyDetail.property_price}
                 readOnly
               />
             </div>
@@ -146,28 +122,16 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="status"
-                defaultValue={cardData.status}
+                defaultValue={cardData.project.status}
                 readOnly
               />
             </div>
-            {/* {cardData.status === 'Block' && (
-                  <>
-                    <div className="sp-data-field">
-                      <label htmlFor="blockedDays">No. of Blocked Days</label>
-                      <input type="text" id="blockedDays" defaultValue={cardData.blockedDays} readOnly />
-                    </div>
-                    <div className="sp-data-field">
-                      <label htmlFor="daysLeft">No. of Days Left</label>
-                      <input type="text" id="daysLeft" defaultValue={cardData.daysLeft} readOnly />
-                    </div>
-                  </>
-                )} */}
             <div className="sp-data-field">
               <label htmlFor="totalCommission">Total Commission</label>
               <input
                 type="text"
                 id="totalCommission"
-                defaultValue={cardData.totalCommission}
+                defaultValue={cardData.commission.total_commission}
                 readOnly
               />
             </div>
@@ -178,7 +142,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="commissionReceived"
-                defaultValue={cardData.commissionReceived}
+                defaultValue={cardData.commission.commission_recived_till_now}
                 readOnly
               />
             </div>
@@ -197,40 +161,22 @@ const CommissionCard = ({
         return (
           <>
             <div className="sp-data-field">
-              <label htmlFor="invoiceNumber">Invoice Number</label>
-              <input
-                type="text"
-                id="invoiceNumber"
-                defaultValue={cardData.invoiceNumber}
-                readOnly
-              />
-            </div>
-            <div className="sp-data-field">
-              <label htmlFor="dateOfOnboard">Date</label>
-              <input
-                type="text"
-                id="dateOfOnboard"
-                defaultValue={cardData.date}
-                readOnly
-              />
-            </div>
-            <div className="sp-data-field">
-              <label htmlFor="commissionHolderID">Commission Holder ID</label>
+              <label htmlFor="commissionHolderID">Sales Person ID</label>
               <input
                 type="text"
                 id="commissionHolderID"
-                defaultValue={cardData.commissionHolderID}
+                defaultValue={cardData.user.sales_person_id}
                 readOnly
               />
             </div>
             <div className="sp-data-field">
               <label htmlFor="commissionHolderName">
-                Commission Holder Name
+                Sales Person Name
               </label>
               <input
                 type="text"
                 id="commissionHolderName"
-                defaultValue={cardData.commissionHolderName}
+                defaultValue={cardData.user.sales_person_name}
                 readOnly
               />
             </div>
@@ -239,7 +185,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="clientName"
-                defaultValue={cardData.clientName}
+                defaultValue={cardData.client_name}
                 readOnly
               />
             </div>
@@ -248,7 +194,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="clientPhone"
-                defaultValue={cardData.clientPhone}
+                defaultValue={cardData.client_phn_no}
                 readOnly
               />
             </div>
@@ -257,7 +203,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="aadhaarNumber"
-                defaultValue={cardData.aadhaarNumber}
+                defaultValue={cardData.client_adhar_no}
                 readOnly
               />
             </div>
@@ -266,7 +212,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="commissionType"
-                defaultValue={cardData.commissionType}
+                defaultValue={cardData.commission.type_of_commission}
                 readOnly
               />
             </div>
@@ -275,7 +221,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="projectName"
-                defaultValue={cardData.projectName}
+                defaultValue={cardData.project.project_name}
                 readOnly
               />
             </div>
@@ -284,7 +230,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="projectType"
-                defaultValue={cardData.projectType}
+                defaultValue={cardData.project.project_type}
                 readOnly
               />
             </div>
@@ -293,7 +239,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="villaNumber"
-                defaultValue={cardData.villaNumber}
+                defaultValue={cardData.project.villa_number}
                 readOnly
               />
             </div>
@@ -302,7 +248,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="priceOfProperty"
-                defaultValue={cardData.priceOfProperty}
+                defaultValue={cardData.PropertyDetail.property_price}
                 readOnly
               />
             </div>
@@ -311,28 +257,16 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="status"
-                defaultValue={cardData.status}
+                defaultValue={cardData.project.status}
                 readOnly
               />
             </div>
-            {/* {cardData.status === 'Block' && (
-                  <>
-                    <div className="sp-data-field">
-                      <label htmlFor="blockedDays">No. of Blocked Days</label>
-                      <input type="text" id="blockedDays" defaultValue={cardData.blockedDays} readOnly />
-                    </div>
-                    <div className="sp-data-field">
-                      <label htmlFor="daysLeft">No. of Days Left</label>
-                      <input type="text" id="daysLeft" defaultValue={cardData.daysLeft} readOnly />
-                    </div>
-                  </>
-                )} */}
             <div className="sp-data-field">
               <label htmlFor="totalCommission">Total Commission</label>
               <input
                 type="text"
                 id="totalCommission"
-                defaultValue={cardData.totalCommission}
+                defaultValue={cardData.commission.total_commission}
                 readOnly
               />
             </div>
@@ -343,7 +277,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="commissionReceived"
-                defaultValue={cardData.commissionReceived}
+                defaultValue={cardData.commission.commission_recived_till_now}
                 readOnly
               />
             </div>
@@ -363,40 +297,22 @@ const CommissionCard = ({
         return (
           <>
             <div className="sp-data-field">
-              <label htmlFor="invoiceNumber">Invoice Number</label>
-              <input
-                type="text"
-                id="invoiceNumber"
-                defaultValue={cardData.invoiceNumber}
-                readOnly
-              />
-            </div>
-            <div className="sp-data-field">
-              <label htmlFor="dateOfOnboard">Date</label>
-              <input
-                type="text"
-                id="dateOfOnboard"
-                defaultValue={cardData.date}
-                readOnly
-              />
-            </div>
-            <div className="sp-data-field">
-              <label htmlFor="commissionHolderID">Commission Holder ID</label>
+              <label htmlFor="commissionHolderID">Sales Person ID</label>
               <input
                 type="text"
                 id="commissionHolderID"
-                defaultValue={cardData.commissionHolderID}
+                defaultValue={cardData.user.sales_person_id}
                 readOnly
               />
             </div>
             <div className="sp-data-field">
               <label htmlFor="commissionHolderName">
-                Commission Holder Name
+                Sales Person Name
               </label>
               <input
                 type="text"
                 id="commissionHolderName"
-                defaultValue={cardData.commissionHolderName}
+                defaultValue={cardData.user.sales_person_name}
                 readOnly
               />
             </div>
@@ -405,7 +321,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="clientName"
-                defaultValue={cardData.clientName}
+                defaultValue={cardData.client_name}
                 readOnly
               />
             </div>
@@ -414,7 +330,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="clientPhone"
-                defaultValue={cardData.clientPhone}
+                defaultValue={cardData.client_phn_no}
                 readOnly
               />
             </div>
@@ -423,7 +339,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="aadhaarNumber"
-                defaultValue={cardData.aadhaarNumber}
+                defaultValue={cardData.client_adhar_no}
                 readOnly
               />
             </div>
@@ -432,7 +348,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="commissionType"
-                defaultValue={cardData.commissionType}
+                defaultValue={cardData.commission.type_of_commission}
                 readOnly
               />
             </div>
@@ -441,7 +357,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="projectName"
-                defaultValue={cardData.projectName}
+                defaultValue={cardData.project.project_name}
                 readOnly
               />
             </div>
@@ -450,7 +366,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="projectType"
-                defaultValue={cardData.projectType}
+                defaultValue={cardData.project.project_type}
                 readOnly
               />
             </div>
@@ -459,7 +375,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="plotNumber"
-                defaultValue={cardData.plotNumber}
+                defaultValue={cardData.project.plot_number}
                 readOnly
               />
             </div>
@@ -468,7 +384,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="priceOfProperty"
-                defaultValue={cardData.priceOfProperty}
+                defaultValue={cardData.PropertyDetail.property_price}
                 readOnly
               />
             </div>
@@ -477,28 +393,16 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="status"
-                defaultValue={cardData.status}
+                defaultValue={cardData.project.status}
                 readOnly
               />
             </div>
-            {/* {cardData.status === 'Block' && (
-                  <>
-                    <div className="sp-data-field">
-                      <label htmlFor="blockedDays">No. of Blocked Days</label>
-                      <input type="text" id="blockedDays" defaultValue={cardData.blockedDays} readOnly />
-                    </div>
-                    <div className="sp-data-field">
-                      <label htmlFor="daysLeft">No. of Days Left</label>
-                      <input type="text" id="daysLeft" defaultValue={cardData.daysLeft} readOnly />
-                    </div>
-                  </>
-                )} */}
             <div className="sp-data-field">
               <label htmlFor="totalCommission">Total Commission</label>
               <input
                 type="text"
                 id="totalCommission"
-                defaultValue={cardData.totalCommission}
+                defaultValue={cardData.commission.total_commission}
                 readOnly
               />
             </div>
@@ -509,7 +413,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="commissionReceived"
-                defaultValue={cardData.commissionReceived}
+                defaultValue={cardData.commission.commission_recived_till_now}
                 readOnly
               />
             </div>
@@ -529,40 +433,22 @@ const CommissionCard = ({
         return (
           <>
             <div className="sp-data-field">
-              <label htmlFor="invoiceNumber">Invoice Number</label>
-              <input
-                type="text"
-                id="invoiceNumber"
-                defaultValue={cardData.invoiceNumber}
-                readOnly
-              />
-            </div>
-            <div className="sp-data-field">
-              <label htmlFor="dateOfOnboard">Date</label>
-              <input
-                type="text"
-                id="dateOfOnboard"
-                defaultValue={cardData.date}
-                readOnly
-              />
-            </div>
-            <div className="sp-data-field">
-              <label htmlFor="commissionHolderID">Commission Holder ID</label>
+              <label htmlFor="commissionHolderID">Sales Person ID</label>
               <input
                 type="text"
                 id="commissionHolderID"
-                defaultValue={cardData.commissionHolderID}
+                defaultValue={cardData.user.sales_person_id}
                 readOnly
               />
             </div>
             <div className="sp-data-field">
               <label htmlFor="commissionHolderName">
-                Commission Holder Name
+                Sales Person Name
               </label>
               <input
                 type="text"
                 id="commissionHolderName"
-                defaultValue={cardData.commissionHolderName}
+                defaultValue={cardData.user.sales_person_name}
                 readOnly
               />
             </div>
@@ -571,7 +457,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="clientName"
-                defaultValue={cardData.clientName}
+                defaultValue={cardData.client_name}
                 readOnly
               />
             </div>
@@ -580,7 +466,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="clientPhone"
-                defaultValue={cardData.clientPhone}
+                defaultValue={cardData.client_phn_no}
                 readOnly
               />
             </div>
@@ -589,7 +475,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="aadhaarNumber"
-                defaultValue={cardData.aadhaarNumber}
+                defaultValue={cardData.client_adhar_no}
                 readOnly
               />
             </div>
@@ -598,7 +484,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="commissionType"
-                defaultValue={cardData.commissionType}
+                defaultValue={cardData.commission.type_of_commission}
                 readOnly
               />
             </div>
@@ -607,7 +493,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="projectName"
-                defaultValue={cardData.projectName}
+                defaultValue={cardData.project.project_name}
                 readOnly
               />
             </div>
@@ -616,7 +502,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="projectType"
-                defaultValue={cardData.projectType}
+                defaultValue={cardData.project.project_type}
                 readOnly
               />
             </div>
@@ -625,7 +511,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="plotNumber"
-                defaultValue={cardData.plotNumber}
+                defaultValue={cardData.project.plot_number}
                 readOnly
               />
             </div>
@@ -634,7 +520,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="sqYards"
-                defaultValue={cardData.sqYards}
+                defaultValue={cardData.project.sq_yards}
                 readOnly
               />
             </div>
@@ -643,7 +529,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="priceOfProperty"
-                defaultValue={cardData.priceOfProperty}
+                defaultValue={cardData.PropertyDetail.property_price}
                 readOnly
               />
             </div>
@@ -652,28 +538,16 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="status"
-                defaultValue={cardData.status}
+                defaultValue={cardData.project.status}
                 readOnly
               />
             </div>
-            {/* {cardData.status === 'Block' && (
-                  <>
-                    <div className="sp-data-field">
-                      <label htmlFor="blockedDays">No. of Blocked Days</label>
-                      <input type="text" id="blockedDays" defaultValue={cardData.blockedDays} readOnly />
-                    </div>
-                    <div className="sp-data-field">
-                      <label htmlFor="daysLeft">No. of Days Left</label>
-                      <input type="text" id="daysLeft" defaultValue={cardData.daysLeft} readOnly />
-                    </div>
-                  </>
-                )} */}
             <div className="sp-data-field">
               <label htmlFor="totalCommission">Total Commission</label>
               <input
                 type="text"
                 id="totalCommission"
-                defaultValue={cardData.totalCommission}
+                defaultValue={cardData.commission.total_commission}
                 readOnly
               />
             </div>
@@ -684,7 +558,7 @@ const CommissionCard = ({
               <input
                 type="text"
                 id="commissionReceived"
-                defaultValue={cardData.commissionReceived}
+                defaultValue={cardData.commission.commission_recived_till_now}
                 readOnly
               />
             </div>

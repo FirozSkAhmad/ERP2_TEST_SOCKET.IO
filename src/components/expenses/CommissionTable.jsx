@@ -1,31 +1,54 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import exportIcon from "../../assets/export.svg";
 import close from "../../assets/menuClose.svg";
-import expensesCommissionData from "../../data/expensesCommissionData";
-import expensesCommissionDropData from "../../data/expensesCommissionDropData";
-import commissionCardData from "../../data/commissionCardData";
 import CommissionCard from "./CommissionCard";
+import sharedContext from "../../context/SharedContext";
+import Loader from "../Loader";
 
 const CommissionTable = () => {
+  const { setLoader, loader } = useContext(sharedContext);
   const [commission, setCommission] = useState([]);
   const [commissionData, setCommissionData] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
-  const [selectedCommissionHolderId, setSelectedCommissionHolderId] =
-    useState(null);
-  const [commissionCardDetails, setCommissionCardDetails] = useState([]);
+  const [selectedCommissionHolderId, setSelectedCommissionHolderId] = useState(null);
   const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
 
-  useEffect(() => {
-    setCommissionCardDetails(commissionCardData);
-  }, []);
+  const BaseURL = "https://erp-phase2-bck.onrender.com";
+
+  // API to get commission table data
 
   useEffect(() => {
-    setCommission(expensesCommissionData);
+    const fetchCommissionData = async () => {
+      setLoader(true);
+      setCommission([]);
+        try {
+            const accessToken = localStorage.getItem("token");
+            const response = await fetch(`${BaseURL}/expenses/getExpenses?expensesFilter=COMMISSIONS`, {
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`,
+                },
+            });
+            if (!response.ok) {
+                throw new Error('Network error. Failed to fetch commission table data');
+            }
+            const result = await response.json();
+            setCommission(result.data);
+            console.log(result.data);
+        } catch (error) {
+            console.error('Error fetching commission table data:', error);
+        } finally {
+          setLoader(false);
+        }
+    };  
+
+    fetchCommissionData();
   }, []);
 
-  useEffect(() => {
-    setCommissionData(expensesCommissionDropData);
-  }, []);
+  // API to get dropdown data
+
+  // useEffect(() => {
+  //   setCommissionData(expensesCommissionDropData);
+  // }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -39,29 +62,65 @@ const CommissionTable = () => {
     };
   }, []);
 
-  const handleRowClick = (commissionHolderID) => {
+  const handleRowClick = async (commissionHolderID) => {
     setSelectedRow(commissionHolderID);
+
+    setLoader(true);
+    setCommissionData([]);
+
+    try {
+      const accessToken = localStorage.getItem("token");
+      const response = await fetch(`${BaseURL}/history/getPraticularCommissionHolderHistory?commission_holder_id=${commissionHolderID}`, {
+          headers: {
+              "Authorization": `Bearer ${accessToken}`,
+          },
+      });
+      if (!response.ok) {
+          throw new Error('Network error. Failed to fetch commission table dropdown data');
+      }
+        const result = await response.json();
+        setCommissionData(result.data);
+        console.log(result.data);
+    } catch (error) {
+        console.error('Error fetching commission table dropdown data:', error);
+    } finally {
+      setLoader(false);
+    }
   };
 
   const handleCloseDropdown = () => {
     setSelectedRow(null);
   };
 
-  const handleDropDownRowClick = (commissionHolderID) => {
-    setSelectedCommissionHolderId(commissionHolderID);
-    console.log(commissionHolderID);
+  // API to get commission card data
+
+  const handleDropDownRowClick = async (receiptId, projectType ) => {
+    try {
+      const accessToken = localStorage.getItem("token");
+      const response = await fetch(`${BaseURL}/expenses/getPraticularCommisionDetails?receipt_id=${receiptId}&projectType=${projectType}`, {
+          headers: {
+            "Authorization": `Bearer ${accessToken}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Network error. Failed to fetch commission card details.');
+    }
+
+    const result = await response.json();
+      setSelectedCommissionHolderId(result.Details);
+      console.log(result.Details);
+    } catch (error) {
+      console.error('Error fetching commission card data:', error);
+    }
+    // setSelectedCommissionHolderId(commissionHolderID);
+    // console.log(commissionHolderID);
   };
 
   const handleCloseCommissionCard = () => {
     setSelectedCommissionHolderId(false);
   };
 
-  const renderDropdown = (commissionHolderID) => {
-    if (selectedRow === commissionHolderID) {
-      console.log(selectedRow);
-      const selectedCommission = commissionData.find(
-        (item) => item.commissionHolderID === commissionHolderID
-      );
+  const renderDropdown = () => {
       return (
         <tr className="dropdown" style={{ backgroundColor: "#D9D9D9" }}>
           <td colSpan="5">
@@ -82,19 +141,21 @@ const CommissionTable = () => {
                     </tr>
                   </thead>
                   <tbody>
+                    {commissionData.map(data => (
                     <tr
-                      onClick={() => handleDropDownRowClick(commissionHolderID)}
+                      key={data.receipt_id}
+                      onClick={() => handleDropDownRowClick(data.receipt_id, data.project.project_type)}
                     >
-                      <td>{selectedCommission.clientName}</td>
-                      <td>{selectedCommission.projectID}</td>
+                      <td>{data.client_name}</td>
+                      <td>{data.project.project_id}</td>
                       {viewportWidth >= 1024 && (
-                        <td>{selectedCommission.projectType}</td>
+                        <td>{data.project.project_type}</td>
                       )}
                       {viewportWidth >= 1024 && (
-                        <td>{selectedCommission.totalCommission}</td>
+                        <td>{data.commission.total_commission}</td>
                       )}
-                      <td>{selectedCommission.commissionReceived}</td>
-                    </tr>
+                      <td>{data.commission.commission_recived_till_now}</td>
+                    </tr> ))}
                   </tbody>
                 </table>
               </div>
@@ -102,11 +163,12 @@ const CommissionTable = () => {
           </td>
         </tr>
       );
-    }
-    return null;
   };
 
   return (
+    <>
+    <Loader />
+    {commission.length !== 0 ? (
     <div className="com-table-container">
       <table>
         <thead>
@@ -118,31 +180,35 @@ const CommissionTable = () => {
         </thead>
         <tbody>
           {commission.map((data, index) => (
-            <React.Fragment key={index}>
+            <React.Fragment key={data.commission_holder_id}>
               <tr
-                key={index}
-                onClick={() => handleRowClick(data.commissionHolderID)}
+                key={data.commission_holder_id}
+                onClick={() => handleRowClick(data.commission_holder_id)}
               >
-                <td>{data.sno}</td>
-                <td>{data.commissionHolderName}</td>
+                <td>{index + 1}</td>
+                <td>{data.commission_holder_name}</td>
                 <td className="row-down">
-                  {data.commissionHolderID}
+                  {data.commission_holder_id}
                   <img src={exportIcon} alt="Export" />
                 </td>
               </tr>
-              {renderDropdown(data.commissionHolderID)}
+              {selectedRow === data.commission_holder_id && renderDropdown()}
             </React.Fragment>
           ))}
         </tbody>
       </table>
       {selectedCommissionHolderId && (
         <CommissionCard
-          commissionHolderID={selectedCommissionHolderId}
-          commissionCardDetails={commissionCardDetails}
+          cardData={selectedCommissionHolderId}
           onClose={handleCloseCommissionCard}
         />
       )}
-    </div>
+    </div>) : loader == false ? (
+      "No data to show"
+    ) : (
+      ""
+    )}
+    </>
   );
 };
 
