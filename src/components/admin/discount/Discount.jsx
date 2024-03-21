@@ -42,7 +42,7 @@ const Discount = () => {
         }
         const data = await response.json();
         setDiscount(data.data);
-        console.log(discount);
+        // console.log(discount);
         setLoader(false);
       } catch (error) {
         console.error("Error fetching discounts:", error);

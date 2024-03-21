@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import close from "../../../assets/menuClose.svg";
-import discountCardData from "../../../data/discountCardData";
+
 import BASEURL from "../../../data/baseurl";
 
 const DiscountCard = ({ projectID, projectType, onClose }) => {
@@ -8,6 +8,7 @@ const DiscountCard = ({ projectID, projectType, onClose }) => {
   // const receiptData = discountCardData.find(item => item.projectID === projectID);
   const baseUrl = BASEURL.url;
   useEffect(() => {
+    let isMounted = true;
     const fetchData = async () => {
       try {
         const accessToken = localStorage.getItem("token");
@@ -21,8 +22,9 @@ const DiscountCard = ({ projectID, projectType, onClose }) => {
         );
         if (response.ok) {
           const data = await response.json();
-          setReceiptData(data.data);
-          console.log(setReceiptData);
+          if (isMounted) {
+            setReceiptData(data.data);
+          }
         } else {
           throw new Error("Failed to fetch data");
         }
@@ -32,11 +34,15 @@ const DiscountCard = ({ projectID, projectType, onClose }) => {
     };
 
     fetchData();
+    // Cleanup function to abort fetch request when component unmounts
+    return () => {
+      isMounted = false;
+    };
   }, [projectID, projectType]);
 
   const renderFields = () => {
     if (!receiptData) {
-      return <div>Loading...</div>;
+      return <div>Loading.....</div>;
     }
     switch (projectType) {
       case "APARTMENT":
