@@ -13,26 +13,26 @@ const CommissionCard = ({cardData, onClose }) => {
     const projectType = cardData.project.project_type;
 
     switch (projectType) {
-      case "Apartment":
+      case "APARTMENT":
         return (
           <>
             <div className="sp-data-field">
-              <label htmlFor="commissionHolderID">Sales Person ID</label>
+              <label htmlFor="commissionHolderID">Commission Holder ID</label>
               <input
                 type="text"
                 id="commissionHolderID"
-                defaultValue={cardData.user.sales_person_id}
+                defaultValue={cardData.user.commission_holder_id}
                 readOnly
               />
             </div>
             <div className="sp-data-field">
               <label htmlFor="commissionHolderName">
-                Sales Person Name
+                Commission Holder Name
               </label>
               <input
                 type="text"
                 id="commissionHolderName"
-                defaultValue={cardData.user.sales_person_name}
+                defaultValue={cardData.user.commission_holder_name}
                 readOnly
               />
             </div>
@@ -157,7 +157,7 @@ const CommissionCard = ({cardData, onClose }) => {
             </div>
           </>
         );
-      case "Villas":
+      case "VILLA":
         return (
           <>
             <div className="sp-data-field">
@@ -165,7 +165,7 @@ const CommissionCard = ({cardData, onClose }) => {
               <input
                 type="text"
                 id="commissionHolderID"
-                defaultValue={cardData.user.sales_person_id}
+                defaultValue={cardData.user.commission_holder_id}
                 readOnly
               />
             </div>
@@ -176,7 +176,7 @@ const CommissionCard = ({cardData, onClose }) => {
               <input
                 type="text"
                 id="commissionHolderName"
-                defaultValue={cardData.user.sales_person_name}
+                defaultValue={cardData.user.commission_holder_name}
                 readOnly
               />
             </div>
@@ -293,7 +293,7 @@ const CommissionCard = ({cardData, onClose }) => {
             {/* Render fields for Villas type */}
           </>
         );
-      case "Plots":
+      case "PLOT":
         return (
           <>
             <div className="sp-data-field">
@@ -301,7 +301,7 @@ const CommissionCard = ({cardData, onClose }) => {
               <input
                 type="text"
                 id="commissionHolderID"
-                defaultValue={cardData.user.sales_person_id}
+                defaultValue={cardData.user.commission_holder_id}
                 readOnly
               />
             </div>
@@ -312,7 +312,7 @@ const CommissionCard = ({cardData, onClose }) => {
               <input
                 type="text"
                 id="commissionHolderName"
-                defaultValue={cardData.user.sales_person_name}
+                defaultValue={cardData.user.commission_holder_name}
                 readOnly
               />
             </div>
@@ -429,7 +429,7 @@ const CommissionCard = ({cardData, onClose }) => {
             {/* Render fields for Plots type */}
           </>
         );
-      case "Farm lands":
+      case "FARM_LAND":
         return (
           <>
             <div className="sp-data-field">
@@ -437,7 +437,7 @@ const CommissionCard = ({cardData, onClose }) => {
               <input
                 type="text"
                 id="commissionHolderID"
-                defaultValue={cardData.user.sales_person_id}
+                defaultValue={cardData.user.commission_holder_id}
                 readOnly
               />
             </div>
@@ -448,7 +448,7 @@ const CommissionCard = ({cardData, onClose }) => {
               <input
                 type="text"
                 id="commissionHolderName"
-                defaultValue={cardData.user.sales_person_name}
+                defaultValue={cardData.user.commission_holder_name}
                 readOnly
               />
             </div>

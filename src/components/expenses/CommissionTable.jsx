@@ -95,6 +95,9 @@ const CommissionTable = () => {
   // API to get commission card data
 
   const handleDropDownRowClick = async (receiptId, projectType ) => {
+    setLoader(true);
+    setSelectedCommissionHolderId();
+
     try {
       const accessToken = localStorage.getItem("token");
       const response = await fetch(`${BaseURL}/expenses/getPraticularCommisionDetails?receipt_id=${receiptId}&projectType=${projectType}`, {
@@ -111,9 +114,9 @@ const CommissionTable = () => {
       console.log(result.Details);
     } catch (error) {
       console.error('Error fetching commission card data:', error);
+    } finally {
+      setLoader(false);
     }
-    // setSelectedCommissionHolderId(commissionHolderID);
-    // console.log(commissionHolderID);
   };
 
   const handleCloseCommissionCard = () => {
@@ -197,17 +200,17 @@ const CommissionTable = () => {
           ))}
         </tbody>
       </table>
+    </div>) : loader == false ? (
+      "No data to show"
+      ) : (
+        ""
+      )}
       {selectedCommissionHolderId && (
         <CommissionCard
           cardData={selectedCommissionHolderId}
           onClose={handleCloseCommissionCard}
         />
       )}
-    </div>) : loader == false ? (
-      "No data to show"
-    ) : (
-      ""
-    )}
     </>
   );
 };
