@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./pendingReceipts.css";
 import partSoldDataDummy from "../../data/partSoldData";
 import partSoldPayments from "../../data/partSoldPayments";
@@ -10,13 +10,15 @@ import PartPayReceiptCard from "./PartPayReceiptCard";
 // import DeletedPartPaymentsTable from "./DeletedPartPaymentsTable";
 import DeletedPartTable from "./DeletedPartTable";
 import DeletedPartpaymentProjectsTable from "./DeletedPartpaymentProjectsTable";
+import sharedContext from "../../context/SharedContext";
+import Loader from "../Loader";
 
 const PartSoldTable = () => {
+  const { setLoader, loader } = useContext(sharedContext);
   const [partSoldData, setPartSoldData] = useState([]);
   const [payments, setPayments] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
   const [selectedReceiptId, setSelectedReceiptId] = useState(null);
-  const [partPaymentsData, setPartPaymentsData] = useState([]);
   const [selectedReceiptData, setSelectedReceiptData] = useState(null);
   const [selectedOption, setSelectedOption] = useState("");
   const [selectedPartOption, setSelectedPartOption] = useState("Deleted Part");
@@ -28,6 +30,8 @@ const PartSoldTable = () => {
 
   useEffect(() => {
     const fetchPartpayData = async () => {
+      setLoader(true);
+      setPartSoldData([]);
         try {
             const accessToken = localStorage.getItem("token");
             const response = await fetch(`${BaseURL}/receipt/getList?statusFilter=Part Payment`, {
@@ -43,6 +47,8 @@ const PartSoldTable = () => {
             console.log(result.data);
         } catch (error) {
             console.error('Error fetching part payment table data:', error);
+        } finally {
+          setLoader(false);
         }
     };  
 
@@ -69,6 +75,9 @@ const PartSoldTable = () => {
     setSelectedReceiptId(receiptID);
     console.log(selectedReceiptId);
 
+    setLoader(true);
+    setPayments([]);
+
     try {
       const accessToken = localStorage.getItem("token");
       const response = await fetch(`${BaseURL}/receipt/getParticularPartPaymentHistoryList?project_id=${projectID}`, {
@@ -84,6 +93,8 @@ const PartSoldTable = () => {
       console.log(result.data);
   } catch (error) {
       console.error('Error fetching part payment dropdown data:', error);
+  } finally {
+    setLoader(false);
   }
   };
 
@@ -94,6 +105,9 @@ const PartSoldTable = () => {
   // API to get part payment card data
 
   const handleDropDownRowClick = async (partPayID) => {
+    setLoader(true);
+    setSelectedReceiptData();
+
     try {
       const accessToken = localStorage.getItem("token");
       const response = await fetch(`${BaseURL}/receipt/getParticularPartPaymentHistoryDetails?receipt_id=${selectedReceiptId}&pp_id=${partPayID}`, {
@@ -110,6 +124,8 @@ const PartSoldTable = () => {
       console.log(result.data);
     } catch (error) {
       console.error('Error fetching part payment card data:', error);
+    } finally {
+      setLoader(false);
     }
   };
 
@@ -171,7 +187,8 @@ const PartSoldTable = () => {
 
   return (
     <>
-      <div className="receipt-table">
+    <Loader />
+      {partSoldData.length !== 0 ? (<div className="receipt-table">
         <div className="receipt-table-sec">
           <div className="receipt-table-head">
             <h3>Receipts</h3>
@@ -236,10 +253,13 @@ const PartSoldTable = () => {
         {selectedReceiptData && (
           <PartPayReceiptCard
             cardData={selectedReceiptData}
+            dropdownData={payments}
             onClose={handleClosePartPayReceiptCard}
           />
         )}
       </div>
+      ) : loader == false ? ( <div className="receipt-table">No data to show</div>) :
+      ("")}
       {viewportWidth >= 1024 && (
         <div className="res-del-rec">
           <select

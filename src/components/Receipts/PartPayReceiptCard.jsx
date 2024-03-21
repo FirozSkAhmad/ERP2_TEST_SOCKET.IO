@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import "./pendingReceipts.css";
 import close from "../../assets/menuClose.svg";
+import toast from "react-hot-toast";
+import sharedContext from "../../context/SharedContext";
+import Loader from "../Loader";
 
-const PartPayReceiptCard = ({ cardData, onClose }) => {
+const PartPayReceiptCard = ({ cardData, dropdownData, onClose }) => {
+  const { setLoader, loader } = useContext(sharedContext);
   const [formData, setFormData] = useState({
     amount: cardData.partPaymentData.amount || "",
   });
@@ -19,6 +23,8 @@ const PartPayReceiptCard = ({ cardData, onClose }) => {
   // API to update amount
 
   const handleSave = async () => {
+    setLoader(true);
+
     try {
       if (formData.amount === "") {
         // Display an error message or prevent submission if the amount is empty
@@ -43,8 +49,13 @@ const PartPayReceiptCard = ({ cardData, onClose }) => {
         throw new Error("Network error. Network response was not ok");
       }
       console.log("Successfully updated amount:", formData);
+      toast.success("Successfully saved!")
       } catch (error) {
         console.error("Error saving updated form:", error);
+        toast.error("Saving failed!")
+      } finally {
+        setLoader(false);
+        onClose();
       }
   }
 
@@ -54,10 +65,12 @@ const PartPayReceiptCard = ({ cardData, onClose }) => {
     const partPayID = cardData.partPaymentData.pp_id;
     const projDetID = cardData.ReceiptData.PropertyDetail.pd_id;
 
+    setLoader(true);
+
     try {
       const accessToken = localStorage.getItem("token");
       const response = await fetch(`${BaseURL}/receipt/deleteParticularPartPaymentAmount?pp_id=${partPayID}&pd_id=${projDetID}`, {
-        method: "DELETE",
+        method: "PUT",
         headers: {
           "Authorization": `Bearer ${accessToken}`,
         },
@@ -66,8 +79,13 @@ const PartPayReceiptCard = ({ cardData, onClose }) => {
         throw new Error("Network error. Network response was not ok");
       }
       console.log("Successfully deleted part payment amount");
+      toast.success("Successfull deleted!")
     } catch (error) {
       console.error("Error deleting part payment amount:", error);
+      toast.error("Deletion failed!")
+    } finally {
+      setLoader(false);
+      onClose();
     }
   }
 
@@ -664,6 +682,8 @@ const PartPayReceiptCard = ({ cardData, onClose }) => {
   };
 
   return (
+    <>
+    <Loader />
     <div className="rec-det">
       <div className="rec-sec">
         <div className="close">
@@ -688,6 +708,7 @@ const PartPayReceiptCard = ({ cardData, onClose }) => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
