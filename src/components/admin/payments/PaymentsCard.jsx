@@ -21,6 +21,8 @@ const PaymentsCard = ({ receiptID, fetchPaymentsList, onClose }) => {
     amount: "",
   });
 
+  const BaseURL = "https://erp-phase2-bck.onrender.com";
+
   const makeRequest = async (url, options) => {
     const response = await fetch(url, options);
     if (!response.ok) {
@@ -33,8 +35,7 @@ const PaymentsCard = ({ receiptID, fetchPaymentsList, onClose }) => {
     setLoader(true);
     setReceiptData({});
     try {
-      const token =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MDkyNzQ3NzAsImV4cCI6MTc0MDgzMjM3MCwiYXVkIjoiMTpTVVBFUiBBRE1JTiIsImlzcyI6InZyY2FwcGxpY2F0aW9uIn0.dC7WAsdD5-leh-c3v-Xjmi-abnFTfgx6d9uvYf60Jck";
+      const token = localStorage.getItem("token");
       const headers = new Headers({
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -47,7 +48,7 @@ const PaymentsCard = ({ receiptID, fetchPaymentsList, onClose }) => {
       };
 
       const result = await makeRequest(
-        `http://localhost:4200/receipt/getParticularReceiptData?receipt_id=${receiptID}`,
+        `${BaseURL}/receipt/getParticularReceiptData?receipt_id=${receiptID}`,
         requestOptions
       );
 
@@ -175,9 +176,9 @@ const PaymentsCard = ({ receiptID, fetchPaymentsList, onClose }) => {
     // Common API call logic, executed if above conditions are passed or status is AVAILABLE
     setLoader(true);
     try {
-      const token = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MDkyNzQ3NzAsImV4cCI6MTc0MDgzMjM3MCwiYXVkIjoiMTpTVVBFUiBBRE1JTiIsImlzcyI6InZyY2FwcGxpY2F0aW9uIn0.dC7WAsdD5-leh-c3v-Xjmi-abnFTfgx6d9uvYf60Jck`;
+      const token = localStorage.getItem("token");
       const headers = new Headers({
-        Authorization: token,
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       });
 
@@ -193,7 +194,7 @@ const PaymentsCard = ({ receiptID, fetchPaymentsList, onClose }) => {
       };
 
       const postResult = await makeRequest(
-        `http://localhost:4200/payments/payPartPayment`,
+        `${BaseURL}/payments/payPartPayment`,
         postRequestOptions
       );
 

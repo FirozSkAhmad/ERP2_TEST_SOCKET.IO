@@ -9,6 +9,8 @@ const BlockedTable = () => {
   const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
   const { setLoader, loader } = useContext(sharedContext);
 
+  const BaseURL = "https://erp-phase2-bck.onrender.com";
+
   const makeRequest = async (url, options) => {
     const response = await fetch(url, options);
     if (!response.ok) {
@@ -22,8 +24,7 @@ const BlockedTable = () => {
     setBlockedData([]);
     try {
       // Token should be retrieved securely, e.g., from an environment variable or secure storage
-      const token =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MDkyNzQ3NzAsImV4cCI6MTc0MDgzMjM3MCwiYXVkIjoiMTpTVVBFUiBBRE1JTiIsImlzcyI6InZyY2FwcGxpY2F0aW9uIn0.dC7WAsdD5-leh-c3v-Xjmi-abnFTfgx6d9uvYf60Jck";
+      const token = localStorage.getItem("token");
       const headers = new Headers({
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -36,7 +37,7 @@ const BlockedTable = () => {
       };
 
       const result = await makeRequest(
-        `http://localhost:4200/payments/getPaymentsList?statusFilter=BLOCK`,
+        `${BaseURL}/payments/getPaymentsList?statusFilter=BLOCK`,
         requestOptions
       );
 
