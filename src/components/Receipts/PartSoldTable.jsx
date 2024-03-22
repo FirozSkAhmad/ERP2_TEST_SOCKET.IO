@@ -1,13 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import "./pendingReceipts.css";
-import partSoldDataDummy from "../../data/partSoldData";
-import partSoldPayments from "../../data/partSoldPayments";
-import partPayRecData from "../../data/partPayRecData";
 import close from "../../assets/menuClose.svg";
 import deleteIcon from "../../assets/delete.svg";
 import exportIcon from "../../assets/export.svg";
 import PartPayReceiptCard from "./PartPayReceiptCard";
-// import DeletedPartPaymentsTable from "./DeletedPartPaymentsTable";
 import DeletedPartTable from "./DeletedPartTable";
 import DeletedPartpaymentProjectsTable from "./DeletedPartpaymentProjectsTable";
 import sharedContext from "../../context/SharedContext";
@@ -188,7 +184,7 @@ const PartSoldTable = () => {
   return (
     <>
     <Loader />
-      {partSoldData.length !== 0 ? (<div className="receipt-table">
+      <div className="receipt-table">
         <div className="receipt-table-sec">
           <div className="receipt-table-head">
             <h3>Receipts</h3>
@@ -206,6 +202,7 @@ const PartSoldTable = () => {
               </select>
             </div>
           </div>
+          {partSoldData.length !== 0 ? (
           <div className="receipts-table-container">
             {selectedOption === "" && (
               <table>
@@ -244,12 +241,14 @@ const PartSoldTable = () => {
                 </tbody>
               </table>
             )}
-            {selectedOption === "Deleted Part Payment" && <DeletedPartTable />}
+          </div>
+          ) : loader == false ? ("No data to show in part payments") : (
+          "" )}
+        </div>
+        {selectedOption === "Deleted Part Payment" && <DeletedPartTable />}
             {selectedOption === "Deleted Projects" && (
               <DeletedPartpaymentProjectsTable />
             )}
-          </div>
-        </div>
         {selectedReceiptData && (
           <PartPayReceiptCard
             cardData={selectedReceiptData}
@@ -258,8 +257,6 @@ const PartSoldTable = () => {
           />
         )}
       </div>
-      ) : loader == false ? ( <div className="receipt-table">No data to show</div>) :
-      ("")}
       {viewportWidth >= 1024 && (
         <div className="res-del-rec">
           <select
