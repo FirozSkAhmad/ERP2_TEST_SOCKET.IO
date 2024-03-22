@@ -9,6 +9,8 @@ const DeletedReceiptsTable = () => {
   const { setLoader, loader, deletedReceiptsData, setDeletedReceiptsData } =
     useContext(sharedContext);
 
+  const BaseURL = "https://erp-phase2-bck.onrender.com";
+
   const makeRequest = async (url, options) => {
     const response = await fetch(url, options);
     if (!response.ok) {
@@ -22,8 +24,7 @@ const DeletedReceiptsTable = () => {
     setDeletedReceiptsData([]);
     try {
       // Token should be retrieved securely, e.g., from an environment variable or secure storage
-      const token =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MDkyNzQ3NzAsImV4cCI6MTc0MDgzMjM3MCwiYXVkIjoiMTpTVVBFUiBBRE1JTiIsImlzcyI6InZyY2FwcGxpY2F0aW9uIn0.dC7WAsdD5-leh-c3v-Xjmi-abnFTfgx6d9uvYf60Jck";
+      const token = localStorage.getItem("token");
       const headers = new Headers({
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -36,7 +37,7 @@ const DeletedReceiptsTable = () => {
       };
 
       const result = await makeRequest(
-        `https://erp-phase2-bck.onrender.com/receipt/getRejectedReceiptsList`,
+        `${BaseURL}/receipt/getRejectedReceiptsList`,
         requestOptions
       );
 

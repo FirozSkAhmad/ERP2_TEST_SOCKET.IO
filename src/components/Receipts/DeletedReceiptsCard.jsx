@@ -8,6 +8,8 @@ const DeletedReceiptsCard = ({ receiptID, onClose }) => {
   const { setLoader, loader } = useContext(sharedContext);
   const [receiptData, setReceiptData] = useState({});
 
+  const BaseURL = "https://erp-phase2-bck.onrender.com";
+
   const makeRequest = async (url, options) => {
     const response = await fetch(url, options);
     if (!response.ok) {
@@ -20,8 +22,7 @@ const DeletedReceiptsCard = ({ receiptID, onClose }) => {
     setLoader(true);
     setReceiptData({});
     try {
-      const token =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MDkyNzQ3NzAsImV4cCI6MTc0MDgzMjM3MCwiYXVkIjoiMTpTVVBFUiBBRE1JTiIsImlzcyI6InZyY2FwcGxpY2F0aW9uIn0.dC7WAsdD5-leh-c3v-Xjmi-abnFTfgx6d9uvYf60Jck";
+      const token = localStorage.getItem("token");
       const headers = new Headers({
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -34,7 +35,7 @@ const DeletedReceiptsCard = ({ receiptID, onClose }) => {
       };
 
       const result = await makeRequest(
-        `https://erp-phase2-bck.onrender.com/receipt/getParticularReceiptData?receipt_id=${receiptID}`,
+        `${BaseURL}/receipt/getParticularReceiptData?receipt_id=${receiptID}`,
         requestOptions
       );
 
@@ -205,16 +206,17 @@ const DeletedReceiptsCard = ({ receiptID, onClose }) => {
           <input type="text" id="amount" defaultValue={ta_amount} readOnly />
         </div>
         <div className="rec-data-field">
-          <label htmlFor="typeOfCommission">Type of Commission *</label>
+          <label htmlFor="typeOfCommission">Type of Commission</label>
           <input
             type="text"
             id="typeOfCommission"
             defaultValue={type_of_commission}
+            readOnly
           />
         </div>
 
         <div className="rec-data-field">
-          <label htmlFor="priceOfProperty">Price of Property *</label>
+          <label htmlFor="priceOfProperty">Price of Property</label>
           <input
             type="text"
             id="priceOfProperty"

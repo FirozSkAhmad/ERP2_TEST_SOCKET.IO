@@ -122,7 +122,7 @@ const DeletedPartCard = ({ cardData, onClose }) => {
               />
             </div>
             <div className="rec-data-field">
-              <label htmlFor="priceOfProperty">Price of Property *</label>
+              <label htmlFor="priceOfProperty">Price of Property</label>
               <input
                 type="text"
                 id="priceOfProperty"
@@ -262,7 +262,7 @@ const DeletedPartCard = ({ cardData, onClose }) => {
               />
             </div>
             <div className="rec-data-field">
-              <label htmlFor="priceOfProperty">Price of Property *</label>
+              <label htmlFor="priceOfProperty">Price of Property</label>
               <input
                 type="text"
                 id="priceOfProperty"
@@ -403,7 +403,7 @@ const DeletedPartCard = ({ cardData, onClose }) => {
               />
             </div>
             <div className="rec-data-field">
-              <label htmlFor="priceOfProperty">Price of Property *</label>
+              <label htmlFor="priceOfProperty">Price of Property</label>
               <input
                 type="text"
                 id="priceOfProperty"
@@ -553,7 +553,7 @@ const DeletedPartCard = ({ cardData, onClose }) => {
               />
             </div>
             <div className="rec-data-field">
-              <label htmlFor="priceOfProperty">Price of Property *</label>
+              <label htmlFor="priceOfProperty">Price of Property</label>
               <input
                 type="text"
                 id="priceOfProperty"
