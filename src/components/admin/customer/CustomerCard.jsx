@@ -212,7 +212,7 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
                 />
               </div>
             )}
-            {receiptData?.status === "BLOCK" && (
+            {receiptData?.project?.status === "BLOCK" && (
               <>
                 <div className="cus-data-field">
                   <label htmlFor="blockedDays">No. of Blocked Days</label>
@@ -237,7 +237,7 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
                 </div>
               </>
             )}
-            {receiptData?.status === "PART PAYMENT" && (
+            {receiptData?.project?.status === "PART PAYMENT" && (
               <>
                 <div className="cus-data-field">
                   <label htmlFor="paidAmount">Amount Paid Till Now</label>
@@ -411,7 +411,7 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
                 />
               </div>
             )}
-            {receiptData?.status === "Block" && (
+            {receiptData?.project?.status === "Block" && (
               <>
                 <div className="cus-data-field">
                   <label htmlFor="blockedDays">No. of Blocked Days</label>
@@ -433,7 +433,7 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
                 </div>
               </>
             )}
-            {receiptData?.status === "Part Payment" && (
+            {receiptData?.project?.status === "Part Payment" && (
               <>
                 <div className="cus-data-field">
                   <label htmlFor="paidAmount">Amount Paid Till Now</label>
@@ -608,7 +608,7 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
                 />
               </div>
             )}
-            {receiptData?.status === "Block" && (
+            {receiptData?.project?.status === "Block" && (
               <>
                 <div className="cus-data-field">
                   <label htmlFor="blockedDays">No. of Blocked Days</label>
@@ -630,7 +630,7 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
                 </div>
               </>
             )}
-            {receiptData?.status === "Part Payment" && (
+            {receiptData?.project?.status === "Part Payment" && (
               <>
                 <div className="cus-data-field">
                   <label htmlFor="paidAmount">Amount Paid Till Now</label>
@@ -814,7 +814,7 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
                 />
               </div>
             )}
-            {receiptData?.status === "Block" && (
+            {receiptData?.project?.status === "Block" && (
               <>
                 <div className="cus-data-field">
                   <label htmlFor="blockedDays">No. of Blocked Days</label>
@@ -836,7 +836,7 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
                 </div>
               </>
             )}
-            {receiptData?.status === "Part Payment" && (
+            {receiptData?.project?.status === "Part Payment" && (
               <>
                 <div className="cus-data-field">
                   <label htmlFor="paidAmount">Amount Paid Till Now</label>
