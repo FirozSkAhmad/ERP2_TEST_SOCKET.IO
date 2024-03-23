@@ -75,7 +75,7 @@ const CustomerTable = ({ selectedButton }) => {
               key={customer.project.project_id}
               onClick={() =>
                 handleRowClick(
-                  customer.project.project_id,
+                  customer.receipt_id,
                   customer.project.project_type
                 )
               }

@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
-import ".//customer.css";
+import "./customer.css";
 import close from "../../../assets/menuClose.svg";
 import BASEURL from "../../../data/baseurl";
 const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
-  const [receiptData, setReceiptData] = useState(null);
+  const [receiptData, setReceiptData] = useState([]);
   useEffect(() => {
     let isMounted = true;
+    console.log(customers);
     const fetchData = async () => {
       try {
         const accessToken = localStorage.getItem("token");
         const response = await fetch(
-          `${BASEURL.url}/discounts/getPraticularCustomerDetails?receipt_id=${projectID}&projectType=${projectType}`,
+          `${BASEURL.url}/customers/getPraticularCustomerDetails?receipt_id=${projectID}&projectType=${projectType}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -32,7 +33,7 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
     };
 
     fetchData();
-    // Cleanup function to abort fetch request when component unmounts
+
     return () => {
       isMounted = false;
     };
@@ -48,7 +49,7 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
               <input
                 type="text"
                 id="invoiceNumber"
-                defaultValue={receiptData.receipt_id}
+                defaultValue={receiptData?.receipt_id}
                 readOnly
               />
             </div>
@@ -58,8 +59,8 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
                 type="text"
                 id="dateOfOnboard"
                 defaultValue={
-                  receiptData.PropertyDetail.TokenOrAdvanceHistory
-                    .data_of_ta_payment
+                  receiptData.PropertyDetail?.TokenOrAdvanceHistory
+                    ?.data_of_ta_payment
                 }
                 readOnly
               />
@@ -69,7 +70,7 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
               <input
                 type="text"
                 id="salesPersonID"
-                defaultValue={receiptData.user.commission_holder_id}
+                defaultValue={receiptData.user?.commission_holder_id}
                 readOnly
               />
             </div>
@@ -78,7 +79,7 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
               <input
                 type="text"
                 id="salesPersonName"
-                defaultValue={receiptData.user.commission_holder_name}
+                defaultValue={receiptData.user?.commission_holder_name}
                 readOnly
               />
             </div>
@@ -87,7 +88,7 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
               <input
                 type="text"
                 id="clientName"
-                defaultValue={receiptData.client_name}
+                defaultValue={receiptData?.client_name}
                 readOnly
               />
             </div>
@@ -96,7 +97,7 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
               <input
                 type="text"
                 id="clientPhone"
-                defaultValue={receiptData.client_phn_no}
+                defaultValue={receiptData?.client_phn_no}
                 readOnly
               />
             </div>
@@ -114,7 +115,7 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
               <input
                 type="text"
                 id="commissionType"
-                defaultValue={receiptData.commission.type_of_commission}
+                defaultValue={receiptData.commission?.type_of_commission}
                 readOnly
               />
             </div>
@@ -123,7 +124,7 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
               <input
                 type="text"
                 id="projectName"
-                defaultValue={receiptData.project.project_name}
+                defaultValue={receiptData.project?.project_name}
                 readOnly
               />
             </div>
@@ -132,7 +133,7 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
               <input
                 type="text"
                 id="projectType"
-                defaultValue={receiptData.project.project_type}
+                defaultValue={receiptData.project?.project_type}
                 readOnly
               />
             </div>
@@ -141,7 +142,7 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
               <input
                 type="text"
                 id="towerNumber"
-                defaultValue={receiptData.project.tower_number}
+                defaultValue={receiptData.project?.tower_number}
                 readOnly
               />
             </div>
@@ -150,7 +151,7 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
               <input
                 type="text"
                 id="flatNumber"
-                defaultValue={receiptData.project.flat_number}
+                defaultValue={receiptData.project?.flat_number}
                 readOnly
               />
             </div>
@@ -159,7 +160,7 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
               <input
                 type="text"
                 id="priceOfProperty"
-                defaultValue={receiptData.PropertyDetail.property_price}
+                defaultValue={receiptData.PropertyDetail?.property_price}
               />
             </div>
             <div className="cus-data-field">
@@ -168,8 +169,8 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
                 type="text"
                 id="modeOfPayment"
                 defaultValue={
-                  receiptData.PropertyDetail.TokenOrAdvanceHistory
-                    .ta_mode_of_payment
+                  receiptData.PropertyDetail?.TokenOrAdvanceHistory
+                    ?.ta_mode_of_payment
                 }
                 readOnly
               />
@@ -179,44 +180,49 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
               <input
                 type="text"
                 id="status"
-                defaultValue={receiptData.project.status}
+                defaultValue={receiptData?.project?.status}
                 readOnly
               />
             </div>
-            {receiptData.project.status === "Token" && (
+            {receiptData?.project?.status === "TOKEN" && (
               <div className="cus-data-field">
                 <label htmlFor="tokenAmount">Token Amount</label>
                 <input
                   type="text"
                   id="tokenAmount"
                   defaultValue={
-                    receiptData.PropertyDetail.TokenOrAdvanceHistory.ta_amount
+                    receiptData?.PropertyDetail?.TokenOrAdvanceHistory
+                      ?.ta_amount
                   }
                   readOnly
                 />
               </div>
             )}
-            {receiptData.project.status === "Advance" && (
+            {receiptData?.project?.status === "ADVANCE" && (
               <div className="cus-data-field">
                 <label htmlFor="advanceAmount">Advance Amount</label>
                 <input
                   type="text"
                   id="advanceAmount"
                   defaultValue={
-                    receiptData.PropertyDetail.TokenOrAdvanceHistory.ta_amount
+                    receiptData?.PropertyDetail?.TokenOrAdvanceHistory
+                      ?.ta_amount
                   }
                   readOnly
                 />
               </div>
             )}
-            {receiptData.status === "Block" && (
+            {receiptData?.status === "BLOCK" && (
               <>
                 <div className="cus-data-field">
                   <label htmlFor="blockedDays">No. of Blocked Days</label>
                   <input
                     type="text"
                     id="blockedDays"
-                    defaultValue={receiptData.BlockedProject}
+                    defaultValue={
+                      receiptData?.PropertyDetail?.BlockedProject
+                        ?.no_of_days_blocked
+                    }
                     readOnly
                   />
                 </div>
@@ -231,7 +237,7 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
                 </div>
               </>
             )}
-            {receiptData.status === "Part-Payment" && (
+            {receiptData?.status === "PART PAYMENT" && (
               <>
                 <div className="cus-data-field">
                   <label htmlFor="paidAmount">Amount Paid Till Now</label>
@@ -379,11 +385,11 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
               <input
                 type="text"
                 id="status"
-                defaultValue={receiptData.status}
+                defaultValue={receiptData?.status}
                 readOnly
               />
             </div>
-            {receiptData.status === "Token" && (
+            {receiptData?.status === "Token" && (
               <div className="cus-data-field">
                 <label htmlFor="tokenAmount">Token Amount</label>
                 <input
@@ -394,7 +400,7 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
                 />
               </div>
             )}
-            {receiptData.status === "Advance" && (
+            {receiptData?.status === "Advance" && (
               <div className="cus-data-field">
                 <label htmlFor="advanceAmount">Advance Amount</label>
                 <input
@@ -405,7 +411,7 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
                 />
               </div>
             )}
-            {receiptData.status === "Block" && (
+            {receiptData?.status === "Block" && (
               <>
                 <div className="cus-data-field">
                   <label htmlFor="blockedDays">No. of Blocked Days</label>
@@ -427,7 +433,7 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
                 </div>
               </>
             )}
-            {receiptData.status === "Part-Payment" && (
+            {receiptData?.status === "Part Payment" && (
               <>
                 <div className="cus-data-field">
                   <label htmlFor="paidAmount">Amount Paid Till Now</label>
@@ -580,7 +586,7 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
                 readOnly
               />
             </div>
-            {receiptData.status === "Token" && (
+            {receiptData?.status === "Token" && (
               <div className="cus-data-field">
                 <label htmlFor="tokenAmount">Token Amount</label>
                 <input
@@ -591,7 +597,7 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
                 />
               </div>
             )}
-            {receiptData.status === "Advance" && (
+            {receiptData?.status === "Advance" && (
               <div className="cus-data-field">
                 <label htmlFor="advanceAmount">Advance Amount</label>
                 <input
@@ -602,7 +608,7 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
                 />
               </div>
             )}
-            {receiptData.status === "Block" && (
+            {receiptData?.status === "Block" && (
               <>
                 <div className="cus-data-field">
                   <label htmlFor="blockedDays">No. of Blocked Days</label>
@@ -624,7 +630,7 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
                 </div>
               </>
             )}
-            {receiptData.status === "Part-Payment" && (
+            {receiptData?.status === "Part Payment" && (
               <>
                 <div className="cus-data-field">
                   <label htmlFor="paidAmount">Amount Paid Till Now</label>
@@ -786,7 +792,7 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
                 readOnly
               />
             </div>
-            {receiptData.status === "Token" && (
+            {receiptData?.status === "Token" && (
               <div className="cus-data-field">
                 <label htmlFor="tokenAmount">Token Amount</label>
                 <input
@@ -797,7 +803,7 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
                 />
               </div>
             )}
-            {receiptData.status === "Advance" && (
+            {receiptData?.status === "Advance" && (
               <div className="cus-data-field">
                 <label htmlFor="advanceAmount">Advance Amount</label>
                 <input
@@ -808,7 +814,7 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
                 />
               </div>
             )}
-            {receiptData.status === "Block" && (
+            {receiptData?.status === "Block" && (
               <>
                 <div className="cus-data-field">
                   <label htmlFor="blockedDays">No. of Blocked Days</label>
@@ -830,7 +836,7 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
                 </div>
               </>
             )}
-            {receiptData.status === "Part-Payment" && (
+            {receiptData?.status === "Part Payment" && (
               <>
                 <div className="cus-data-field">
                   <label htmlFor="paidAmount">Amount Paid Till Now</label>
