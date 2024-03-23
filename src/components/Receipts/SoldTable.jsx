@@ -10,6 +10,7 @@ import SoldCard from "./SoldCard";
 import SoldDeletedProjects from "./SoldDeletedProjects";
 import sharedContext from "../../context/SharedContext";
 import Loader from "../Loader";
+import toast from "react-hot-toast";
 
 const SoldTable = () => {
   const { setLoader, loader } = useContext(sharedContext);
@@ -139,6 +140,32 @@ const SoldTable = () => {
     setSelectedReceiptData(false);
   };
 
+  // API to delete
+
+  const handleDelete = async (projectID, projDetID) => {
+    setLoader(true);
+
+    try {
+      const accessToken = localStorage.getItem("token");
+      const response = await fetch(`${BaseURL}/receipt/deleteParticularProjectPartPayments?project_id=${projectID}&pd_id=${projDetID}`, {
+        method: "PUT",
+        headers: {
+          "Authorization": `Bearer ${accessToken}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Network error. Network response was not ok");
+      }
+      console.log("Successfully deleted sold data");
+      toast.success("Successfully deleted!")
+    } catch (error) {
+      console.error("Error deleting sold data:", error);
+      toast.error("Deletion failed!")
+    } finally {
+      setLoader(false);
+    }
+  }
+
   const renderDropdown = () => {
       return (
         <tr className="dropdown" style={{ backgroundColor: "#D9D9D9" }}>
@@ -221,7 +248,7 @@ const SoldTable = () => {
                         {viewportWidth >= 1024 && (
                           <td>
                             <div className="receipt-actions">
-                              <img src={deleteIcon} alt="" />
+                              <img src={deleteIcon} onClick={() => handleDelete(data.project.project_id, data.PropertyDetail.pd_id)} alt="" />
                               <img src={exportIcon} alt="" />
                             </div>
                           </td>

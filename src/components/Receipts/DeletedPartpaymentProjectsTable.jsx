@@ -71,8 +71,8 @@ const DeletedPartpaymentProjectsTable = () => {
             </thead>
             <tbody>
               {deltedPartpaymentProjects.map((data) => (
-                <React.Fragment key={data.project.project_id}>
-                  <tr key={data.project.project_id}>
+                <React.Fragment key={data.receipt_id}>
+                  <tr key={data.receipt_id}>
                     <td>{data.project.project_id}</td>
                     <td>{data.project.project_name}</td>
                     <td>{data.client_name}</td>

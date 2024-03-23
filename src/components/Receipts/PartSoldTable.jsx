@@ -8,6 +8,7 @@ import DeletedPartTable from "./DeletedPartTable";
 import DeletedPartpaymentProjectsTable from "./DeletedPartpaymentProjectsTable";
 import sharedContext from "../../context/SharedContext";
 import Loader from "../Loader";
+import toast from "react-hot-toast";
 
 const PartSoldTable = () => {
   const { setLoader, loader } = useContext(sharedContext);
@@ -24,7 +25,7 @@ const PartSoldTable = () => {
 
   // API to fetch part payment table data
 
-  useEffect(() => {
+
     const fetchPartpayData = async () => {
       setLoader(true);
       setPartSoldData([]);
@@ -46,10 +47,11 @@ const PartSoldTable = () => {
         } finally {
           setLoader(false);
         }
-    };  
-
-    fetchPartpayData();
-  }, []);
+    };
+    
+    useEffect(() => {
+      fetchPartpayData();
+    }, [])
 
   useEffect(() => {
     const handleResize = () => {
@@ -139,6 +141,34 @@ const PartSoldTable = () => {
     // console.log(selectedOption);
   };
 
+  // API to delete
+
+  const handleDelete = async (projectID, projDetID) => {
+    setLoader(true);
+
+    try {
+      const accessToken = localStorage.getItem("token");
+      const response = await fetch(`${BaseURL}/receipt/deleteParticularProjectPartPayments?project_id=${projectID}&pd_id=${projDetID}`, {
+        method: "PUT",
+        headers: {
+          "Authorization": `Bearer ${accessToken}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Network error. Network response was not ok");
+      }
+      console.log("Successfully deleted part payment data");
+      toast.success("Successfully deleted!");
+      // Re-render table data after deleting
+      await fetchPartpayData();
+    } catch (error) {
+      console.error("Error deleting part payment data:", error);
+      toast.error("Deletion failed!")
+    } finally {
+      setLoader(false);
+    }
+  }
+
   // useEffect(() => {
   //   console.log(selectedOption);
   // }, [selectedOption]);
@@ -217,9 +247,9 @@ const PartSoldTable = () => {
                 </thead>
                 <tbody>
                   {partSoldData.map((partSold) => (
-                    <React.Fragment key={partSold.project.project_id}>
+                    <React.Fragment key={partSold.receipt_id}>
                       <tr
-                        key={partSold.project.project_id}
+                        key={partSold.receipt_id}
                         onClick={() => handleRowClick(partSold.project.project_id, partSold.receipt_id)}
                       >
                         <td>{partSold.project.project_id}</td>
@@ -229,7 +259,7 @@ const PartSoldTable = () => {
                         {viewportWidth >= 1024 && (
                           <td>
                             <div className="receipt-actions">
-                              <img src={deleteIcon} alt="" />
+                              <img src={deleteIcon} onClick={() => handleDelete(partSold.project.project_id, partSold.PropertyDetail.pd_id)} alt="" />
                               <img src={exportIcon} alt="" />
                             </div>
                           </td>
@@ -253,6 +283,7 @@ const PartSoldTable = () => {
           <PartPayReceiptCard
             cardData={selectedReceiptData}
             dropdownData={payments}
+            reRenderPartpayments={handleRowClick}
             onClose={handleClosePartPayReceiptCard}
           />
         )}

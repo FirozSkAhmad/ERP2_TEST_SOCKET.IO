@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import sharedContext from "../../context/SharedContext";
 import Loader from "../Loader";
 
-const PartPayReceiptCard = ({ cardData, dropdownData, onClose }) => {
+const PartPayReceiptCard = ({ cardData, reRenderPartpayments, onClose }) => {
   const { setLoader, loader } = useContext(sharedContext);
   const [formData, setFormData] = useState({
     amount: cardData.partPaymentData.amount || "",
@@ -64,6 +64,7 @@ const PartPayReceiptCard = ({ cardData, dropdownData, onClose }) => {
   const handleDelete = async () => {
     const partPayID = cardData.partPaymentData.pp_id;
     const projDetID = cardData.ReceiptData.PropertyDetail.pd_id;
+    const projectID = cardData.ReceiptData.project.project_id;
 
     setLoader(true);
 
@@ -79,7 +80,9 @@ const PartPayReceiptCard = ({ cardData, dropdownData, onClose }) => {
         throw new Error("Network error. Network response was not ok");
       }
       console.log("Successfully deleted part payment amount");
-      toast.success("Successfull deleted!")
+      toast.success("Successfully deleted!")
+      // Re-render dropdown data after deleting 
+      await reRenderPartpayments(projectID);
     } catch (error) {
       console.error("Error deleting part payment amount:", error);
       toast.error("Deletion failed!")
