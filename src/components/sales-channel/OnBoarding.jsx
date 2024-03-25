@@ -350,6 +350,8 @@ const OnBoarding = () => {
 
     const [aadhaarError, setAadhaarError] = useState('');
     const [phoneError, setPhoneError] = useState('');
+    const [amountError, setAmountError] = useState('');
+    const [daysError, setDaysError] = useState('');
 
     const handleChange = (e) => {
         const { id, value } = e.target;
@@ -368,6 +370,19 @@ const OnBoarding = () => {
             setPhoneError('');
         }
 
+        // Validate amount
+        if (id === 'ta_amount' && parseFloat(value) < 0) {
+            setAmountError('The amount cannot be negative.');
+        } else {
+            setAmountError('');
+        }
+
+        if (id === 'no_of_days_blocked' && parseFloat(value) < 0) {
+            setDaysError('The days cannot be negative.');
+        } else {
+            setDaysError('');
+        }
+
         setOnBoardFormData(prevData => ({
             ...prevData,
             [id]: value
@@ -379,8 +394,10 @@ const OnBoarding = () => {
         // setLoader(true)
         console.log(onBoardFormData);
 
-        if (!onBoardData.status) {
-            alert('Please select the status.');
+        if (!onBoardData.status ||
+            (onBoardData.status === 'Block' && parseFloat(onBoardFormData.no_of_days_blocked) < 0) ||
+            ((onBoardData.status === 'Token' || onBoardData.status === 'Advance') && parseFloat(onBoardFormData.ta_amount) < 0)) {
+            alert('Please fix the errors before submitting the form.');
             return;
         }
 
@@ -551,6 +568,7 @@ const OnBoarding = () => {
                                             <label htmlFor="no_of_days_blocked">Enter the days *</label>
                                             <input type="number" name="" id="no_of_days_blocked" value={onBoardFormData.no_of_days_blocked} onChange={handleChange} placeholder="Enter the days" required />
                                         </div>
+                                        {daysError && <p style={{color: 'red', fontSize: '14px'}}>{daysError}</p>}
                                         <div className="board-field">
                                             <label htmlFor="remark">Remarks</label>
                                             <input type="text" name="" id="remark" value={onBoardFormData.remark} onChange={handleChange} />
@@ -571,6 +589,7 @@ const OnBoarding = () => {
                                     <label htmlFor="ta_amount">Amount *</label>
                                     <input type="number" name="" id="ta_amount" value={onBoardFormData.ta_amount} onChange={handleChange} placeholder="Enter Amount" required/>
                                 </div>
+                                {amountError && <p style={{color: 'red', fontSize: '14px'}}>{amountError}</p>}
                                 </>
                                 )}
                             </>
