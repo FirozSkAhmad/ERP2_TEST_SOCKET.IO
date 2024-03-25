@@ -1,12 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import '../sales-channel/onBoarding.css'
 import logo from '../../assets/logo.svg'
 import menu from '../../assets/menu.svg'
 import MobileModal from "../menu/MobileModal";
 import WebMenu from "../menu/WebMenu";
 import NavBar from "../NavBar";
+// import sharedContext from "../../context/SharedContext";
+// import toast from "react-hot-toast";
+// import Loader from "../Loader";
 
 const OnBoarding = () => {
+    // const { setLoader, loader } = useContext(sharedContext);
     const [isOpen, setIsOpen] = useState(false);
     const [onBoardData, setOnBoardData] = useState({ project_type: "", status: "" });
     const [projectName, setProjectName] = useState([]);
@@ -344,8 +348,26 @@ const OnBoarding = () => {
         remark: ""
     });
 
+    const [aadhaarError, setAadhaarError] = useState('');
+    const [phoneError, setPhoneError] = useState('');
+
     const handleChange = (e) => {
         const { id, value } = e.target;
+
+        // Validate Aadhaar number
+        if (id === 'client_adhar_no' && value.length !== 12) {
+            setAadhaarError('Aadhaar number must be exactly 12 characters long.');
+        } else {
+            setAadhaarError('');
+        }
+
+        // Validate phone number
+        if (id === 'client_phn_no' && value.length !== 10) {
+            setPhoneError('Phone number must be exactly 10 characters long.');
+        } else {
+            setPhoneError('');
+        }
+
         setOnBoardFormData(prevData => ({
             ...prevData,
             [id]: value
@@ -353,8 +375,9 @@ const OnBoarding = () => {
     };
 
     const handleSubmit = async (e) => {
-        console.log(onBoardFormData);
         e.preventDefault();
+        // setLoader(true)
+        console.log(onBoardFormData);
 
         if (!onBoardData.status) {
             alert('Please select the status.');
@@ -375,15 +398,43 @@ const OnBoarding = () => {
             throw new Error("Network error. Network response was not ok");
         }
         console.log("Successful", onBoardFormData);
-        // onClose();
+        // toast.success("Form submitted successfully!");
+        // Reset form data
+        setOnBoardFormData({
+            sales_person_id: "",
+            sales_person_name: "",
+            client_name: "",
+            client_phn_no: "",
+            client_adhar_no: "",
+            project_type: "",
+            project_name: "",
+            tower_number: "",
+            flat_number: "",
+            villa_number: "",
+            plot_number: "",
+            sq_yards: "",
+            ta_mode_of_payment: "",
+            status: "",
+            type_of_commission: "",
+            ta_amount: "",
+            priceOfProperty: "",
+            discount: "",
+            no_of_days_blocked: "",
+            remark: ""
+        });
         } catch (error) {
           console.error("Error submitting form:", error);
+        //   toast.error("Could not submit the form");
+        } finally {
+            // setLoader(false);
+
         }
     };
 
 
   return ( 
     <div>
+        {/* <Loader /> */}
         <style>
             {`
                 @media screen and (min-width: 1024px) {
@@ -420,10 +471,12 @@ const OnBoarding = () => {
                             <label htmlFor="client_phn_no">Client Phone no. *</label>
                             <input type="number" name="" id="client_phn_no" value={onBoardFormData.client_phn_no} onChange={handleChange} placeholder="Enter Client Phone number" required />
                         </div>
+                        {phoneError && <p style={{color: 'red', fontSize: '14px'}}>{phoneError}</p>}
                         <div className="board-field">
                             <label htmlFor="client_adhar_no">Aadhar Card no. *</label>
                             <input type="number" name="" id="client_adhar_no" value={onBoardFormData.client_adhar_no} onChange={handleChange} placeholder="Enter Aadhaar Number" required />
                         </div>
+                        {aadhaarError && <p style={{color: 'red', fontSize: '14px'}}>{aadhaarError}</p>}
                         <div className="board-field">
                             <label htmlFor="project_type">Project Type *</label>
                             <select id="project_type" value={onBoardData.project_type} onChange={handleProjectChange} required>
@@ -511,7 +564,7 @@ const OnBoarding = () => {
                                         <option value="">Select Mode of Payment</option>
                                         <option value="cash">Cash</option>
                                         <option value="upi">UPI</option>
-                                        <option value="bank">Bank Transfer</option>
+                                        <option value="bank transfer">Bank Transfer</option>
                                     </select>
                                 </div>
                                 <div className="board-field">
@@ -588,7 +641,7 @@ const OnBoarding = () => {
                                         <option value="">Select Mode of Payment</option>
                                         <option value="cash">Cash</option>
                                         <option value="upi">UPI</option>
-                                        <option value="bank">Bank Transfer</option>
+                                        <option value="bank transfer">Bank Transfer</option>
                                     </select>
                                 </div>
                                 <div className="board-field">
@@ -665,7 +718,7 @@ const OnBoarding = () => {
                                         <option value="">Select Mode of Payment</option>
                                         <option value="cash">Cash</option>
                                         <option value="upi">UPI</option>
-                                        <option value="bank">Bank Transfer</option>
+                                        <option value="bank transfer">Bank Transfer</option>
                                     </select>
                                 </div>
                                 <div className="board-field">
@@ -751,7 +804,7 @@ const OnBoarding = () => {
                                         <option value="">Select Mode of Payment</option>
                                         <option value="cash">Cash</option>
                                         <option value="upi">UPI</option>
-                                        <option value="bank">Bank Transfer</option>
+                                        <option value="bank transfer">Bank Transfer</option>
                                     </select>
                                 </div>
                                 <div className="board-field">
