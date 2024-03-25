@@ -394,10 +394,16 @@ const OnBoarding = () => {
         // setLoader(true)
         console.log(onBoardFormData);
 
-        if (!onBoardData.status ||
-            (onBoardData.status === 'Block' && parseFloat(onBoardFormData.no_of_days_blocked) < 0) ||
-            ((onBoardData.status === 'Token' || onBoardData.status === 'Advance') && parseFloat(onBoardFormData.ta_amount) < 0)) {
-            alert('Please fix the errors before submitting the form.');
+        if (!onBoardData.status) {
+            alert('Please select the status.');
+            return;
+        }
+        if (onBoardData.status === 'Block' && parseFloat(onBoardFormData.no_of_days_blocked) < 0) {
+            alert('The number of days cannot be negative.');
+            return;
+        }
+        if (((onBoardData.status === 'Token' || onBoardData.status === 'Advance') && parseFloat(onBoardFormData.ta_amount) < 0)) {
+            alert('The amount cannot be negative.');
             return;
         }
 
