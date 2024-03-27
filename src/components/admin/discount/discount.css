@@ -5,6 +5,7 @@
 
 .disc-table-container tbody tr {
   border-top: 20px solid #fff;
+  cursor: pointer;
 }
 
 /* Discount Card */
