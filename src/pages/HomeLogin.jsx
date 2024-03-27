@@ -38,6 +38,9 @@ const HomeLogin = () => {
 
       localStorage.setItem("user_id", user_id);
 
+      localStorage.setItem("role_type", role_type);
+
+
       switch (role_type) {
         case "SUPER ADMIN":
           navigate("/admin/dashboard");

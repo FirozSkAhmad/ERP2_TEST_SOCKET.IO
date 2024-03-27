@@ -13,14 +13,20 @@ import receipts from '../../assets/receipts.svg';
 import customer from '../../assets/customer.svg';
 import logout from '../../assets/logout.svg';
 
-const MobileModal = ({ isOpen, onClose, roleType }) => {
+const MobileModal = ({ isOpen, onClose }) => {
+    
     const handleClose = () => {
         onClose(); // Call onClose function to close the modal
-      };
+    };
 
       const renderMenuItems = () => {
+        const roleType = localStorage.getItem("role_type");
+        console.log(roleType);
+
+        if(!roleType) return null;
+
         switch (roleType) {
-            case 'Sales Person':
+            case 'SALES PERSON':
                 return (
                     <>
                         <li><a href="/sales/dashboard"><img src={home} alt="" /></a><a href="/sales/dashboard"><p>Dashboard</p></a></li>
@@ -28,7 +34,7 @@ const MobileModal = ({ isOpen, onClose, roleType }) => {
                         <li><a href="/sales/history"><img src={approval} alt="" /></a><a href="/sales/history"><p>History</p></a></li>
                     </>
                 );
-            case 'Manager':
+            case 'MANAGER':
                 return (
                     <>
                         <li><a href="/manager/dashboard"><img src={home} alt="" /></a><a href="/manager/dashboard"><p>Dashboard</p></a></li>
@@ -38,7 +44,7 @@ const MobileModal = ({ isOpen, onClose, roleType }) => {
                         <li><a href="/manager/cp-history"><img src={historyIcon} alt="" /></a><a href="/manager/cp-history"><p>CP History</p></a></li>
                     </>
                 );
-            case 'Channel Person':
+            case 'CHANNEL PARTNER':
                 return (
                     <>
                         <li><a href="/channel/dashboard"><img src={home} alt="" /></a><a href="/channel/dashboard"><p>Dashboard</p></a></li>
@@ -46,7 +52,7 @@ const MobileModal = ({ isOpen, onClose, roleType }) => {
                         <li><a href="/channel/onboard"><img src={approval} alt="" /></a><a href="/channel/onboard"><p>Onboard Form</p></a></li>
                     </>
                 );
-            case 'Super Admin':
+            case 'SUPER ADMIN':
                 return (
                     <>
                         <li><a href="/admin/dashboard"><img src={home} alt="" /></a><a href="/admin/dashboard"><p>Dashboard</p></a></li>

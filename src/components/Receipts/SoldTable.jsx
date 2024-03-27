@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./pendingReceipts.css";
 import soldDataDummy from "../../data/soldDataDummy";
 import partSoldPayments from "../../data/partSoldPayments";
@@ -8,21 +8,58 @@ import deleteIcon from "../../assets/delete.svg";
 import exportIcon from "../../assets/export.svg";
 import SoldCard from "./SoldCard";
 import SoldDeletedProjects from "./SoldDeletedProjects";
+import sharedContext from "../../context/SharedContext";
+import Loader from "../Loader";
+import toast from "react-hot-toast";
 
 const SoldTable = () => {
+  const { setLoader, loader } = useContext(sharedContext);
   const [soldData, setSoldData] = useState([]);
-  const [partPaymentsData, setPartPaymentsData] = useState([]);
+  const [payments, setPayments] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
   const [selectedReceiptId, setSelectedReceiptId] = useState(null);
+  const [selectedReceiptData, setSelectedReceiptData] = useState(null);
+  const [partPaymentsData, setPartPaymentsData] = useState([]);
   const [showDeletedProjects, setShowDeletedProjects] = useState(false);
   const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
 
-  useEffect(() => {
-    setPartPaymentsData(partPayRecData);
-  }, []);
+  // useEffect(() => {
+  //   setPartPaymentsData(partPayRecData);
+  // }, []);
+
+  // useEffect(() => {
+  //   setSoldData(soldDataDummy);
+  // }, []);
+
+  const BaseURL = "https://erp-phase2-bck.onrender.com";
+
+  // API to fetch deleted part payment table data
 
   useEffect(() => {
-    setSoldData(soldDataDummy);
+    const fetchSoldData = async () => {
+      setLoader(true);
+      setSoldData([]);
+        try {
+            const accessToken = localStorage.getItem("token");
+            const response = await fetch(`${BaseURL}/receipt/getList?statusFilter=SOLD`, {
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`,
+                },
+            });
+            if (!response.ok) {
+                throw new Error('Network error. Failed to fetch sold table data');
+            }
+            const result = await response.json();
+            setSoldData(result.data);
+            console.log(result.data);
+        } catch (error) {
+            console.error('Error fetching sold table data:', error);
+        } finally {
+          setLoader(false);
+        }
+    };  
+
+    fetchSoldData();
   }, []);
 
   useEffect(() => {
@@ -37,34 +74,99 @@ const SoldTable = () => {
     };
   }, []);
 
-  const handleRowClick = (rowID) => {
-    setSelectedRow(rowID);
-  };
+  // API to get sold dropdown data
 
-  const handleDropDownRowClick = (receiptID) => {
+  const handleRowClick = async (projectID, receiptID) => {
+    setSelectedRow(projectID);
+
     setSelectedReceiptId(receiptID);
+    console.log(selectedReceiptId);
+
+    setLoader(true);
+    setPayments([]);
+
+    try {
+      const accessToken = localStorage.getItem("token");
+      const response = await fetch(`${BaseURL}/receipt/getParticularPartPaymentHistoryList?project_id=${projectID}`, {
+          headers: {
+              "Authorization": `Bearer ${accessToken}`,
+          },
+      });
+      if (!response.ok) {
+          throw new Error('Network error. Failed to fetch sold dropdown data');
+      }
+      const result = await response.json();
+      setPayments(result.data);
+      console.log(result.data);
+    } catch (error) {
+        console.error('Error fetching sold dropdown data:', error);
+    } finally {
+      setLoader(false);
+    }
   };
 
   const handleCloseDropdown = () => {
     setSelectedRow(null);
   };
 
-  const handleClosePartPayReceiptCard = () => {
-    setSelectedReceiptId(false);
+  // API to get sold card data
+
+  const handleDropDownRowClick = async (partPayID) => {
+    setLoader(true);
+    setSelectedReceiptData();
+
+    try {
+      const accessToken = localStorage.getItem("token");
+      const response = await fetch(`${BaseURL}/receipt/getParticularPartPaymentHistoryDetails?receipt_id=${selectedReceiptId}&pp_id=${partPayID}`, {
+          headers: {
+            "Authorization": `Bearer ${accessToken}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Network error. Failed to fetch sold card details.');
+    }
+
+    const result = await response.json();
+      setSelectedReceiptData(result.data);
+      console.log(result.data);
+    } catch (error) {
+      console.error('Error fetching sold card data:', error);
+    } finally {
+      setLoader(false);
+    }
   };
 
-  const renderDropdown = (projectID) => {
-    const selectedProject = partSoldPayments.find(
-      (item) => item.projectID === projectID
-    );
-    if (
-      selectedRow === projectID &&
-      selectedProject &&
-      selectedProject.payment
-    ) {
-      const payments = Array.isArray(selectedProject.payment)
-        ? selectedProject.payment
-        : [selectedProject.payment];
+  const handleClosePartPayReceiptCard = () => {
+    setSelectedReceiptData(false);
+  };
+
+  // API to delete
+
+  const handleDelete = async (projectID, projDetID) => {
+    setLoader(true);
+
+    try {
+      const accessToken = localStorage.getItem("token");
+      const response = await fetch(`${BaseURL}/receipt/deleteParticularProjectPartPayments?project_id=${projectID}&pd_id=${projDetID}`, {
+        method: "PUT",
+        headers: {
+          "Authorization": `Bearer ${accessToken}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Network error. Network response was not ok");
+      }
+      console.log("Successfully deleted sold data");
+      toast.success("Successfully deleted!")
+    } catch (error) {
+      console.error("Error deleting sold data:", error);
+      toast.error("Deletion failed!")
+    } finally {
+      setLoader(false);
+    }
+  }
+
+  const renderDropdown = () => {
       return (
         <tr className="dropdown" style={{ backgroundColor: "#D9D9D9" }}>
           <td colSpan="5">
@@ -82,14 +184,14 @@ const SoldTable = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {payments.map((payment, index) => (
+                    {payments.map((payment) => (
                       <tr
-                        key={index}
+                        key={payment.pp_id}
                         onClick={() =>
-                          handleDropDownRowClick(payment.receipt_id)
+                          handleDropDownRowClick(payment.pp_id)
                         }
                       >
-                        <td>{payment.date || "No Payments yet"}</td>
+                        <td>{payment.date_of_pp_payment || "No Payments yet"}</td>
                         <td>{payment.amount || "No Payments yet"}</td>
                       </tr>
                     ))}
@@ -100,12 +202,11 @@ const SoldTable = () => {
           </td>
         </tr>
       );
-    }
-    return null;
   };
 
   return (
     <>
+    <Loader />
       <div className="receipt-table">
         <div className="receipt-table-sec">
           <div className="receipt-table-head">
@@ -122,6 +223,7 @@ const SoldTable = () => {
             <SoldDeletedProjects />
           ) : (
             <div className="receipts-table-container">
+            {soldData.length !== 0 ? (
               <table>
                 <thead>
                   <tr>
@@ -134,36 +236,37 @@ const SoldTable = () => {
                 </thead>
                 <tbody>
                   {soldData.map((data) => (
-                    <React.Fragment key={data.projectID}>
+                    <React.Fragment key={data.project.project_id}>
                       <tr
                         key={data.projectID}
-                        onClick={() => handleRowClick(data.projectID)}
+                        onClick={() => handleRowClick(data.project.project_id, data.receipt_id)}
                       >
-                        <td>{data.projectID}</td>
-                        <td>{data.projectName}</td>
+                        <td>{data.project.project_id}</td>
+                        <td>{data.project.project_name}</td>
                         <td>{data.clientName}</td>
-                        {viewportWidth >= 1024 && <td>{data.status}</td>}
+                        {viewportWidth >= 1024 && <td>{data.project.status}</td>}
                         {viewportWidth >= 1024 && (
                           <td>
                             <div className="receipt-actions">
-                              <img src={deleteIcon} alt="" />
+                              <img src={deleteIcon} onClick={() => handleDelete(data.project.project_id, data.PropertyDetail.pd_id)} alt="" />
                               <img src={exportIcon} alt="" />
                             </div>
                           </td>
                         )}
                       </tr>
-                      {renderDropdown(data.projectID)}
+                      {selectedRow === data.project.project_id && renderDropdown()}
                     </React.Fragment>
                   ))}
                 </tbody>
               </table>
+              ) : loader == false ? ("No data to show in sold") :
+                ("")}
             </div>
           )}
         </div>
-        {selectedReceiptId && (
+        {selectedReceiptData && (
           <SoldCard
-            receiptID={selectedReceiptId}
-            partPaymentsData={partPaymentsData}
+            cardData={selectedReceiptData}
             onClose={handleClosePartPayReceiptCard}
           />
         )}

@@ -48,7 +48,7 @@
 
 /* Responsive */
 
-@media screen and (min-width: 1204px) {
+@media screen and (min-width: 1024px) {
   .payments-type {
     justify-content: start;
     gap: 1.5rem;

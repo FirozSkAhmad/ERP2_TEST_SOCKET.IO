@@ -1,17 +1,101 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import "./pendingReceipts.css";
 import close from "../../assets/menuClose.svg";
+import toast from "react-hot-toast";
+import sharedContext from "../../context/SharedContext";
+import Loader from "../Loader";
 
-const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
-  console.log(receiptID);
-  console.log(partPaymentsData);
-  const partPaymentData = partPaymentsData.find(
-    (partPayment) => partPayment.invoiceNumber == receiptID
-  );
-  if (!partPaymentData) return null;
+const PartPayReceiptCard = ({ cardData, reRenderPartpayments, onClose }) => {
+  const { setLoader, loader } = useContext(sharedContext);
+  const [formData, setFormData] = useState({
+    amount: cardData.partPaymentData.amount || "",
+  });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value,
+    });
+  };
+
+  const BaseURL = "https://erp-phase2-bck.onrender.com";
+
+  // API to update amount
+
+  const handleSave = async () => {
+    setLoader(true);
+
+    try {
+      if (formData.amount === "") {
+        // Display an error message or prevent submission if the amount is empty
+        console.error("Amount cannot be empty");
+        return;
+      }
+
+      const accessToken = localStorage.getItem("token");
+      const response = await fetch(`${BaseURL}/receipt/editParticularPartPaymentAmount`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          pd_id: cardData.ReceiptData.PropertyDetail.pd_id,
+          pp_id: cardData.partPaymentData.pp_id,
+          new_amount: formData.amount,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Network error. Network response was not ok");
+      }
+      console.log("Successfully updated amount:", formData);
+      toast.success("Successfully saved!")
+      } catch (error) {
+        console.error("Error saving updated form:", error);
+        toast.error("Saving failed!")
+      } finally {
+        setLoader(false);
+        onClose();
+      }
+  }
+
+  // API to delete
+
+  const handleDelete = async () => {
+    const partPayID = cardData.partPaymentData.pp_id;
+    const projDetID = cardData.ReceiptData.PropertyDetail.pd_id;
+    const projectID = cardData.ReceiptData.project.project_id;
+
+    setLoader(true);
+
+    try {
+      const accessToken = localStorage.getItem("token");
+      const response = await fetch(`${BaseURL}/receipt/deleteParticularPartPaymentAmount?pp_id=${partPayID}&pd_id=${projDetID}`, {
+        method: "PUT",
+        headers: {
+          "Authorization": `Bearer ${accessToken}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Network error. Network response was not ok");
+      }
+      console.log("Successfully deleted part payment amount");
+      toast.success("Successfully deleted!")
+      // Re-render dropdown data after deleting 
+      await reRenderPartpayments(projectID);
+    } catch (error) {
+      console.error("Error deleting part payment amount:", error);
+      toast.error("Deletion failed!")
+    } finally {
+      setLoader(false);
+      onClose();
+    }
+  }
 
   const renderFields = () => {
-    const projectType = partPaymentData.projectType;
+    if (!cardData) return null;
+
+    const projectType = cardData.ReceiptData.project.project_type;
 
     switch (projectType) {
       case "APARTMENT":
@@ -22,7 +106,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="invoiceNumber"
-                defaultValue={partPaymentData.invoiceNumber}
+                defaultValue={cardData.ReceiptData.receipt_id}
                 readOnly
               />
             </div>
@@ -31,7 +115,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="date"
-                defaultValue={partPaymentData.date}
+                defaultValue={cardData.ReceiptData.date_of_validation}
                 readOnly
               />
             </div>
@@ -40,7 +124,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="salesPersonID"
-                defaultValue={partPaymentData.salesPersonID}
+                defaultValue={cardData.ReceiptData.user.user_id}
                 readOnly
               />
             </div>
@@ -49,7 +133,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="salesPersonName"
-                defaultValue={partPaymentData.salesPersonName}
+                defaultValue={cardData.ReceiptData.user.user_name}
                 readOnly
               />
             </div>
@@ -58,7 +142,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="clientName"
-                defaultValue={partPaymentData.clientName}
+                defaultValue={cardData.ReceiptData.client_name}
                 readOnly
               />
             </div>
@@ -67,7 +151,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="clientPhone"
-                defaultValue={partPaymentData.clientPhone}
+                defaultValue={cardData.ReceiptData.client_phn_no}
                 readOnly
               />
             </div>
@@ -76,7 +160,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="aadhaarNumber"
-                defaultValue={partPaymentData.aadhaarNumber}
+                defaultValue={cardData.ReceiptData.client_adhar_no}
                 readOnly
               />
             </div>
@@ -85,7 +169,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="projectType"
-                defaultValue={partPaymentData.projectType}
+                defaultValue={cardData.ReceiptData.project.project_type}
                 readOnly
               />
             </div>
@@ -94,7 +178,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="projectName"
-                defaultValue={partPaymentData.projectName}
+                defaultValue={cardData.ReceiptData.project.project_name}
                 readOnly
               />
             </div>
@@ -103,7 +187,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="towerNumber"
-                defaultValue={partPaymentData.towerNumber}
+                defaultValue={cardData.ReceiptData.project.tower_number}
                 readOnly
               />
             </div>
@@ -112,7 +196,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="flatNumber"
-                defaultValue={partPaymentData.flatNumber}
+                defaultValue={cardData.ReceiptData.project.flat_number}
                 readOnly
               />
             </div>
@@ -121,16 +205,16 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="discount"
-                defaultValue={partPaymentData.discount}
+                defaultValue={cardData.ReceiptData.PropertyDetail.discount_percent}
                 readOnly
               />
             </div>
             <div className="rec-data-field">
-              <label htmlFor="priceOfProperty">Price of Property *</label>
+              <label htmlFor="priceOfProperty">Price of Property</label>
               <input
                 type="text"
                 id="priceOfProperty"
-                defaultValue={partPaymentData.priceOfProperty}
+                defaultValue={cardData.ReceiptData.PropertyDetail.property_price}
                 readOnly
               />
             </div>
@@ -139,7 +223,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="status"
-                defaultValue={partPaymentData.status}
+                defaultValue={cardData.ReceiptData.project.status}
                 readOnly
               />
             </div>
@@ -148,7 +232,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="dateOfPartPayment"
-                defaultValue={partPaymentData.dateOfPartPayment}
+                defaultValue={cardData.partPaymentData.date_of_pp_payment}
                 readOnly
               />
             </div>
@@ -157,7 +241,8 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="amount"
-                defaultValue={partPaymentData.amount}
+                value={formData.amount}
+                onChange={handleChange}
               />
             </div>
           </>
@@ -170,7 +255,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="invoiceNumber"
-                defaultValue={partPaymentData.invoiceNumber}
+                defaultValue={cardData.ReceiptData.receipt_id}
                 readOnly
               />
             </div>
@@ -179,7 +264,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="date"
-                defaultValue={partPaymentData.date}
+                defaultValue={cardData.ReceiptData.date_of_validation}
                 readOnly
               />
             </div>
@@ -188,7 +273,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="salesPersonID"
-                defaultValue={partPaymentData.salesPersonID}
+                defaultValue={cardData.ReceiptData.user.user_id}
                 readOnly
               />
             </div>
@@ -197,7 +282,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="salesPersonName"
-                defaultValue={partPaymentData.salesPersonName}
+                defaultValue={cardData.ReceiptData.user.user_name}
                 readOnly
               />
             </div>
@@ -206,7 +291,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="clientName"
-                defaultValue={partPaymentData.clientName}
+                defaultValue={cardData.ReceiptData.client_name}
                 readOnly
               />
             </div>
@@ -215,7 +300,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="clientPhone"
-                defaultValue={partPaymentData.clientPhone}
+                defaultValue={cardData.ReceiptData.client_phn_no}
                 readOnly
               />
             </div>
@@ -224,7 +309,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="aadhaarNumber"
-                defaultValue={partPaymentData.aadhaarNumber}
+                defaultValue={cardData.ReceiptData.client_adhar_no}
                 readOnly
               />
             </div>
@@ -233,7 +318,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="projectType"
-                defaultValue={partPaymentData.projectType}
+                defaultValue={cardData.ReceiptData.project.project_type}
                 readOnly
               />
             </div>
@@ -242,7 +327,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="projectName"
-                defaultValue={partPaymentData.projectName}
+                defaultValue={cardData.ReceiptData.project.project_name}
                 readOnly
               />
             </div>
@@ -251,7 +336,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="villaNumber"
-                defaultValue={partPaymentData.villaNumber}
+                defaultValue={cardData.ReceiptData.project.villa_number}
                 readOnly
               />
             </div>
@@ -260,16 +345,16 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="discount"
-                defaultValue={partPaymentData.discount}
+                defaultValue={cardData.ReceiptData.PropertyDetail.discount_percent}
                 readOnly
               />
             </div>
             <div className="rec-data-field">
-              <label htmlFor="priceOfProperty">Price of Property *</label>
+              <label htmlFor="priceOfProperty">Price of Property</label>
               <input
                 type="text"
                 id="priceOfProperty"
-                defaultValue={partPaymentData.priceOfProperty}
+                defaultValue={cardData.ReceiptData.PropertyDetail.property_price}
                 readOnly
               />
             </div>
@@ -278,7 +363,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="status"
-                defaultValue={partPaymentData.status}
+                defaultValue={cardData.ReceiptData.project.status}
                 readOnly
               />
             </div>
@@ -287,7 +372,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="dateOfPartPayment"
-                defaultValue={partPaymentData.dateOfPartPayment}
+                defaultValue={cardData.partPaymentData.date_of_pp_payment}
                 readOnly
               />
             </div>
@@ -296,7 +381,8 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="amount"
-                defaultValue={partPaymentData.amount}
+                value={formData.amount}
+                onChange={handleChange}
               />
             </div>
             {/* Render fields for Villas type */}
@@ -310,7 +396,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="invoiceNumber"
-                defaultValue={partPaymentData.invoiceNumber}
+                defaultValue={cardData.ReceiptData.receipt_id}
                 readOnly
               />
             </div>
@@ -319,7 +405,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="date"
-                defaultValue={partPaymentData.date}
+                defaultValue={cardData.ReceiptData.date_of_validation}
                 readOnly
               />
             </div>
@@ -328,7 +414,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="salesPersonID"
-                defaultValue={partPaymentData.salesPersonID}
+                defaultValue={cardData.ReceiptData.user.user_id}
                 readOnly
               />
             </div>
@@ -337,7 +423,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="salesPersonName"
-                defaultValue={partPaymentData.salesPersonName}
+                defaultValue={cardData.ReceiptData.user.user_name}
                 readOnly
               />
             </div>
@@ -346,7 +432,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="clientName"
-                defaultValue={partPaymentData.clientName}
+                defaultValue={cardData.ReceiptData.client_name}
                 readOnly
               />
             </div>
@@ -355,7 +441,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="clientPhone"
-                defaultValue={partPaymentData.clientPhone}
+                defaultValue={cardData.ReceiptData.client_phn_no}
                 readOnly
               />
             </div>
@@ -364,7 +450,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="aadhaarNumber"
-                defaultValue={partPaymentData.aadhaarNumber}
+                defaultValue={cardData.ReceiptData.client_adhar_no}
                 readOnly
               />
             </div>
@@ -373,7 +459,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="projectType"
-                defaultValue={partPaymentData.projectType}
+                defaultValue={cardData.ReceiptData.project.project_type}
                 readOnly
               />
             </div>
@@ -382,7 +468,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="projectName"
-                defaultValue={partPaymentData.projectName}
+                defaultValue={cardData.ReceiptData.project.project_name}
                 readOnly
               />
             </div>
@@ -391,7 +477,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="plotNumber"
-                defaultValue={partPaymentData.plotNumber}
+                defaultValue={cardData.ReceiptData.project.plot_number}
                 readOnly
               />
             </div>
@@ -400,16 +486,16 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="discount"
-                defaultValue={partPaymentData.discount}
+                defaultValue={cardData.ReceiptData.PropertyDetail.discount_percent}
                 readOnly
               />
             </div>
             <div className="rec-data-field">
-              <label htmlFor="priceOfProperty">Price of Property *</label>
+              <label htmlFor="priceOfProperty">Price of Property</label>
               <input
                 type="text"
                 id="priceOfProperty"
-                defaultValue={partPaymentData.priceOfProperty}
+                defaultValue={cardData.ReceiptData.PropertyDetail.property_price}
                 readOnly
               />
             </div>
@@ -418,7 +504,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="status"
-                defaultValue={partPaymentData.status}
+                defaultValue={cardData.ReceiptData.project.status}
                 readOnly
               />
             </div>
@@ -427,7 +513,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="dateOfPartPayment"
-                defaultValue={partPaymentData.dateOfPartPayment}
+                defaultValue={cardData.partPaymentData.date_of_pp_payment}
                 readOnly
               />
             </div>
@@ -436,7 +522,8 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="amount"
-                defaultValue={partPaymentData.amount}
+                value={formData.amount}
+                onChange={handleChange}
               />
             </div>
             {/* Render fields for Plots type */}
@@ -450,7 +537,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="invoiceNumber"
-                defaultValue={partPaymentData.invoiceNumber}
+                defaultValue={cardData.ReceiptData.receipt_id}
                 readOnly
               />
             </div>
@@ -459,7 +546,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="date"
-                defaultValue={partPaymentData.date}
+                defaultValue={cardData.ReceiptData.date_of_validation}
                 readOnly
               />
             </div>
@@ -468,7 +555,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="salesPersonID"
-                defaultValue={partPaymentData.salesPersonID}
+                defaultValue={cardData.ReceiptData.user.user_id}
                 readOnly
               />
             </div>
@@ -477,7 +564,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="salesPersonName"
-                defaultValue={partPaymentData.salesPersonName}
+                defaultValue={cardData.ReceiptData.user.user_name}
                 readOnly
               />
             </div>
@@ -486,7 +573,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="clientName"
-                defaultValue={partPaymentData.clientName}
+                defaultValue={cardData.ReceiptData.client_name}
                 readOnly
               />
             </div>
@@ -495,7 +582,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="clientPhone"
-                defaultValue={partPaymentData.clientPhone}
+                defaultValue={cardData.ReceiptData.client_phn_no}
                 readOnly
               />
             </div>
@@ -504,7 +591,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="aadhaarNumber"
-                defaultValue={partPaymentData.aadhaarNumber}
+                defaultValue={cardData.ReceiptData.client_adhar_no}
                 readOnly
               />
             </div>
@@ -513,7 +600,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="projectType"
-                defaultValue={partPaymentData.projectType}
+                defaultValue={cardData.ReceiptData.project.project_type}
                 readOnly
               />
             </div>
@@ -522,7 +609,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="projectName"
-                defaultValue={partPaymentData.projectName}
+                defaultValue={cardData.ReceiptData.project.project_name}
                 readOnly
               />
             </div>
@@ -531,7 +618,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="plotNumber"
-                defaultValue={partPaymentData.plotNumber}
+                defaultValue={cardData.ReceiptData.project.plot_number}
                 readOnly
               />
             </div>
@@ -540,7 +627,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="sqYards"
-                defaultValue={partPaymentData.sqYards}
+                defaultValue={cardData.ReceiptData.project.sq_yards}
                 readOnly
               />
             </div>
@@ -549,16 +636,16 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="discount"
-                defaultValue={partPaymentData.discount}
+                defaultValue={cardData.ReceiptData.PropertyDetail.discount_percent}
                 readOnly
               />
             </div>
             <div className="rec-data-field">
-              <label htmlFor="priceOfProperty">Price of Property *</label>
+              <label htmlFor="priceOfProperty">Price of Property</label>
               <input
                 type="text"
                 id="priceOfProperty"
-                defaultValue={partPaymentData.priceOfProperty}
+                defaultValue={cardData.ReceiptData.PropertyDetail.property_price}
                 readOnly
               />
             </div>
@@ -567,7 +654,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="status"
-                defaultValue={partPaymentData.status}
+                defaultValue={cardData.ReceiptData.project.status}
                 readOnly
               />
             </div>
@@ -576,7 +663,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="dateOfPartPayment"
-                defaultValue={partPaymentData.dateOfPartPayment}
+                defaultValue={cardData.partPaymentData.date_of_pp_payment}
                 readOnly
               />
             </div>
@@ -585,7 +672,8 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="amount"
-                defaultValue={partPaymentData.amount}
+                value={formData.amount}
+                onChange={handleChange}
               />
             </div>
             {/* Render fields for Farm land type */}
@@ -597,6 +685,8 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
   };
 
   return (
+    <>
+    <Loader />
     <div className="rec-det">
       <div className="rec-sec">
         <div className="close">
@@ -608,11 +698,11 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
         <div className="rec-data">{renderFields()}</div>
         <div className="rec-actions">
           <div className="rec-delete">
-            <button>Delete</button>
+            <button onClick={handleDelete}>Delete</button>
           </div>
           <div className="rec-sec-actions">
             <div className="save">
-              <button>Save</button>
+              <button onClick={handleSave}>Save</button>
             </div>
             <div className="export-btn">
               <button>Export</button>
@@ -621,6 +711,7 @@ const PartPayReceiptCard = ({ receiptID, partPaymentsData, onClose }) => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

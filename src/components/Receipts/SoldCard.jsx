@@ -2,16 +2,13 @@ import React from "react";
 import "./pendingReceipts.css";
 import close from "../../assets/menuClose.svg";
 
-const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
-  console.log(receiptID);
-  console.log(partPaymentsData);
-  const partPaymentData = partPaymentsData.find(
-    (partPayment) => partPayment.invoiceNumber == receiptID
-  );
-  if (!partPaymentData) return null;
+const SoldCard = ({ cardData, onClose }) => {
+  console.log(cardData);
 
   const renderFields = () => {
-    const projectType = partPaymentData.projectType;
+    if (!cardData) return null;
+
+    const projectType = cardData.ReceiptData.project.project_type;
 
     switch (projectType) {
       case "APARTMENT":
@@ -22,7 +19,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="invoiceNumber"
-                defaultValue={partPaymentData.invoiceNumber}
+                defaultValue={cardData.ReceiptData.receipt_id}
                 readOnly
               />
             </div>
@@ -31,7 +28,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="date"
-                defaultValue={partPaymentData.date}
+                defaultValue={cardData.ReceiptData.date_of_validation}
                 readOnly
               />
             </div>
@@ -40,7 +37,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="salesPersonID"
-                defaultValue={partPaymentData.salesPersonID}
+                defaultValue={cardData.ReceiptData.user.user_id}
                 readOnly
               />
             </div>
@@ -49,7 +46,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="salesPersonName"
-                defaultValue={partPaymentData.salesPersonName}
+                defaultValue={cardData.ReceiptData.user.user_name}
                 readOnly
               />
             </div>
@@ -58,7 +55,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="clientName"
-                defaultValue={partPaymentData.clientName}
+                defaultValue={cardData.ReceiptData.client_name}
                 readOnly
               />
             </div>
@@ -67,7 +64,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="clientPhone"
-                defaultValue={partPaymentData.clientPhone}
+                defaultValue={cardData.ReceiptData.client_phn_no}
                 readOnly
               />
             </div>
@@ -76,7 +73,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="aadhaarNumber"
-                defaultValue={partPaymentData.aadhaarNumber}
+                defaultValue={cardData.ReceiptData.client_adhar_no}
                 readOnly
               />
             </div>
@@ -85,7 +82,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="projectType"
-                defaultValue={partPaymentData.projectType}
+                defaultValue={cardData.ReceiptData.project.project_type}
                 readOnly
               />
             </div>
@@ -94,7 +91,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="projectName"
-                defaultValue={partPaymentData.projectName}
+                defaultValue={cardData.ReceiptData.project.project_name}
                 readOnly
               />
             </div>
@@ -103,7 +100,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="towerNumber"
-                defaultValue={partPaymentData.towerNumber}
+                defaultValue={cardData.ReceiptData.project.tower_number}
                 readOnly
               />
             </div>
@@ -112,7 +109,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="flatNumber"
-                defaultValue={partPaymentData.flatNumber}
+                defaultValue={cardData.ReceiptData.project.flat_number}
                 readOnly
               />
             </div>
@@ -121,16 +118,16 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="discount"
-                defaultValue={partPaymentData.discount}
+                defaultValue={cardData.ReceiptData.PropertyDetail.discount_percent}
                 readOnly
               />
             </div>
             <div className="rec-data-field">
-              <label htmlFor="priceOfProperty">Price of Property *</label>
+              <label htmlFor="priceOfProperty">Price of Property</label>
               <input
                 type="text"
                 id="priceOfProperty"
-                defaultValue={partPaymentData.priceOfProperty}
+                defaultValue={cardData.ReceiptData.PropertyDetail.property_price}
                 readOnly
               />
             </div>
@@ -139,7 +136,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="status"
-                defaultValue={partPaymentData.status}
+                defaultValue={cardData.ReceiptData.project.status}
                 readOnly
               />
             </div>
@@ -148,7 +145,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="dateOfPartPayment"
-                defaultValue={partPaymentData.dateOfPartPayment}
+                defaultValue={cardData.partPaymentData.date_of_pp_payment}
                 readOnly
               />
             </div>
@@ -157,7 +154,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="amount"
-                defaultValue={partPaymentData.amount}
+                defaultValue={cardData.partPaymentData.amount}
                 readOnly
               />
             </div>
@@ -171,7 +168,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="invoiceNumber"
-                defaultValue={partPaymentData.invoiceNumber}
+                defaultValue={cardData.ReceiptData.receipt_id}
                 readOnly
               />
             </div>
@@ -180,7 +177,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="date"
-                defaultValue={partPaymentData.date}
+                defaultValue={cardData.ReceiptData.date_of_validation}
                 readOnly
               />
             </div>
@@ -189,7 +186,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="salesPersonID"
-                defaultValue={partPaymentData.salesPersonID}
+                defaultValue={cardData.ReceiptData.user.user_id}
                 readOnly
               />
             </div>
@@ -198,7 +195,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="salesPersonName"
-                defaultValue={partPaymentData.salesPersonName}
+                defaultValue={cardData.ReceiptData.user.user_name}
                 readOnly
               />
             </div>
@@ -207,7 +204,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="clientName"
-                defaultValue={partPaymentData.clientName}
+                defaultValue={cardData.ReceiptData.client_name}
                 readOnly
               />
             </div>
@@ -216,7 +213,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="clientPhone"
-                defaultValue={partPaymentData.clientPhone}
+                defaultValue={cardData.ReceiptData.client_phn_no}
                 readOnly
               />
             </div>
@@ -225,7 +222,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="aadhaarNumber"
-                defaultValue={partPaymentData.aadhaarNumber}
+                defaultValue={cardData.ReceiptData.client_adhar_no}
                 readOnly
               />
             </div>
@@ -234,7 +231,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="projectType"
-                defaultValue={partPaymentData.projectType}
+                defaultValue={cardData.ReceiptData.project.project_type}
                 readOnly
               />
             </div>
@@ -243,7 +240,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="projectName"
-                defaultValue={partPaymentData.projectName}
+                defaultValue={cardData.ReceiptData.project.project_name}
                 readOnly
               />
             </div>
@@ -252,7 +249,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="villaNumber"
-                defaultValue={partPaymentData.villaNumber}
+                defaultValue={cardData.ReceiptData.project.villa_number}
                 readOnly
               />
             </div>
@@ -261,16 +258,16 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="discount"
-                defaultValue={partPaymentData.discount}
+                defaultValue={cardData.ReceiptData.PropertyDetail.discount_percent}
                 readOnly
               />
             </div>
             <div className="rec-data-field">
-              <label htmlFor="priceOfProperty">Price of Property *</label>
+              <label htmlFor="priceOfProperty">Price of Property</label>
               <input
                 type="text"
                 id="priceOfProperty"
-                defaultValue={partPaymentData.priceOfProperty}
+                defaultValue={cardData.ReceiptData.PropertyDetail.property_price}
                 readOnly
               />
             </div>
@@ -279,7 +276,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="status"
-                defaultValue={partPaymentData.status}
+                defaultValue={cardData.ReceiptData.project.status}
                 readOnly
               />
             </div>
@@ -288,7 +285,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="dateOfPartPayment"
-                defaultValue={partPaymentData.dateOfPartPayment}
+                defaultValue={cardData.partPaymentData.date_of_pp_payment}
                 readOnly
               />
             </div>
@@ -297,7 +294,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="amount"
-                defaultValue={partPaymentData.amount}
+                defaultValue={cardData.partPaymentData.amount}
                 readOnly
               />
             </div>
@@ -312,7 +309,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="invoiceNumber"
-                defaultValue={partPaymentData.invoiceNumber}
+                defaultValue={cardData.ReceiptData.receipt_id}
                 readOnly
               />
             </div>
@@ -321,7 +318,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="date"
-                defaultValue={partPaymentData.date}
+                defaultValue={cardData.ReceiptData.date_of_validation}
                 readOnly
               />
             </div>
@@ -330,7 +327,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="salesPersonID"
-                defaultValue={partPaymentData.salesPersonID}
+                defaultValue={cardData.ReceiptData.user.user_id}
                 readOnly
               />
             </div>
@@ -339,7 +336,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="salesPersonName"
-                defaultValue={partPaymentData.salesPersonName}
+                defaultValue={cardData.ReceiptData.user.user_name}
                 readOnly
               />
             </div>
@@ -348,7 +345,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="clientName"
-                defaultValue={partPaymentData.clientName}
+                defaultValue={cardData.ReceiptData.client_name}
                 readOnly
               />
             </div>
@@ -357,7 +354,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="clientPhone"
-                defaultValue={partPaymentData.clientPhone}
+                defaultValue={cardData.ReceiptData.client_phn_no}
                 readOnly
               />
             </div>
@@ -366,7 +363,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="aadhaarNumber"
-                defaultValue={partPaymentData.aadhaarNumber}
+                defaultValue={cardData.ReceiptData.client_adhar_no}
                 readOnly
               />
             </div>
@@ -375,7 +372,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="projectType"
-                defaultValue={partPaymentData.projectType}
+                defaultValue={cardData.ReceiptData.project.project_type}
                 readOnly
               />
             </div>
@@ -384,7 +381,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="projectName"
-                defaultValue={partPaymentData.projectName}
+                defaultValue={cardData.ReceiptData.project.project_name}
                 readOnly
               />
             </div>
@@ -393,7 +390,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="plotNumber"
-                defaultValue={partPaymentData.plotNumber}
+                defaultValue={cardData.ReceiptData.project.plot_number}
                 readOnly
               />
             </div>
@@ -402,16 +399,16 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="discount"
-                defaultValue={partPaymentData.discount}
+                defaultValue={cardData.ReceiptData.PropertyDetail.discount_percent}
                 readOnly
               />
             </div>
             <div className="rec-data-field">
-              <label htmlFor="priceOfProperty">Price of Property *</label>
+              <label htmlFor="priceOfProperty">Price of Property</label>
               <input
                 type="text"
                 id="priceOfProperty"
-                defaultValue={partPaymentData.priceOfProperty}
+                defaultValue={cardData.ReceiptData.PropertyDetail.property_price}
                 readOnly
               />
             </div>
@@ -420,7 +417,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="status"
-                defaultValue={partPaymentData.status}
+                defaultValue={cardData.ReceiptData.project.status}
                 readOnly
               />
             </div>
@@ -429,7 +426,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="dateOfPartPayment"
-                defaultValue={partPaymentData.dateOfPartPayment}
+                defaultValue={cardData.partPaymentData.date_of_pp_payment}
                 readOnly
               />
             </div>
@@ -438,7 +435,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="amount"
-                defaultValue={partPaymentData.amount}
+                defaultValue={cardData.partPaymentData.amount}
                 readOnly
               />
             </div>
@@ -453,7 +450,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="invoiceNumber"
-                defaultValue={partPaymentData.invoiceNumber}
+                defaultValue={cardData.ReceiptData.receipt_id}
                 readOnly
               />
             </div>
@@ -462,7 +459,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="date"
-                defaultValue={partPaymentData.date}
+                defaultValue={cardData.ReceiptData.date_of_validation}
                 readOnly
               />
             </div>
@@ -471,7 +468,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="salesPersonID"
-                defaultValue={partPaymentData.salesPersonID}
+                defaultValue={cardData.ReceiptData.user.user_id}
                 readOnly
               />
             </div>
@@ -480,7 +477,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="salesPersonName"
-                defaultValue={partPaymentData.salesPersonName}
+                defaultValue={cardData.ReceiptData.user.user_name}
                 readOnly
               />
             </div>
@@ -489,7 +486,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="clientName"
-                defaultValue={partPaymentData.clientName}
+                defaultValue={cardData.ReceiptData.client_name}
                 readOnly
               />
             </div>
@@ -498,7 +495,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="clientPhone"
-                defaultValue={partPaymentData.clientPhone}
+                defaultValue={cardData.ReceiptData.client_phn_no}
                 readOnly
               />
             </div>
@@ -507,7 +504,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="aadhaarNumber"
-                defaultValue={partPaymentData.aadhaarNumber}
+                defaultValue={cardData.ReceiptData.client_adhar_no}
                 readOnly
               />
             </div>
@@ -516,7 +513,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="projectType"
-                defaultValue={partPaymentData.projectType}
+                defaultValue={cardData.ReceiptData.project.project_type}
                 readOnly
               />
             </div>
@@ -525,7 +522,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="projectName"
-                defaultValue={partPaymentData.projectName}
+                defaultValue={cardData.ReceiptData.project.project_name}
                 readOnly
               />
             </div>
@@ -534,7 +531,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="plotNumber"
-                defaultValue={partPaymentData.plotNumber}
+                defaultValue={cardData.ReceiptData.project.plot_number}
                 readOnly
               />
             </div>
@@ -543,7 +540,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="sqYards"
-                defaultValue={partPaymentData.sqYards}
+                defaultValue={cardData.ReceiptData.project.sq_yards}
                 readOnly
               />
             </div>
@@ -552,16 +549,16 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="discount"
-                defaultValue={partPaymentData.discount}
+                defaultValue={cardData.ReceiptData.PropertyDetail.discount_percent}
                 readOnly
               />
             </div>
             <div className="rec-data-field">
-              <label htmlFor="priceOfProperty">Price of Property *</label>
+              <label htmlFor="priceOfProperty">Price of Property</label>
               <input
                 type="text"
                 id="priceOfProperty"
-                defaultValue={partPaymentData.priceOfProperty}
+                defaultValue={cardData.ReceiptData.PropertyDetail.property_price}
                 readOnly
               />
             </div>
@@ -570,7 +567,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="status"
-                defaultValue={partPaymentData.status}
+                defaultValue={cardData.ReceiptData.project.status}
                 readOnly
               />
             </div>
@@ -579,7 +576,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="dateOfPartPayment"
-                defaultValue={partPaymentData.dateOfPartPayment}
+                defaultValue={cardData.partPaymentData.date_of_pp_payment}
                 readOnly
               />
             </div>
@@ -588,7 +585,7 @@ const SoldCard = ({ receiptID, partPaymentsData, onClose }) => {
               <input
                 type="text"
                 id="amount"
-                defaultValue={partPaymentData.amount}
+                defaultValue={cardData.partPaymentData.amount}
                 readOnly
               />
             </div>
