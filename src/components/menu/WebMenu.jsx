@@ -11,10 +11,16 @@ import receipts from "../../assets/receipts.svg";
 import customer from "../../assets/customer.svg";
 import logout from "../../assets/logout.svg";
 
-const WebMenu = ({ roleType }) => {
+const WebMenu = () => {
+
   const renderMenuItems = () => {
+    const roleType = localStorage.getItem("role_type");
+    console.log(roleType);
+
+    if(!roleType) return null;
+    
     switch (roleType) {
-      case "Sales Person":
+      case "SALES PERSON":
         return (
           <>
             <li>
@@ -43,7 +49,7 @@ const WebMenu = ({ roleType }) => {
             </li>
           </>
         );
-      case "Manager":
+      case "MANAGER":
         return (
           <>
             <li>
@@ -88,7 +94,7 @@ const WebMenu = ({ roleType }) => {
             </li>
           </>
         );
-      case "Channel Person":
+      case "CHANNEL PARTNER":
         return (
           <>
             <li>
@@ -117,7 +123,7 @@ const WebMenu = ({ roleType }) => {
             </li>
           </>
         );
-      case "Super Admin":
+      case "SUPER ADMIN":
         return (
           <>
             <li>
