@@ -1,16 +1,90 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import "./pendingReceipts.css";
-import receiptsDataDummy from "../../data/receiptsDataDummy";
+// import receiptsDataDummy from "../../data/receiptsDataDummy";
 import PendingReceiptCard from "./PendingReceiptCard";
 import DeletedReceiptsTable from "./DeletedReceiptsTable";
+import sharedContext from "../../context/SharedContext";
+import Loader from "../Loader";
 
 const PendingReceiptsTable = ({ onDeletedReceiptsClick }) => {
+  const { setLoader, loader, setDeletedReceiptsData } =
+    useContext(sharedContext);
   const [receiptsData, setReceiptsData] = useState([]);
-  const [selectedProjectID, setSelectedProjectID] = useState(null);
+  const [selectedReceiptID, setSelectedReceiptID] = useState(null);
   const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
 
+  const BaseURL = "https://erp-phase2-bck.onrender.com";
+
+  const makeRequest = async (url, options) => {
+    const response = await fetch(url, options);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+  };
+
+  const fetchPendingReceiptsList = async () => {
+    setLoader(true);
+    setReceiptsData([]);
+    try {
+      // Token should be retrieved securely, e.g., from an environment variable or secure storage
+      const token = localStorage.getItem("token");
+      const headers = new Headers({
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      });
+
+      const requestOptions = {
+        method: "GET",
+        headers: headers,
+        redirect: "follow",
+      };
+
+      const result = await makeRequest(
+        `${BaseURL}/receipt/getPendingReceiptsList`,
+        requestOptions
+      );
+
+      setReceiptsData(result.data);
+    } catch (error) {
+      console.error("Error fetching pending receipts list:", error);
+    } finally {
+      setLoader(false);
+    }
+  };
+
+  const fetchRejectedReceiptsList = async () => {
+    setLoader(true);
+    setDeletedReceiptsData([]);
+    try {
+      // Token should be retrieved securely, e.g., from an environment variable or secure storage
+      const token = localStorage.getItem("token");
+      const headers = new Headers({
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      });
+
+      const requestOptions = {
+        method: "GET",
+        headers: headers,
+        redirect: "follow",
+      };
+
+      const result = await makeRequest(
+        `${BaseURL}/receipt/getRejectedReceiptsList`,
+        requestOptions
+      );
+
+      setDeletedReceiptsData(result.data);
+    } catch (error) {
+      console.error("Error fetching pending receipts list:", error);
+    } finally {
+      setLoader(false);
+    }
+  };
+
   useEffect(() => {
-    setReceiptsData(receiptsDataDummy);
+    fetchPendingReceiptsList();
   }, []);
 
   useEffect(() => {
@@ -26,15 +100,16 @@ const PendingReceiptsTable = ({ onDeletedReceiptsClick }) => {
   }, []);
 
   const handleRowClick = (projectID) => {
-    setSelectedProjectID(projectID); // Update the selected projectID when a row is clicked
+    setSelectedReceiptID(projectID); // Update the selected projectID when a row is clicked
   };
 
   const handleCloseReceiptCard = () => {
-    setSelectedProjectID(false);
+    setSelectedReceiptID(false);
   };
 
   return (
     <>
+      <Loader />
       <div className="receipt-table">
         <div className="receipt-table-sec">
           <div className="receipt-table-head">
@@ -43,34 +118,41 @@ const PendingReceiptsTable = ({ onDeletedReceiptsClick }) => {
               <button onClick={onDeletedReceiptsClick}>Deleted Receipts</button>
             </div>
           </div>
-          <div className="receipts-table-container">
-            <table>
-              <thead>
-                <tr>
-                  <th>Project ID</th>
-                  <th>Project Name</th>
-                  <th>Project Type</th>
-                </tr>
-              </thead>
-              <tbody>
-                {receiptsData.map((receipt) => (
-                  <tr
-                    key={receipt.projectID}
-                    onClick={() => handleRowClick(receipt.projectID)}
-                  >
-                    <td>{receipt.projectID}</td>
-                    <td>{receipt.projectName}</td>
-                    <td>{receipt.projectType}</td>
+          {receiptsData.length !== 0 ? (
+            <div className="receipts-table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Project ID</th>
+                    <th>Project Name</th>
+                    <th>Project Type</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {receiptsData.map((receipt) => (
+                    <tr
+                      key={receipt.receipt_id}
+                      onClick={() => handleRowClick(receipt.receipt_id)}
+                    >
+                      <td>{receipt.project.project_id}</td>
+                      <td>{receipt.project.project_name}</td>
+                      <td>{receipt.project.project_type}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : loader == false ? (
+            "No data to show"
+          ) : (
+            ""
+          )}
         </div>
-        {selectedProjectID && (
+        {selectedReceiptID && (
           <PendingReceiptCard
-            projectID={selectedProjectID}
-            receiptsData={receiptsData}
+            receiptID={selectedReceiptID}
+            fetchPendingReceiptsList={fetchPendingReceiptsList}
+            fetchRejectedReceiptsList={fetchRejectedReceiptsList}
             onClose={handleCloseReceiptCard}
           />
         )}

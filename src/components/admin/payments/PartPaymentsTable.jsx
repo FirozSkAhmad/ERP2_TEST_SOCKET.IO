@@ -1,68 +1,126 @@
-import React, { useEffect, useState } from "react";
-import partPaymentData from "../../../data/partPaymentsData";
-import partPaymentsCardData from "../../../data/partPaymentsCardData";
+import React, { useEffect, useState, useContext } from "react";
 import PaymentsCard from "./PaymentsCard";
+import sharedContext from "../../../context/SharedContext";
+import Loader from "../../Loader";
 
 const PartPaymentsTable = () => {
-    const [partPayments, setPartPayments] = useState([]);
-    const [selectedRow, setSelectedRow] = useState(null);
-    const [partPaymentCardDetails, setPartPaymentCardDetails] = useState([]);
-    const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
+  const [partPayments, setPartPayments] = useState([]);
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
+  const { setLoader, loader } = useContext(sharedContext);
 
-    useEffect(() => {
-        setPartPaymentCardDetails(partPaymentsCardData)
-    }, [])
+  const BaseURL = "https://erp-phase2-bck.onrender.com";
 
-    useEffect(() => {
-        setPartPayments(partPaymentData);
-    }, []);
+  const makeRequest = async (url, options) => {
+    const response = await fetch(url, options);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+  };
 
-    useEffect(() => {
-        const handleResize = () => {
-          setViewportWidth(window.innerWidth);
-        };
-      
-        window.addEventListener('resize', handleResize); // Listen for viewport width changes
-      
-        return () => {
-          window.removeEventListener('resize', handleResize); // Cleanup
-        };
-    }, []);
+  const fetchPaymentsList = async () => {
+    setLoader(true);
+    setPartPayments([]);
+    try {
+      // Token should be retrieved securely, e.g., from an environment variable or secure storage
+      const token = localStorage.getItem("token");
+      const headers = new Headers({
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      });
 
-    const handleRowClick = (projectID) => {
-        setSelectedRow(projectID);
+      const requestOptions = {
+        method: "GET",
+        headers: headers,
+        redirect: "follow",
+      };
+
+      const result = await makeRequest(
+        `${BaseURL}/payments/getPaymentsList?statusFilter=PART PAYMENT`,
+        requestOptions
+      );
+
+      setPartPayments(result.data);
+    } catch (error) {
+      console.error("Error fetching pending receipts list:", error);
+    } finally {
+      setLoader(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPaymentsList();
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setViewportWidth(window.innerWidth);
     };
 
-    const handleClosePaymentsCard = () => {
-        setSelectedRow(false);
+    window.addEventListener("resize", handleResize); // Listen for viewport width changes
+
+    return () => {
+      window.removeEventListener("resize", handleResize); // Cleanup
     };
+  }, []);
+
+  const handleRowClick = (receiptID) => {
+    setSelectedRow(receiptID);
+  };
+
+  const handleClosePaymentsCard = () => {
+    setSelectedRow(false);
+  };
 
   return (
-    <div className="com-table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Project ID</th>
-                                {viewportWidth >= 1024 && <th>Project Name</th>}
-                                {viewportWidth >= 1024 && <th>Project Type</th>}
-                                <th>Client Name</th>
-                                <th>Pending Payment</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {partPayments.map(data => (
-                                <tr key={data.projectID} onClick={() => handleRowClick(data.projectID)}>
-                                    <td>{data.projectID}</td>
-                                    {viewportWidth >= 1024 && <td>{data.projectName}</td>}
-                                    {viewportWidth >= 1024 && <td>{data.projectType}</td>}
-                                    <td>{data.clientName}</td>
-                                    <td>{data.pendingPayment}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                    {selectedRow && <PaymentsCard projectID={selectedRow} partPaymentCardDetails={partPaymentCardDetails} onClose={handleClosePaymentsCard} />}
-                </div>
+    <>
+      <Loader />
+      {partPayments.length !== 0 ? (
+        <div className="com-table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Project ID</th>
+                {viewportWidth >= 1024 && <th>Project Name</th>}
+                {viewportWidth >= 1024 && <th>Project Type</th>}
+                <th>Client Name</th>
+                <th>Pending Payment</th>
+              </tr>
+            </thead>
+            <tbody>
+              {partPayments.map((data) => (
+                <tr
+                  key={data.receipt_id}
+                  onClick={() => handleRowClick(data.receipt_id)}
+                >
+                  <td>{data.project.project_id}</td>
+                  {viewportWidth >= 1024 && (
+                    <td>{data.project.project_name}</td>
+                  )}
+                  {viewportWidth >= 1024 && (
+                    <td>{data.project.project_type}</td>
+                  )}
+                  <td>{data.client_name}</td>
+                  <td>{data.PropertyDetail.pending_payment}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {selectedRow && (
+            <PaymentsCard
+              receiptID={selectedRow}
+              fetchPaymentsList={fetchPaymentsList}
+              onClose={handleClosePaymentsCard}
+            />
+          )}
+        </div>
+      ) : loader == false ? (
+        <div className="com-table-container">No data to show</div>
+      ) : (
+        ""
+      )}
+    </>
   );
 };
 

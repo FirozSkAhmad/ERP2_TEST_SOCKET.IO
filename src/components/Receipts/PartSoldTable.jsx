@@ -1,32 +1,57 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./pendingReceipts.css";
-import partSoldDataDummy from "../../data/partSoldData";
-import partSoldPayments from "../../data/partSoldPayments";
-import partPayRecData from "../../data/partPayRecData";
 import close from "../../assets/menuClose.svg";
 import deleteIcon from "../../assets/delete.svg";
 import exportIcon from "../../assets/export.svg";
 import PartPayReceiptCard from "./PartPayReceiptCard";
-// import DeletedPartPaymentsTable from "./DeletedPartPaymentsTable";
 import DeletedPartTable from "./DeletedPartTable";
 import DeletedPartpaymentProjectsTable from "./DeletedPartpaymentProjectsTable";
+import sharedContext from "../../context/SharedContext";
+import Loader from "../Loader";
+import toast from "react-hot-toast";
 
 const PartSoldTable = () => {
+  const { setLoader, loader } = useContext(sharedContext);
   const [partSoldData, setPartSoldData] = useState([]);
-  const [partPaymentsData, setPartPaymentsData] = useState([]);
+  const [payments, setPayments] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
   const [selectedReceiptId, setSelectedReceiptId] = useState(null);
+  const [selectedReceiptData, setSelectedReceiptData] = useState(null);
   const [selectedOption, setSelectedOption] = useState("");
   const [selectedPartOption, setSelectedPartOption] = useState("Deleted Part");
   const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
 
-  useEffect(() => {
-    setPartPaymentsData(partPayRecData);
-  }, []);
+  const BaseURL = "https://erp-phase2-bck.onrender.com";
 
-  useEffect(() => {
-    setPartSoldData(partSoldDataDummy);
-  }, []);
+  // API to fetch part payment table data
+
+
+    const fetchPartpayData = async () => {
+      setLoader(true);
+      setPartSoldData([]);
+        try {
+            const accessToken = localStorage.getItem("token");
+            const response = await fetch(`${BaseURL}/receipt/getList?statusFilter=Part Payment`, {
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`,
+                },
+            });
+            if (!response.ok) {
+                throw new Error('Network error. Failed to fetch part payment table data');
+            }
+            const result = await response.json();
+            setPartSoldData(result.data);
+            console.log(result.data);
+        } catch (error) {
+            console.error('Error fetching part payment table data:', error);
+        } finally {
+          setLoader(false);
+        }
+    };
+    
+    useEffect(() => {
+      fetchPartpayData();
+    }, [])
 
   useEffect(() => {
     const handleResize = () => {
@@ -40,20 +65,70 @@ const PartSoldTable = () => {
     };
   }, []);
 
-  const handleRowClick = (rowID) => {
-    setSelectedRow(rowID);
-  };
+  // API to get part payment dropdown data
 
-  const handleDropDownRowClick = (receiptID) => {
+  const handleRowClick = async (projectID, receiptID) => {
+    setSelectedRow(projectID);
+
     setSelectedReceiptId(receiptID);
+    console.log(selectedReceiptId);
+
+    setLoader(true);
+    setPayments([]);
+
+    try {
+      const accessToken = localStorage.getItem("token");
+      const response = await fetch(`${BaseURL}/receipt/getParticularPartPaymentHistoryList?project_id=${projectID}`, {
+          headers: {
+              "Authorization": `Bearer ${accessToken}`,
+          },
+      });
+      if (!response.ok) {
+          throw new Error('Network error. Failed to fetch part payment dropdown data');
+      }
+      const result = await response.json();
+      setPayments(result.data);
+      console.log(result.data);
+  } catch (error) {
+      console.error('Error fetching part payment dropdown data:', error);
+  } finally {
+    setLoader(false);
+  }
   };
 
   const handleCloseDropdown = () => {
     setSelectedRow(null);
   };
 
+  // API to get part payment card data
+
+  const handleDropDownRowClick = async (partPayID) => {
+    setLoader(true);
+    setSelectedReceiptData();
+
+    try {
+      const accessToken = localStorage.getItem("token");
+      const response = await fetch(`${BaseURL}/receipt/getParticularPartPaymentHistoryDetails?receipt_id=${selectedReceiptId}&pp_id=${partPayID}`, {
+          headers: {
+            "Authorization": `Bearer ${accessToken}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Network error. Failed to fetch part payment card details.');
+    }
+
+    const result = await response.json();
+      setSelectedReceiptData(result.data);
+      console.log(result.data);
+    } catch (error) {
+      console.error('Error fetching part payment card data:', error);
+    } finally {
+      setLoader(false);
+    }
+  };
+
   const handleClosePartPayReceiptCard = () => {
-    setSelectedReceiptId(false);
+    setSelectedReceiptData(false);
   };
 
   const handleSelectChange = (event) => {
@@ -66,22 +141,39 @@ const PartSoldTable = () => {
     // console.log(selectedOption);
   };
 
+  // API to delete
+
+  const handleDelete = async (projectID, projDetID) => {
+    setLoader(true);
+
+    try {
+      const accessToken = localStorage.getItem("token");
+      const response = await fetch(`${BaseURL}/receipt/deleteParticularProjectPartPayments?project_id=${projectID}&pd_id=${projDetID}`, {
+        method: "PUT",
+        headers: {
+          "Authorization": `Bearer ${accessToken}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Network error. Network response was not ok");
+      }
+      console.log("Successfully deleted part payment data");
+      toast.success("Successfully deleted!");
+      // Re-render table data after deleting
+      await fetchPartpayData();
+    } catch (error) {
+      console.error("Error deleting part payment data:", error);
+      toast.error("Deletion failed!")
+    } finally {
+      setLoader(false);
+    }
+  }
+
   // useEffect(() => {
   //   console.log(selectedOption);
   // }, [selectedOption]);
 
-  const renderDropdown = (projectID) => {
-    const selectedProject = partSoldPayments.find(
-      (item) => item.projectID === projectID
-    );
-    if (
-      selectedRow === projectID &&
-      selectedProject &&
-      selectedProject.payment
-    ) {
-      const payments = Array.isArray(selectedProject.payment)
-        ? selectedProject.payment
-        : [selectedProject.payment];
+  const renderDropdown = () => {
       return (
         <tr className="dropdown" style={{ backgroundColor: "#D9D9D9" }}>
           <td colSpan="5">
@@ -99,14 +191,14 @@ const PartSoldTable = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {payments.map((payment, index) => (
+                    {payments.map((payment) => (
                       <tr
-                        key={index}
+                        key={payment.pp_id}
                         onClick={() =>
-                          handleDropDownRowClick(payment.receipt_id)
+                          handleDropDownRowClick(payment.pp_id)
                         }
                       >
-                        <td>{payment.date || "No Payments yet"}</td>
+                        <td>{payment.date_of_pp_payment || "No Payments yet"}</td>
                         <td>{payment.amount || "No Payments yet"}</td>
                       </tr>
                     ))}
@@ -117,12 +209,11 @@ const PartSoldTable = () => {
           </td>
         </tr>
       );
-    }
-    return null;
   };
 
   return (
     <>
+    <Loader />
       <div className="receipt-table">
         <div className="receipt-table-sec">
           <div className="receipt-table-head">
@@ -141,6 +232,7 @@ const PartSoldTable = () => {
               </select>
             </div>
           </div>
+          {partSoldData.length !== 0 ? (
           <div className="receipts-table-container">
             {selectedOption === "" && (
               <table>
@@ -155,40 +247,43 @@ const PartSoldTable = () => {
                 </thead>
                 <tbody>
                   {partSoldData.map((partSold) => (
-                    <React.Fragment key={partSold.projectID}>
+                    <React.Fragment key={partSold.receipt_id}>
                       <tr
-                        key={partSold.projectID}
-                        onClick={() => handleRowClick(partSold.projectID)}
+                        key={partSold.receipt_id}
+                        onClick={() => handleRowClick(partSold.project.project_id, partSold.receipt_id)}
                       >
-                        <td>{partSold.projectID}</td>
-                        <td>{partSold.projectName}</td>
-                        <td>{partSold.clientName}</td>
-                        {viewportWidth >= 1024 && <td>{partSold.status}</td>}
+                        <td>{partSold.project.project_id}</td>
+                        <td>{partSold.project.project_name}</td>
+                        <td>{partSold.client_name}</td>
+                        {viewportWidth >= 1024 && <td>{partSold.project.status}</td>}
                         {viewportWidth >= 1024 && (
                           <td>
                             <div className="receipt-actions">
-                              <img src={deleteIcon} alt="" />
+                              <img src={deleteIcon} onClick={() => handleDelete(partSold.project.project_id, partSold.PropertyDetail.pd_id)} alt="" />
                               <img src={exportIcon} alt="" />
                             </div>
                           </td>
                         )}
                       </tr>
-                      {renderDropdown(partSold.projectID)}
+                      {selectedRow === partSold.project.project_id && renderDropdown()}
                     </React.Fragment>
                   ))}
                 </tbody>
               </table>
             )}
-            {selectedOption === "Deleted Part Payment" && <DeletedPartTable />}
+          </div>
+          ) : loader == false ? ("No data to show in part payments") : (
+          "" )}
+        </div>
+        {selectedOption === "Deleted Part Payment" && <DeletedPartTable />}
             {selectedOption === "Deleted Projects" && (
               <DeletedPartpaymentProjectsTable />
             )}
-          </div>
-        </div>
-        {selectedReceiptId && (
+        {selectedReceiptData && (
           <PartPayReceiptCard
-            receiptID={selectedReceiptId}
-            partPaymentsData={partPaymentsData}
+            cardData={selectedReceiptData}
+            dropdownData={payments}
+            reRenderPartpayments={handleRowClick}
             onClose={handleClosePartPayReceiptCard}
           />
         )}

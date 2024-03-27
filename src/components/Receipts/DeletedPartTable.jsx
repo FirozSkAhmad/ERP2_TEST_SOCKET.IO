@@ -1,24 +1,55 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./pendingReceipts.css";
 import partSoldPayments from "../../data/partSoldPayments";
 import partPayRecData from "../../data/partPayRecData";
 import close from "../../assets/menuClose.svg";
 import abcd from "../../data/abcd";
 import DeletedPartCard from "./DeletedPartCard";
+import sharedContext from "../../context/SharedContext";
 
 const DeletedPartTable = () => {
+  const { setLoader, loader } = useContext(sharedContext);
   const [deltedPartpayments, setDeletedpartpayments] = useState([]);
-  const [partPaymentsData, setPartPaymentsData] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
+  const [payments, setPayments] = useState([]);
+  const [partPaymentsData, setPartPaymentsData] = useState([]);
   const [selectedReceiptId, setSelectedReceiptId] = useState(null);
+  const [selectedReceiptData, setSelectedReceiptData] = useState(null);
   const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
+
+  const BaseURL = "https://erp-phase2-bck.onrender.com";
 
   useEffect(() => {
     setPartPaymentsData(partPayRecData);
   }, []);
 
+  // API to fetch deleted part payment table data
+
   useEffect(() => {
-    setDeletedpartpayments(abcd);
+    const fetchDeletedPartpayData = async () => {
+      setLoader(true);
+      setDeletedpartpayments([]);
+        try {
+            const accessToken = localStorage.getItem("token");
+            const response = await fetch(`${BaseURL}/receipt/getDeletedHistoryList?deletedFilter=semi deleted&statusFilter=Part Payment`, {
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`,
+                },
+            });
+            if (!response.ok) {
+                throw new Error('Network error. Failed to fetch deleted part payment table data');
+            }
+            const result = await response.json();
+            setDeletedpartpayments(result.data);
+            console.log(result.data);
+        } catch (error) {
+            console.error('Error fetching deleted part payment table data:', error);
+        } finally {
+          setLoader(false);
+        }
+    };  
+
+    fetchDeletedPartpayData();
   }, []);
 
   useEffect(() => {
@@ -33,34 +64,72 @@ const DeletedPartTable = () => {
     };
   }, []);
 
-  const handleRowClick = (rowID) => {
-    setSelectedRow(rowID);
-  };
+  // API to fetch deleted part payment dropdown data
 
-  const handleDropDownRowClick = (receiptID) => {
+  const handleRowClick = async (projectID, receiptID) => {
+    setSelectedRow(projectID);
+
     setSelectedReceiptId(receiptID);
+    console.log(selectedReceiptId);
+
+    setLoader(true);
+    setPayments([]);
+
+    try {
+      const accessToken = localStorage.getItem("token");
+      const response = await fetch(`${BaseURL}/receipt/getParticularPartPaymentDeletedHistoryList?project_id=${projectID}`, {
+          headers: {
+              "Authorization": `Bearer ${accessToken}`,
+          },
+      });
+      if (!response.ok) {
+          throw new Error('Network error. Failed to fetch deleted part payment dropdown data');
+      }
+      const result = await response.json();
+      setPayments(result.data);
+      console.log(result.data);
+    } catch (error) {
+        console.error('Error fetching deleted part payment dropdown data:', error);
+    } finally {
+      setLoader(false);
+    }
   };
 
   const handleCloseDropdown = () => {
     setSelectedRow(null);
   };
 
-  const handleCloseDeletedPartCard = () => {
-    setSelectedReceiptId(false);
+  const handleDropDownRowClick = async (partPayID) => {
+    setLoader(true);
+    setSelectedReceiptData();
+
+    try {
+      const accessToken = localStorage.getItem("token");
+      const response = await fetch(`${BaseURL}/receipt/getParticularPartPaymentHistoryDetails?receipt_id=${selectedReceiptId}&pp_id=${partPayID}`, {
+          headers: {
+            "Authorization": `Bearer ${accessToken}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Network error. Failed to fetch deleted part payment card details.');
+    }
+
+    const result = await response.json();
+      setSelectedReceiptData(result.data);
+      console.log(result.data);
+    } catch (error) {
+      console.error('Error fetching deleted part payment card data:', error);
+    } finally {
+      setLoader(false);
+    }
+    // setSelectedReceiptData(receiptID);
   };
 
-  const renderDropdown = (projectID) => {
-    const selectedProject = partSoldPayments.find(
-      (item) => item.projectID === projectID
-    );
-    if (
-      selectedRow === projectID &&
-      selectedProject &&
-      selectedProject.payment
-    ) {
-      const payments = Array.isArray(selectedProject.payment)
-        ? selectedProject.payment
-        : [selectedProject.payment];
+  const handleCloseDeletedPartCard = () => {
+    setSelectedReceiptData(false);
+  };
+
+  const renderDropdown = () => {
       return (
         <tr className="dropdown" style={{ backgroundColor: "#D9D9D9" }}>
           <td colSpan="5">
@@ -78,14 +147,14 @@ const DeletedPartTable = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {payments.map((payment, index) => (
+                    {payments.map((payment) => (
                       <tr
-                        key={index}
+                        key={payment.pp_id}
                         onClick={() =>
-                          handleDropDownRowClick(payment.receipt_id)
+                          handleDropDownRowClick(payment.pp_id)
                         }
                       >
-                        <td>{payment.date || "No Payments yet"}</td>
+                        <td>{payment.date_of_pp_payment || "No Payments yet"}</td>
                         <td>{payment.amount || "No Payments yet"}</td>
                       </tr>
                     ))}
@@ -96,13 +165,12 @@ const DeletedPartTable = () => {
           </td>
         </tr>
       );
-    }
-    return null;
   };
 
   return (
     <div>
       <div className="receipt-table-sec">
+      {deltedPartpayments.length !== 0 ? (
         <div className="receipts-table-container part-pay-del">
           <table>
             <thead>
@@ -115,27 +183,28 @@ const DeletedPartTable = () => {
             </thead>
             <tbody>
               {deltedPartpayments.map((data) => (
-                <React.Fragment key={data.projectID}>
+                <React.Fragment key={data.project.project_id}>
                   <tr
-                    key={data.projectID}
-                    onClick={() => handleRowClick(data.projectID)}
+                    key={data.project.project_id}
+                    onClick={() => handleRowClick(data.project.project_id, data.receipt_id)}
                   >
-                    <td>{data.projectID}</td>
-                    <td>{data.projectName}</td>
-                    <td>{data.clientName}</td>
-                    {viewportWidth >= 1024 && <td>{data.status}</td>}
+                    <td>{data.project.project_id}</td>
+                    <td>{data.project.project_name}</td>
+                    <td>{data.client_name}</td>
+                    {viewportWidth >= 1024 && <td>{data.project.status}</td>}
                   </tr>
-                  {renderDropdown(data.projectID)}
+                  {selectedRow === data.project.project_id && renderDropdown()}
                 </React.Fragment>
               ))}
             </tbody>
           </table>
         </div>
+        ) : loader == false ? (<div className="part-pay-del">No data to show in Deleted Part-payments</div>) : 
+        ("")}
       </div>
-      {selectedReceiptId && (
+      {selectedReceiptData && (
         <DeletedPartCard
-          receiptID={selectedReceiptId}
-          partPaymentsData={partPaymentsData}
+          cardData={selectedReceiptData}
           onClose={handleCloseDeletedPartCard}
         />
       )}

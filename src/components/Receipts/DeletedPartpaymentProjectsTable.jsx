@@ -1,14 +1,46 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import partSoldDataDummy from "../../data/partSoldData";
+import sharedContext from "../../context/SharedContext";
 
 const DeletedPartpaymentProjectsTable = () => {
-  const [deltedPartpaymentProjects, setDeletedpartpaymentProjects] = useState(
-    []
-  );
+  const { setLoader, loader } = useContext(sharedContext);
+  const [deltedPartpaymentProjects, setDeletedpartpaymentProjects] = useState([]);
   const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
 
+  // useEffect(() => {
+  //   setDeletedpartpaymentProjects(partSoldDataDummy);
+  // }, []);
+
+  const BaseURL = "https://erp-phase2-bck.onrender.com";
+
+  // API to fetch deleted part payment table data
+
   useEffect(() => {
-    setDeletedpartpaymentProjects(partSoldDataDummy);
+    const fetchDeletedPartpayProjects = async () => {
+      setLoader(true);
+      setDeletedpartpaymentProjects([]);
+
+        try {
+            const accessToken = localStorage.getItem("token");
+            const response = await fetch(`${BaseURL}/receipt/getDeletedHistoryList?deletedFilter=COMPLETELY DELETED&statusFilter=Part Payment`, {
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`,
+                },
+            });
+            if (!response.ok) {
+                throw new Error('Network error. Failed to fetch deleted part payment projects table data');
+            }
+            const result = await response.json();
+            setDeletedpartpaymentProjects(result.data);
+            console.log(result.data);
+        } catch (error) {
+            console.error('Error fetching deleted part payment projects table data:', error);
+        } finally {
+          setLoader(false);
+        }
+    };  
+
+    fetchDeletedPartpayProjects();
   }, []);
 
   useEffect(() => {
@@ -26,6 +58,7 @@ const DeletedPartpaymentProjectsTable = () => {
   return (
     <div>
       <div className="receipt-table-sec">
+        {deltedPartpaymentProjects.length !== 0 ? (
         <div className="receipts-table-container part-pay-del">
           <table>
             <thead>
@@ -38,19 +71,20 @@ const DeletedPartpaymentProjectsTable = () => {
             </thead>
             <tbody>
               {deltedPartpaymentProjects.map((data) => (
-                <React.Fragment key={data.projectID}>
-                  <tr key={data.projectID}>
-                    <td>{data.projectID}</td>
-                    <td>{data.projectName}</td>
-                    <td>{data.clientName}</td>
-                    {viewportWidth >= 1024 && <td>{data.status}</td>}
+                <React.Fragment key={data.receipt_id}>
+                  <tr key={data.receipt_id}>
+                    <td>{data.project.project_id}</td>
+                    <td>{data.project.project_name}</td>
+                    <td>{data.client_name}</td>
+                    {viewportWidth >= 1024 && <td>{data.project.status}</td>}
                   </tr>
-                  {/* {renderDropdown(data.projectID)} */}
                 </React.Fragment>
               ))}
             </tbody>
           </table>
         </div>
+        ) : loader == false ? (<div className="part-pay-del">No data to show in Deleted Projects</div>) : 
+        ("")}
       </div>
     </div>
   );
