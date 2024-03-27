@@ -17,8 +17,7 @@ const CpHistory = () => {
   const [history, setHistory] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
   const [clientData, setClientData] = useState([]);
-  const [selectedChannelPartnerId, setSelectedChannelPartnerId] =
-    useState(null);
+  const [selectedChannelPartnerId, setSelectedChannelPartnerId] = useState(null);
   const [cpHistoryCardDetails, setCpHistoryCardDetails] = useState([]);
   const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
 
@@ -26,20 +25,62 @@ const CpHistory = () => {
     setCpHistoryCardDetails(cpHistoryCardData);
   }, []);
 
-  useEffect(() => {
-    setHistory(cpHistoryData);
-  }, []);
-
   const toggleModal = () => {
     setIsOpen(!isOpen); // Toggle modal visibility
   };
 
-  const handleRowClick = (channelPartnerID) => {
-    setSelectedRow(channelPartnerID); // Update selected salesperson ID
-    const data = cpClientData.filter(
-      (item) => item.channelPartnerID === channelPartnerID
-    );
-    setClientData(data); // Set client data for selected salesperson
+  const BaseURL = "https://erp-phase2-bck.onrender.com";
+
+  // API to fetch Channel Partner data
+
+  useEffect(() => {
+    const fetchHistory = async () => {
+        try {
+            const accessToken = localStorage.getItem("token");
+            const response = await fetch(`${BaseURL}/history/getCommissionHolderslist?role_type=CHANNEL PARTNER`, {
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`,
+                },
+            });
+            if (!response.ok) {
+                throw new Error('Network error. Failed to fetch channel partner history data');
+            }
+            const result = await response.json();
+            setHistory(result.data);
+            console.log(result.data);
+        } catch (error) {
+            console.error('Error fetching channel partner history data:', error);
+        }
+    };  
+
+    fetchHistory();
+  }, []);
+
+  // API to fetch Channel Partner history data and Row click
+
+  const handleRowClick = async (channelPartnerID) => {
+    setSelectedRow(channelPartnerID); // Update selected channelPartner ID
+
+    try {
+        const accessToken = localStorage.getItem("token");
+        const response = await fetch(`${BaseURL}/history/getPraticularCommissionHolderHistory?commission_holder_id=${channelPartnerID}`, {
+            headers: {
+                "Authorization": `Bearer ${accessToken}`,
+            },
+        });
+        if (!response.ok) {
+            throw new Error('Network error. Failed to fetch channel partner history dropdown data');
+        }
+        const result = await response.json();
+          setClientData(result.data);
+          console.log(result.data);
+        } catch (error) {
+          console.error('Error fetching channel partner history dropdown data:', error);
+    }
+  };
+
+  const handleCloseDropdown = () => {
+    setSelectedRow(null);
   };
 
   useEffect(() => {
@@ -54,13 +95,32 @@ const CpHistory = () => {
     };
   }, []);
 
-  const handleCloseDropdown = () => {
-    setSelectedRow(null);
+  // API to fetch Channel Partner history card data and Dropdown click
+
+  const handleDropDownRowClick = async (receiptId, projectType) => {
+    try {
+      const accessToken = localStorage.getItem("token");
+      const response = await fetch(`${BaseURL}/history/getPraticularHistoryDetails?commissionHolderId=${selectedRow}&receipt_id=${receiptId}&projectType=${projectType}`, {
+          headers: {
+            "Authorization": `Bearer ${accessToken}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Network error. Failed to fetch SP history card details.');
+    }
+
+    const result = await response.json();
+      setSelectedChannelPartnerId(result.Details);
+      console.log(result.Details);
+    } catch (error) {
+      console.error('Error fetching SP history card data:', error);
+    }
   };
 
-  const handleDropDownRowClick = (channelPartnerID) => {
-    setSelectedChannelPartnerId(channelPartnerID);
-  };
+
+  // const handleDropDownRowClick = (channelPartnerID) => {
+  //   setSelectedChannelPartnerId(channelPartnerID);
+  // };
 
   const handleCloseSpHistoryCard = () => {
     setSelectedChannelPartnerId(false);
@@ -87,20 +147,20 @@ const CpHistory = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {clientData.map((client, index) => (
+                  {clientData.map((client) => (
                     <tr
-                      key={index}
+                      key={client.receipt_id}
                       onClick={() =>
-                        handleDropDownRowClick(client.channelPartnerID)
+                        handleDropDownRowClick(client.receipt_id, client.project.project_type)
                       }
                     >
-                      <td>{client.clientName}</td>
-                      <td>{client.projectID}</td>
-                      {viewportWidth >= 1024 && <td>{client.projectType}</td>}
+                      <td>{client.client_name}</td>
+                      <td>{client.project.project_id}</td>
+                      {viewportWidth >= 1024 && <td>{client.project.project_type}</td>}
                       {viewportWidth >= 1024 && (
-                        <td>{client.totalCommission}</td>
+                        <td>{client.commission.total_commission}</td>
                       )}
-                      <td>{client.commissionReceived}</td>
+                      <td>{client.commission.commission_recived_till_now}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -145,20 +205,20 @@ const CpHistory = () => {
             </tr>
           </thead>
           <tbody>
-            {history.map((his) => (
-              <React.Fragment key={his.channelPartnerID}>
+            {history.map((his, index) => (
+              <React.Fragment key={his.commission_holder_id}>
                 <tr
-                  key={his.channelPartnerID}
-                  onClick={() => handleRowClick(his.channelPartnerID)}
+                  key={his.commission_holder_id}
+                  onClick={() => handleRowClick(his.commission_holder_id)}
                 >
-                  <td>{his.sno}</td>
-                  <td>{his.channelPartnerID}</td>
+                  <td>{index + 1}</td>
+                  <td>{his.commission_holder_id}</td>
                   <td className="row-down">
-                    {his.channelPartnerName}
+                    {his.commission_holder_name}
                     <img src={exportIcon} alt="Export" />
                   </td>
                 </tr>
-                {selectedRow === his.channelPartnerID && renderDropdown()}
+                {selectedRow === his.commission_holder_id && renderDropdown()}
               </React.Fragment>
             ))}
           </tbody>
@@ -169,8 +229,7 @@ const CpHistory = () => {
       <MobileModal isOpen={isOpen} onClose={toggleModal} />
       {selectedChannelPartnerId && (
         <CpHistoryCard
-          channelPartnerID={selectedChannelPartnerId}
-          cpHistoryCardDetails={cpHistoryCardDetails}
+          history={selectedChannelPartnerId}
           onClose={handleCloseSpHistoryCard}
         />
       )}

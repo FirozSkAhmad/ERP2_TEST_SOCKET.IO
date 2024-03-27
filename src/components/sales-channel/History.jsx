@@ -5,26 +5,14 @@ import menu from '../../assets/menu.svg'
 import MobileModal from "../menu/MobileModal";
 import WebMenu from "../menu/WebMenu";
 import NavBar from "../NavBar";
-import clientData from '../../data/clientData'
 import HistoryCard from "./HistoryCard";
-import historyData from "../../data/historyData";
-import BASEURL from "../../data/baseurl";
 
 const History = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [clients, setClients] = useState([]);
     const [selectedHistory, setSelectedHistory] = useState(null);
-    const [selectedRole, setSelectedRole] = useState('Sales Person');
     const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
 
-  const handleRoleChange = (e) => {
-    setSelectedRole(e.target.value);
-  };
-
-
-    // useEffect(() => {
-    //     setClients(clientData)
-    // }, [])
   const BaseURL = "https://erp-phase2-bck.onrender.com";
 
   useEffect(() => {
@@ -72,7 +60,9 @@ const History = () => {
     const handleHistoryClick = async (receiptId, projectType) => {
         try {
             const accessToken = localStorage.getItem("token");
-            const response = await fetch(`${BaseURL}/history/getPraticularHistoryDetails?receipt_id=${receiptId}&projectType=${projectType}`, {
+            const userId = localStorage.getItem("user_id");
+
+            const response = await fetch(`${BaseURL}/history/getPraticularHistoryDetails?commissionHolderId=${userId}&receipt_id=${receiptId}&projectType=${projectType}`, {
                 headers: {
                   "Authorization": `Bearer ${accessToken}`,
             },
@@ -110,17 +100,6 @@ const History = () => {
         </div >
         <div className="his-table">
             <div className="his-table-sec">
-            <select value={selectedRole} onChange={handleRoleChange}>
-        <option value="Sales Person">Sales Person</option>
-        <option value="Manager">Manager</option>
-        <option value="Channel Person">Channel Person</option>
-        <option value="Super Admin">Super Admin</option>
-      </select>
-                <div className="his-head">
-                    <h3>
-                        History
-                    </h3>
-                </div>
                 <div className="his-table-container">
                     <table>
                         <thead>
@@ -148,8 +127,8 @@ const History = () => {
             </div>
         </div>
         <NavBar />
-        <WebMenu roleType={selectedRole}/>
-        <MobileModal isOpen={isOpen} onClose={toggleModal} roleType={selectedRole}/>
+        <WebMenu />
+        <MobileModal isOpen={isOpen} onClose={toggleModal} />
         {selectedHistory && <HistoryCard history={selectedHistory} onClose={handleCloseHistoryCard} />}
     </div>
   );
