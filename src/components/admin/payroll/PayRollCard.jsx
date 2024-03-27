@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import './/payrollCard.css'
 import logo from '../../../assets/logo.svg';
 import menu from '../../../assets/menu.svg'
@@ -10,7 +10,15 @@ import ManageRoleInput from "./ManageRoleInput";
 
 const PayRollCard = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const [showManageInput, setShowManageInput] = useState(false)
+    const [showManageInput, setShowManageInput] = useState(false);
+    const [roles, setRoles] = useState([]);
+    const [roleType, setRoleType] = useState('');
+    const [payrollFormData, setpayrollFormData] = useState({
+        name: "",
+        role_type: "",
+        incentives: "",
+        salary: ""
+    });
 
     const toggleManageInput = () => {
         setShowManageInput(!showManageInput); // Toggle ManageRoleInput visibility
@@ -18,6 +26,83 @@ const PayRollCard = () => {
 
     const toggleModal = () => {
         setIsOpen(!isOpen); // Toggle modal visibility
+    };
+
+    const BaseURL = "https://erp-phase2-bck.onrender.com";
+
+    useEffect(() => {
+        const fetchRoleTypes = async () => {
+          try {
+            const accessToken = localStorage.getItem("token");
+            const response = await fetch(
+              `${BaseURL}/payroll/getRoleTypes`,
+              {
+                headers: {
+                  Authorization: `Bearer ${accessToken}`,
+                },
+              }
+            );
+            if (!response.ok) {
+              throw new Error("Network error. Failed to fetch role types.");
+            }
+            const result = await response.json();
+            setRoles(result.roleTypes);
+            console.log(result.roleTypes);
+          } catch (error) {
+            console.error("Error fetching role types", error);
+          }
+        };
+    
+        fetchRoleTypes();
+    }, []);
+
+    const handleRoleChange = (e) => {
+        const selectedRoleType = e.target.value;
+        setRoleType(selectedRoleType);
+        setpayrollFormData(prevData => ({
+            ...prevData,
+            role_type: selectedRoleType
+        })); 
+    }
+
+    // API to submit payroll data
+
+    const handleChange = (e) => {
+        const { id, value } = e.target;
+        setpayrollFormData(prevData => ({
+            ...prevData,
+            [id]: value
+        }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+          const accessToken = localStorage.getItem("token");
+          const response = await fetch(`${BaseURL}/payroll/addNewPayRoll`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+            body: JSON.stringify(payrollFormData),
+          });
+          if (!response.ok) {
+            throw new Error("Network error. Network response was not ok");
+        }
+        console.log("Successfully submitted payroll form data", payrollFormData);
+        
+        setpayrollFormData({
+            name: "",
+            role_type: "",
+            incentives: "",
+            salary: ""
+        });
+
+        } catch (error) {
+          console.error("Error submitting payroll  form:", error);
+        }
     };
 
   return (
@@ -44,28 +129,27 @@ const PayRollCard = () => {
                     </div>
                 </div>
                 <div className="payroll-form">
-                    <form action="">
+                    <form onSubmit={handleSubmit}>
                         <div className="payroll-form-field">
                             <label htmlFor="name">Name *</label>
-                            <input type="text" id="name" placeholder="Enter Name" />
+                            <input type="text" id="name" value={payrollFormData.name} onChange={handleChange} placeholder="Enter Name" required />
                         </div>
                         <div className="payroll-form-field">
-                            <label htmlFor="role-type">Role Type</label>
-                            <select id="role-type">
-                                <option value="">Select Role</option>
-                                <option value="super-admin">Super Admin</option>
-                                <option value="manager">Manager</option>
-                                <option value="channel-partner">Channel Partner</option>
-                                <option value="sales-person">Sales Person</option>
+                            <label htmlFor="role-type">Role Type *</label>
+                            <select id="role-type" value={roleType} onChange={handleRoleChange} required>
+                            <option value="" style={{ fontSize: "14px" }}>Select Role</option>
+                                {roles.map((name, index) => (
+                                    <option key={index} value={name} style={{ fontSize: "14px" }}>{name}</option>
+                                ))}
                             </select>
                         </div>
                         <div className="payroll-form-field">
                             <label htmlFor="incentives">Incentives</label>
-                            <input type="text" id="incentives" placeholder="Enter Incentive" />
+                            <input type="text" id="incentives" value={payrollFormData.incentives} onChange={handleChange} placeholder="Enter Incentive" />
                         </div>
                         <div className="payroll-form-field">
-                            <label htmlFor="salary">Salary</label>
-                            <input type="text" id="salary" placeholder="Enter Salary" />
+                            <label htmlFor="salary">Salary *</label>
+                            <input type="text" id="salary" value={payrollFormData.salary} onChange={handleChange} placeholder="Enter Salary" required />
                         </div>
                         <div className="payroll-actions">
                             <div className="submit">
@@ -76,7 +160,7 @@ const PayRollCard = () => {
                 </div>
             </div>
         </div>
-        {showManageInput && <ManageRoleInput />}
+        {showManageInput && <ManageRoleInput onClose={() => setShowManageInput(false)} />}
         <NavBar />
         <WebMenu />
         <MobileModal isOpen={isOpen} onClose={toggleModal}/>
