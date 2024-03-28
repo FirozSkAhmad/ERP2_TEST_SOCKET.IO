@@ -19,6 +19,31 @@ body {
   transform: translate(-50%, -50%);
 }
 
+.btn-hide {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin-right: 10px;
+  position: absolute;
+  right: 0;
+  bottom: 289px;
+  cursor: pointer;
+}
+
+/* .pass {
+  position: absolute;
+  right: 0;
+  bottom: 436px;
+  cursor: pointer;
+}
+
+.confirm-pass {
+  position: absolute;
+  right: 0;
+  bottom: 356px;
+  cursor: pointer;
+} */
+
 .signUp {
   height: 100%;
   width: 360px;
@@ -167,7 +192,10 @@ select:focus {
 }
 
 /* @media screen and (min-width: 1024px) {
-  body {
-    background: #f0f1f3;
+  .pass {
+    bottom: 447px;
+  }
+  .confirm-pass {
+    bottom: 366px;
   }
 } */

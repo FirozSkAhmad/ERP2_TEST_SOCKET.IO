@@ -114,12 +114,12 @@ const SignUp = () => {
             />
           </div>
           <div className="form_input-field">
-            <label htmlFor="password" className="form-label">
+            <label htmlFor="confirm-password" className="form-label">
               Confirm Password*
             </label>
             <input
               type="password"
-              id="password"
+              id="confirm-password"
               placeholder="Create a password"
               name="confirmpassword"
               value={formData.confirmpassword}
@@ -154,7 +154,7 @@ const SignUp = () => {
               </option>
             </select>
           </div>
-          {formData.role_type === "channel-partner" && (
+          {formData.role_type === "CHANNEL PARTNER" && (
             <>
               <div className="form_input-field">
                 <label htmlFor="address" className="form-label">

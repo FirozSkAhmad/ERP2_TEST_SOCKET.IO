@@ -10,11 +10,21 @@ import history from "../../assets/history.svg";
 import receipts from "../../assets/receipts.svg";
 import customer from "../../assets/customer.svg";
 import logout from "../../assets/logout.svg";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const WebMenu = () => {
 
+  const roleType = localStorage.getItem("role_type");
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("role_type");
+    localStorage.removeItem("token");
+    navigate("/");
+  };
+
   const renderMenuItems = () => {
-    const roleType = localStorage.getItem("role_type");
     console.log(roleType);
 
     if(!roleType) return null;
@@ -24,28 +34,28 @@ const WebMenu = () => {
         return (
           <>
             <li>
-              <a href="/sales/dashboard">
+              <NavLink to="/sales/dashboard">
                 <img src={home} alt="" />
-              </a>
-              <a href="/sales/dashboard">
+              </NavLink>
+              <NavLink to="/sales/dashboard">
                 <p>Dashboard</p>
-              </a>
+              </NavLink>
             </li>
             <li>
-              <a href="/sales/onBoard">
+              <NavLink to="/sales/onBoard">
                 <img src={history} alt="" />
-              </a>
-              <a href="/sales/onBoard">
+              </NavLink>
+              <NavLink to="/sales/onBoard">
                 <p>Onboarding Form</p>
-              </a>
+              </NavLink>
             </li>
             <li>
-              <a href="/sales/history">
+              <NavLink to="/sales/history">
                 <img src={approval} alt="" />
-              </a>
-              <a href="/sales/history">
+              </NavLink>
+              <NavLink to="/sales/history">
                 <p>History</p>
-              </a>
+              </NavLink>
             </li>
           </>
         );
@@ -53,44 +63,44 @@ const WebMenu = () => {
         return (
           <>
             <li>
-              <a href="/manager/dashboard">
+              <NavLink to="/manager/dashboard">
                 <img src={home} alt="" />
-              </a>
-              <a href="/manager/dashboard">
+              </NavLink>
+              <NavLink to="/manager/dashboard">
                 <p>Dashboard</p>
-              </a>
+              </NavLink>
             </li>
             <li>
-              <a href="/manager/receipts">
+              <NavLink to="/manager/receipts">
                 <img src={receipts} alt="" />
-              </a>
-              <a href="/manager/receipts">
+              </NavLink>
+              <NavLink to="/manager/receipts">
                 <p>Receipts</p>
-              </a>
+              </NavLink>
             </li>
             <li>
-              <a href="/manager/expenses">
+              <NavLink to="/manager/expenses">
                 <img src={expenses} alt="" />
-              </a>
-              <a href="/manager/expenses">
+              </NavLink>
+              <NavLink to="/manager/expenses">
                 <p>Expenses</p>
-              </a>
+              </NavLink>
             </li>
             <li>
-              <a href="/manager/sp-history">
+              <NavLink to="/manager/sp-history">
                 <img src={history} alt="" />
-              </a>
-              <a href="/manager/sp-history">
+              </NavLink>
+              <NavLink to="/manager/sp-history">
                 <p>SP History</p>
-              </a>
+              </NavLink>
             </li>
             <li>
-              <a href="/manager/cp-history">
+              <NavLink to="/manager/cp-history">
                 <img src={history} alt="" />
-              </a>
-              <a href="/manager/cp-history">
+              </NavLink>
+              <NavLink to="/manager/cp-history">
                 <p>CP History</p>
-              </a>
+              </NavLink>
             </li>
           </>
         );
@@ -98,28 +108,28 @@ const WebMenu = () => {
         return (
           <>
             <li>
-              <a href="/channel/dashboard">
+              <NavLink to="/channel/dashboard">
                 <img src={home} alt="" />
-              </a>
-              <a href="/channel/dashboard">
+              </NavLink>
+              <NavLink to="/channel/dashboard">
                 <p>Dashboard</p>
-              </a>
+              </NavLink>
             </li>
             <li>
-              <a href="/channel/onBoard">
+              <NavLink to="/channel/onBoard">
                 <img src={history} alt="" />
-              </a>
-              <a href="/channel/onBoard">
+              </NavLink>
+              <NavLink to="/channel/onBoard">
                 <p>Onboarding Form</p>
-              </a>
+              </NavLink>
             </li>
             <li>
-              <a href="/channel/history">
+              <NavLink to="/channel/history">
                 <img src={approval} alt="" />
-              </a>
-              <a href="/channel/history">
+              </NavLink>
+              <NavLink to="/channel/history">
                 <p>History</p>
-              </a>
+              </NavLink>
             </li>
           </>
         );
@@ -127,108 +137,108 @@ const WebMenu = () => {
         return (
           <>
             <li>
-              <a href="/admin/dashboard">
+              <NavLink to="/admin/dashboard">
                 <img src={home} alt="" />
-              </a>
-              <a href="/admin/dashboard">
+              </NavLink>
+              <NavLink to="/admin/dashboard">
                 <p>Dashboard</p>
-              </a>
+              </NavLink>
             </li>
             <li>
-              <a href="/admin/approvals">
+              <NavLink to="/admin/approvals">
                 <img src={approval} alt="" />
-              </a>
-              <a href="/admin/approvals">
+              </NavLink>
+              <NavLink to="/admin/approvals">
                 <p>Approval</p>
-              </a>
+              </NavLink>
             </li>
             <li>
-              <a href="/admin/receipts">
+              <NavLink to="/admin/receipts">
                 <img src={receipts} alt="" />
-              </a>
-              <a href="/admin/receipts">
+              </NavLink>
+              <NavLink to="/admin/receipts">
                 <p>Receipts</p>
-              </a>
+              </NavLink>
             </li>
             <li>
-              <a href="/admin/payments">
+              <NavLink to="/admin/payments">
                 <img src={payments} alt="" />
-              </a>
-              <a href="/admin/payments">
+              </NavLink>
+              <NavLink to="/admin/payments">
                 <p>Payments</p>
-              </a>
+              </NavLink>
             </li>
             <li>
-              <a href="/admin/payroll">
+              <NavLink to="/admin/payroll">
                 <img src={home} alt="" />
-              </a>
-              <a href="/admin/payroll">
+              </NavLink>
+              <NavLink to="/admin/payroll">
                 <p>Payrolls</p>
-              </a>
+              </NavLink>
             </li>
             <li>
-              <a href="/admin/expenses">
+              <NavLink to="/admin/expenses">
                 <img src={expenses} alt="" />
-              </a>
-              <a href="/admin/expenses">
+              </NavLink>
+              <NavLink to="/admin/expenses">
                 <p>Expenses</p>
-              </a>
+              </NavLink>
             </li>
             <li>
-              <a href="/admin/commissions">
+              <NavLink to="/admin/commissions">
                 <img src={home} alt="" />
-              </a>
-              <a href="/admin/commissions">
+              </NavLink>
+              <NavLink to="/admin/commissions">
                 <p>Commissions</p>
-              </a>
+              </NavLink>
             </li>
             <li>
-              <a href="/admin/customer">
+              <NavLink to="/admin/customer">
                 <img src={customer} alt="" />
-              </a>
-              <a href="/admin/customer">
+              </NavLink>
+              <NavLink to="/admin/customer">
                 <p>Customer</p>
-              </a>
+              </NavLink>
             </li>
             <li>
-              <a href="/admin/discount">
+              <NavLink to="/admin/discount">
                 <img src={discount} alt="" />
-              </a>
-              <a href="/admin/discount">
+              </NavLink>
+              <NavLink to="/admin/discount">
                 <p>Discount</p>
-              </a>
+              </NavLink>
             </li>
             <li>
-              <a href="/admin/miscellaneous">
+              <NavLink to="/admin/miscellaneous">
                 <img src={miscel} alt="" />
-              </a>
-              <a href="/admin/miscellaneous">
+              </NavLink>
+              <NavLink to="/admin/miscellaneous">
                 <p>Miscellaneous</p>
-              </a>
+              </NavLink>
             </li>
             <li>
-              <a href="/admin/sp-history">
+              <NavLink to="/admin/sp-history">
                 <img src={history} alt="" />
-              </a>
-              <a href="/admin/sp-history">
+              </NavLink>
+              <NavLink to="/admin/sp-history">
                 <p>SP History</p>
-              </a>
+              </NavLink>
             </li>
             <li>
-              <a href="/admin/cp-history">
+              <NavLink to="/admin/cp-history">
                 <img src={history} alt="" />
-              </a>
-              <a href="/admin/cp-history">
+              </NavLink>
+              <NavLink to="/admin/cp-history">
                 <p>CP History</p>
-              </a>
+              </NavLink>
             </li>
             <li>
-              <a href="/admin/lead-generation">
+              <NavLink to="/admin/lead-generation">
                 <img src={miscel} alt="" />
-              </a>
-              <a href="/admin/lead-generation">
+              </NavLink>
+              <NavLink to="/admin/lead-generation">
                 <p>Lead Generation</p>
-              </a>
+              </NavLink>
             </li>
           </>
         );
@@ -244,13 +254,13 @@ const WebMenu = () => {
           <div className="menu-items">
             <ul>{renderMenuItems()}</ul>
             <ul className="logout">
-              <li>
-                <a href="">
+              <li onClick={handleLogout}>
+                <NavLink to="">
                   <img src={logout} alt="" />
-                </a>
-                <a href="">
+                </NavLink>
+                <NavLink to="">
                   <p>Logout</p>
-                </a>
+                </NavLink>
               </li>
             </ul>
           </div>
