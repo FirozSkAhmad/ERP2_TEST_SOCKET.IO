@@ -54,6 +54,9 @@ const HomeLogin = () => {
         case "SUPER ADMIN":
           navigate("/admin/dashboard");
           break;
+        case "MANAGER":
+          navigate("/manager/dashboard");
+          break;
         case "SALES PERSON":
           navigate("/sales/dashboard");
           break;
