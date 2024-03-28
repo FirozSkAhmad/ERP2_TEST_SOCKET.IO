@@ -12,15 +12,25 @@ import historyIcon from '../../assets/history.svg';
 import receipts from '../../assets/receipts.svg';
 import customer from '../../assets/customer.svg';
 import logout from '../../assets/logout.svg';
+import { useNavigate, NavLink } from "react-router-dom";
 
 const MobileModal = ({ isOpen, onClose }) => {
     
+    const roleType = localStorage.getItem("role_type");
+
     const handleClose = () => {
         onClose(); // Call onClose function to close the modal
     };
 
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        localStorage.removeItem("role_type");
+        localStorage.removeItem("token");
+        navigate("/");
+    };
+
       const renderMenuItems = () => {
-        const roleType = localStorage.getItem("role_type");
         console.log(roleType);
 
         if(!roleType) return null;
@@ -29,45 +39,45 @@ const MobileModal = ({ isOpen, onClose }) => {
             case 'SALES PERSON':
                 return (
                     <>
-                        <li><a href="/sales/dashboard"><img src={home} alt="" /></a><a href="/sales/dashboard"><p>Dashboard</p></a></li>
-                        <li><a href="/sales/onBoard"><img src={historyIcon} alt="" /></a><a href="/sales/onBoard"><p>Onboard Form</p></a></li>
-                        <li><a href="/sales/history"><img src={approval} alt="" /></a><a href="/sales/history"><p>History</p></a></li>
+                        <li><NavLink to="/sales/dashboard"><img src={home} alt="" /></NavLink><NavLink to="/sales/dashboard"><p>Dashboard</p></NavLink></li>
+                        <li><NavLink to="/sales/onBoard"><img src={historyIcon} alt="" /></NavLink><NavLink to="/sales/onBoard"><p>Onboard Form</p></NavLink></li>
+                        <li><NavLink to="/sales/history"><img src={approval} alt="" /></NavLink><NavLink to="/sales/history"><p>History</p></NavLink></li>
                     </>
                 );
             case 'MANAGER':
                 return (
                     <>
-                        <li><a href="/manager/dashboard"><img src={home} alt="" /></a><a href="/manager/dashboard"><p>Dashboard</p></a></li>
-                        <li><a href="/manager/receipts"><img src={receipts} alt="" /></a><a href="/manager/receipts"><p>Receipts</p></a></li>
-                        <li><a href="/manager/expenses"><img src={expenses} alt="" /></a><a href="/manager/expenses"><p>Expenses</p></a></li>
-                        <li><a href="/manager/sp-history"><img src={historyIcon} alt="" /></a><a href="/manager/sp-history"><p>SP History</p></a></li>
-                        <li><a href="/manager/cp-history"><img src={historyIcon} alt="" /></a><a href="/manager/cp-history"><p>CP History</p></a></li>
+                        <li><NavLink to="/manager/dashboard"><img src={home} alt="" /></NavLink><NavLink to="/manager/dashboard"><p>Dashboard</p></NavLink></li>
+                        <li><NavLink to="/manager/receipts"><img src={receipts} alt="" /></NavLink><NavLink to="/manager/receipts"><p>Receipts</p></NavLink></li>
+                        <li><NavLink to="/manager/expenses"><img src={expenses} alt="" /></NavLink><NavLink to="/manager/expenses"><p>Expenses</p></NavLink></li>
+                        <li><NavLink to="/manager/sp-history"><img src={historyIcon} alt="" /></NavLink><NavLink to="/manager/sp-history"><p>SP History</p></NavLink></li>
+                        <li><NavLink to="/manager/cp-history"><img src={historyIcon} alt="" /></NavLink><NavLink to="/manager/cp-history"><p>CP History</p></NavLink></li>
                     </>
                 );
             case 'CHANNEL PARTNER':
                 return (
                     <>
-                        <li><a href="/channel/dashboard"><img src={home} alt="" /></a><a href="/channel/dashboard"><p>Dashboard</p></a></li>
-                        <li><a href="/channel/history"><img src={historyIcon} alt="" /></a><a href="/channel/history"><p>History</p></a></li>
-                        <li><a href="/channel/onboard"><img src={approval} alt="" /></a><a href="/channel/onboard"><p>Onboard Form</p></a></li>
+                        <li><NavLink to="/channel/dashboard"><img src={home} alt="" /></NavLink><NavLink to="/channel/dashboard"><p>Dashboard</p></NavLink></li>
+                        <li><NavLink to="/channel/history"><img src={historyIcon} alt="" /></NavLink><NavLink to="/channel/history"><p>History</p></NavLink></li>
+                        <li><NavLink to="/channel/onboard"><img src={approval} alt="" /></NavLink><NavLink to="/channel/onboard"><p>Onboard Form</p></NavLink></li>
                     </>
                 );
             case 'SUPER ADMIN':
                 return (
                     <>
-                        <li><a href="/admin/dashboard"><img src={home} alt="" /></a><a href="/admin/dashboard"><p>Dashboard</p></a></li>
-                        <li><a href="/admin/approval"><img src={approval} alt="" /></a><a href="/admin/approval"><p>Approval</p></a></li>
-                        <li><a href="/admin/receipts"><img src={receipts} alt="" /></a><a href="/admin/receipts"><p>Receipts</p></a></li>
-                        <li><a href="/admin/payments"><img src={payments} alt="" /></a><a href="/admin/payments"><p>Payments</p></a></li>
-                        <li><a href="/admin/payroll"><img src={home} alt="" /></a><a href="/admin/payrolls"><p>Payrolls</p></a></li>
-                        <li><a href="/admin/expenses"><img src={expenses} alt="" /></a><a href="/admin/expenses"><p>Expenses</p></a></li>
-                        <li><a href="/admin/commissions"><img src={home} alt="" /></a><a href="/admin/commissions"><p>Commissions</p></a></li>
-                        <li><a href="/admin/customer"><img src={customer} alt="" /></a><a href="/admin/customer"><p>Customer</p></a></li>
-                        <li><a href="/admin/discount"><img src={discount} alt="" /></a><a href="/admin/discount"><p>Discount</p></a></li>
-                        <li><a href="/admin/miscellaneous"><img src={miscel} alt="" /></a><a href="/admin/miscellaneous"><p>Miscellaneous</p></a></li>
-                        <li><a href="/admin/sp-history"><img src={historyIcon} alt="" /></a><a href="/admin/sp-history"><p>SP History</p></a></li>
-                        <li><a href="/admin/cp-history"><img src={historyIcon} alt="" /></a><a href="/admin/cp-history"><p>CP History</p></a></li>
-                        <li><a href="/admin/lead-generation"><img src={miscel} alt="" /></a><a href="/admin/lead-generation"><p>Lead Generation</p></a></li>
+                        <li><NavLink to="/admin/dashboard"><img src={home} alt="" /></NavLink><NavLink to="/admin/dashboard"><p>Dashboard</p></NavLink></li>
+                        <li><NavLink to="/admin/approval"><img src={approval} alt="" /></NavLink><NavLink to="/admin/approval"><p>Approval</p></NavLink></li>
+                        <li><NavLink to="/admin/receipts"><img src={receipts} alt="" /></NavLink><NavLink to="/admin/receipts"><p>Receipts</p></NavLink></li>
+                        <li><NavLink to="/admin/payments"><img src={payments} alt="" /></NavLink><NavLink to="/admin/payments"><p>Payments</p></NavLink></li>
+                        <li><NavLink to="/admin/payroll"><img src={home} alt="" /></NavLink><NavLink to="/admin/payrolls"><p>Payrolls</p></NavLink></li>
+                        <li><NavLink to="/admin/expenses"><img src={expenses} alt="" /></NavLink><NavLink to="/admin/expenses"><p>Expenses</p></NavLink></li>
+                        <li><NavLink to="/admin/commissions"><img src={home} alt="" /></NavLink><NavLink to="/admin/commissions"><p>Commissions</p></NavLink></li>
+                        <li><NavLink to="/admin/customer"><img src={customer} alt="" /></NavLink><NavLink to="/admin/customer"><p>Customer</p></NavLink></li>
+                        <li><NavLink to="/admin/discount"><img src={discount} alt="" /></NavLink><NavLink to="/admin/discount"><p>Discount</p></NavLink></li>
+                        <li><NavLink to="/admin/miscellaneous"><img src={miscel} alt="" /></NavLink><NavLink to="/admin/miscellaneous"><p>Miscellaneous</p></NavLink></li>
+                        <li><NavLink to="/admin/sp-history"><img src={historyIcon} alt="" /></NavLink><NavLink to="/admin/sp-history"><p>SP History</p></NavLink></li>
+                        <li><NavLink to="/admin/cp-history"><img src={historyIcon} alt="" /></NavLink><NavLink to="/admin/cp-history"><p>CP History</p></NavLink></li>
+                        <li><NavLink to="/admin/lead-generation"><img src={miscel} alt="" /></NavLink><NavLink to="/admin/lead-generation"><p>Lead Generation</p></NavLink></li>
                     </>
                 );
             default:
@@ -79,7 +89,7 @@ const MobileModal = ({ isOpen, onClose }) => {
   <div className={`mob-modal ${isOpen ? "open" : ""}`}>
     <div className="mob-modal-content">
         <div className="close-menu" >
-            <a className="menu-logo" href="/"><img src={logo} alt="VarunRaj Logo" /></a>
+            <NavLink className="menu-logo" to="/"><img src={logo} alt="VarunRaj Logo" /></NavLink>
             <img src={menuClose} alt="Close Menu" onClick={handleClose}/>
         </div>
             <div className="mob-mn_Col2">
@@ -87,9 +97,9 @@ const MobileModal = ({ isOpen, onClose }) => {
                 {renderMenuItems()}
               </ul>
               <ul className='logout'>
-                <li>
-                  <a href=""><img src={logout} alt="" /></a>
-                  <a href=""><p>Logout</p></a>
+                <li onClick={handleLogout}>
+                  <NavLink to=""><img src={logout} alt="" /></NavLink>
+                  <NavLink to=""><p>Logout</p></NavLink>
                 </li>
               </ul>
             </div>

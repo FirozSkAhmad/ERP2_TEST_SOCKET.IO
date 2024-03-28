@@ -1,12 +1,21 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { FaEye } from "react-icons/fa";
+import { FaEyeSlash } from "react-icons/fa";
 
 const HomeLogin = () => {
+  const [passwordVisible, setPasswordVisible] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     rememberMe: false,
   });
+
   const BaseUrl = "https://erp-phase2-bck.onrender.com";
 
   const navigate = useNavigate();
@@ -44,6 +53,9 @@ const HomeLogin = () => {
       switch (role_type) {
         case "SUPER ADMIN":
           navigate("/admin/dashboard");
+          break;
+        case "MANAGER":
+          navigate("/manager/dashboard");
           break;
         case "SALES PERSON":
           navigate("/sales/dashboard");
@@ -86,13 +98,23 @@ const HomeLogin = () => {
               Password
             </label>
             <input
-              type="password"
+              type={passwordVisible ? "text" : "password"}
               id="password"
               value={formData.password}
               onChange={onChangeInput}
               name="password"
               autoComplete="on"
             />
+            <button className="btn-hide" type="button" onClick={togglePasswordVisibility}>
+              {passwordVisible ?
+                (
+                  <FaEyeSlash />
+                ) :
+                (
+                  <FaEye />
+                )
+              }
+            </button>
           </div>
           <div className="form_check">
             <div>
@@ -117,9 +139,6 @@ const HomeLogin = () => {
             </span>
           </div>
         </form>
-        <Link to="/admin/dashboard">Admin Dash</Link>
-        <Link to="/sales/dashboard">Sales Dash</Link>
-        <Link to="/channel/dashboard">Channel Dash</Link>
       </div>
     </div>
   );

@@ -183,11 +183,6 @@ const Table = ({ selectedButton, url }) => {
                   <td onClick={() => handleCellClick(project)}>
                     {project.project_name}
                   </td>
-
-                  <td onClick={() => handleCellClick(project)}>
-                    {project.pid}
-                  </td>
-
                   {viewportWidth >= 1024 && selectedButton === "APARTMENT" && (
                     <>
                       <td className="tower-number">{project.tower_number}</td>
@@ -207,7 +202,7 @@ const Table = ({ selectedButton, url }) => {
                     </>
                   )}
                   <td onClick={() => handleCellClick(project)}>
-                    {project.projectID}
+                    {project.pid}
                   </td>
                   <td
                     className="proj-status"
