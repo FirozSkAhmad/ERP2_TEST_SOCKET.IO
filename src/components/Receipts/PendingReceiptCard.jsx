@@ -21,6 +21,8 @@ const PendingReceiptCard = ({
     total_commission: "",
   });
 
+  const roleType = localStorage.getItem("role_type");
+
   const BaseURL = "https://erp-phase2-bck.onrender.com";
 
   const makeRequest = async (url, options) => {
@@ -473,7 +475,7 @@ const PendingReceiptCard = ({
               <h3>Receipt</h3>
             </div>
             <div className="rec-data">{renderFields()}</div>
-            <div className="rec-actions">
+            {roleType === "SUPER ADMIN" && <div className="rec-actions">
               <div
                 className="rec-delete"
                 onClick={() => handleAction("REJECT")}
@@ -497,7 +499,10 @@ const PendingReceiptCard = ({
                   <button>Export</button>
                 </div>
               </div>
-            </div>
+            </div>}
+            {roleType === "MANAGER" && <div className="sp-close">
+              <button onClick={onClose}>Close</button>
+            </div>}
           </div>
         </div>
       ) : loader == false ? (
