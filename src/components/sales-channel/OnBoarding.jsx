@@ -323,6 +323,8 @@ const OnBoarding = () => {
     }
     // API to get Square Yards ends here
 
+    const roleType = localStorage.getItem("role_type");
+
     // POST form data
 
     const [onBoardFormData, setOnBoardFormData] = useState({
@@ -547,14 +549,18 @@ const OnBoarding = () => {
                                     <label htmlFor="discount">Discount %</label>
                                     <input type="number" name="" id="discount" value={onBoardFormData.discount} onChange={handleChange} placeholder="Enter Discount % (Remark)" />
                                 </div>
-                                <div className="board-field">
+                                {roleType === "SALES PERSON" && <div className="board-field">
                                     <label htmlFor="type_of_commission">Type of Commission *</label>
                                     <select id="type_of_commission" value={onBoardFormData.type_of_commission} onChange={handleChange} required>
                                         <option value="">Select Commission</option>
                                         <option value="validation">Validation</option>
                                         <option value="sold">Sold</option>
                                     </select>
-                                </div>
+                                </div>}
+                                {roleType === "CHANNEL PARTNER" && <div className="board-field">
+                                    <label htmlFor="type_of_commission">Type of Commission *</label>
+                                    <input type="text" id="type_of_commission" value="Validation" readOnly />
+                                </div>}
                                 <div className="board-field">
                                     <div>
                                         <label id="status-label" htmlFor="status">Status *</label>
@@ -628,14 +634,18 @@ const OnBoarding = () => {
                                     <label htmlFor="discount">Discount %</label>
                                     <input type="number" name="" id="discount" value={onBoardFormData.discount} onChange={handleChange} placeholder="Enter Discount % (Remark)" />
                                 </div>
-                                <div className="board-field">
+                                {roleType === "SALES PERSON" && <div className="board-field">
                                     <label htmlFor="type_of_commission">Type of Commission *</label>
                                     <select id="type_of_commission" value={onBoardFormData.type_of_commission} onChange={handleChange} required>
                                         <option value="">Select Commission</option>
                                         <option value="validation">Validation</option>
                                         <option value="sold">Sold</option>
                                     </select>
-                                </div>
+                                </div>}
+                                {roleType === "CHANNEL PARTNER" && <div className="board-field">
+                                    <label htmlFor="type_of_commission">Type of Commission *</label>
+                                    <input type="text" id="type_of_commission" value="Validation" readOnly />
+                                </div>}
                                 <div className="board-field">
                                     <div><label id="status-label" htmlFor="status">Status *</label></div>
                                     <div className="status">
@@ -705,14 +715,18 @@ const OnBoarding = () => {
                                     <label htmlFor="discount">Discount %</label>
                                     <input type="number" name="" id="discount" value={onBoardFormData.discount} onChange={handleChange} placeholder="Enter Discount % (Remark)" />
                                 </div>
-                                <div className="board-field">
+                                {roleType === "SALES PERSON" && <div className="board-field">
                                     <label htmlFor="type_of_commission">Type of Commission *</label>
                                     <select id="type_of_commission" value={onBoardFormData.type_of_commission} onChange={handleChange} required>
                                         <option value="">Select Commission</option>
                                         <option value="validation">Validation</option>
                                         <option value="sold">Sold</option>
                                     </select>
-                                </div>
+                                </div>}
+                                {roleType === "CHANNEL PARTNER" && <div className="board-field">
+                                    <label htmlFor="type_of_commission">Type of Commission *</label>
+                                    <input type="text" id="type_of_commission" value="Validation" readOnly />
+                                </div>}
                                 <div className="board-field">
                                     <div><label id="status-label" htmlFor="status">Status *</label></div>
                                     <div className="status">
@@ -791,14 +805,18 @@ const OnBoarding = () => {
                                     <label htmlFor="discount">Discount %</label>
                                     <input type="number" name="" id="discount" value={onBoardFormData.discount} onChange={handleChange} placeholder="Enter Discount % (Remark)" />
                                 </div>
-                                <div className="board-field">
+                                {roleType === "SALES PERSON" && <div className="board-field">
                                     <label htmlFor="type_of_commission">Type of Commission *</label>
                                     <select id="type_of_commission" value={onBoardFormData.type_of_commission} onChange={handleChange} required>
                                         <option value="">Select Commission</option>
                                         <option value="validation">Validation</option>
                                         <option value="sold">Sold</option>
                                     </select>
-                                </div>
+                                </div>}
+                                {roleType === "CHANNEL PARTNER" && <div className="board-field">
+                                    <label htmlFor="type_of_commission">Type of Commission *</label>
+                                    <input type="text" id="type_of_commission" value="validation" readOnly />
+                                </div>}
                                 <div className="board-field">
                                     <div><label id="status-label" htmlFor="status">Status *</label></div>
                                     <div className="status">
