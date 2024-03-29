@@ -1,29 +1,27 @@
 import React, { useEffect, useState } from "react";
 import close from "../../../assets/menuClose.svg";
-import commissionData from "../../../data/commissionData";
-import commissionDropData from "../../../data/commissionDropData";
-import commissionValSoldCardData from "../../../data/commissionValSoldCardData";
+// import commissionData from "../../../data/commissionData";
+// import commissionDropData from "../../../data/commissionDropData";
+// import commissionValSoldCardData from "../../../data/commissionValSoldCardData";
 import SoldCard from "./SoldCard";
 
-const SoldTable = ({ data }) => {
-  const [soldData, setSoldData] = useState([]);
-  const [dropData, setDropData] = useState([]);
+const SoldTable = ({ sold }) => {
+  const [dropDownData, setDropDownData] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
   const [selectedSalesPersonId, setSelectedSalesPersonId] = useState(null);
-  const [soldCardDetails, setSoldCardDetails] = useState([]);
+  const [receiptId, setReceiptId] = useState([]);
   const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
+  const [projectType, setProjectType] = useState([]);
 
-  useEffect(() => {
-    setSoldData(commissionData);
-  }, []);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    setDropData(commissionDropData);
-  }, []);
+  const URL = "https://erp-phase2-bck.onrender.com";
 
-  useEffect(() => {
-    setSoldCardDetails(commissionValSoldCardData);
-  }, []);
+  let SNO = 0;
+
+  // useEffect(() => {
+  //   setSoldCardDetails(commissionValSoldCardData);
+  // }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -37,29 +35,56 @@ const SoldTable = ({ data }) => {
     };
   }, []);
 
-  const handleRowClick = (salesPersonID) => {
+  const handleRowClick = async (salesPersonID) => {
     setSelectedRow(salesPersonID);
+    setLoading(true);
+    try {
+      const accessToken = localStorage.getItem("token");
+      const response = await fetch(
+        `${URL}/commissions/getPraticularCommissionHolderHistory?commissionFilter=sold&commission_holder_id=${String(
+          salesPersonID
+        )}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      setLoading(false);
+      const responseData = await response.json();
+      setDropDownData(responseData.data);
+    } catch (error) {
+      setLoading(false);
+      console.error("Error fetching data:", error);
+    }
   };
 
   const handleCloseDropdown = () => {
     setSelectedRow(null);
   };
 
-  const handleDropDownRowClick = (salesPersonID) => {
+  const handleDropDownRowClick = (salesPersonID, receiptID, projectType) => {
     setSelectedSalesPersonId(salesPersonID);
-    console.log(salesPersonID);
+    setReceiptId(receiptID);
+    setProjectType(projectType);
   };
 
   const handleCloseValidationCard = () => {
     setSelectedSalesPersonId(false);
   };
 
+  useEffect(() => {}, [
+    selectedSalesPersonId,
+    handleCloseValidationCard,
+    receiptId,
+    projectType,
+  ]);
+
   const renderDropdown = (salesPersonID) => {
-    if (selectedRow === salesPersonID) {
-      // console.log(selectedRow);
-      const selectedProject = dropData.find(
-        (item) => item.salesPersonID === salesPersonID
-      );
+    if (selectedRow === salesPersonID && dropDownData.length > 0) {
       return (
         <tr className="dropdown" style={{ backgroundColor: "#D9D9D9" }}>
           <td colSpan="5">
@@ -79,19 +104,29 @@ const SoldTable = ({ data }) => {
                       <th>Commission Received Till Now</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr onClick={() => handleDropDownRowClick(salesPersonID)}>
-                      <td>{selectedProject.clientName}</td>
-                      <td>{selectedProject.projectID}</td>
-                      {viewportWidth >= 1024 && (
-                        <td>{selectedProject.projectType}</td>
-                      )}
-                      {viewportWidth >= 1024 && (
-                        <td>{selectedProject.totalCommission}</td>
-                      )}
-                      <td>{selectedProject.commissionReceived}</td>
-                    </tr>
-                  </tbody>
+                  {dropDownData.map((item, i) => (
+                    <tbody key={i}>
+                      <tr
+                        onClick={() =>
+                          handleDropDownRowClick(
+                            salesPersonID,
+                            item.receipt_id,
+                            item.project.project_type
+                          )
+                        }
+                      >
+                        <td>{item.client_name}</td>
+                        <td>{item.project.project_id}</td>
+                        {viewportWidth >= 1024 && (
+                          <td>{item.project.project_type}</td>
+                        )}
+                        {viewportWidth >= 1024 && (
+                          <td>{item.commission.total_commission}</td>
+                        )}
+                        <td>{item.commission.commission_recived_till_now}</td>
+                      </tr>
+                    </tbody>
+                  ))}
                 </table>
               </div>
             </div>
@@ -113,17 +148,17 @@ const SoldTable = ({ data }) => {
           </tr>
         </thead>
         <tbody>
-          {soldData.map((data, index) => (
+          {sold.map((data, index) => (
             <React.Fragment key={index}>
               <tr
                 key={index}
-                onClick={() => handleRowClick(data.salesPersonID)}
+                onClick={() => handleRowClick(data.sales_person_id)}
               >
-                <td>{data.sno}</td>
-                <td>{data.salesPersonID}</td>
-                <td>{data.salesPersonName}</td>
+                <td>{SNO++}</td>
+                <td>{data.sales_person_id}</td>
+                <td>{data.sales_person_name}</td>
               </tr>
-              {renderDropdown(data.salesPersonID)}
+              {renderDropdown(data.sales_person_id)}
             </React.Fragment>
           ))}
         </tbody>
@@ -131,8 +166,9 @@ const SoldTable = ({ data }) => {
       {selectedSalesPersonId && (
         <SoldCard
           salesPersonID={selectedSalesPersonId}
-          soldCardDetails={soldCardDetails}
           onClose={handleCloseValidationCard}
+          receiptID={receiptId}
+          projectType={projectType}
         />
       )}
     </div>

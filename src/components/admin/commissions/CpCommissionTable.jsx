@@ -5,26 +5,20 @@ import cpCommissionDropData from "../../../data/cpCommissionDropData";
 import cpCommissionCardData from "../../../data/cpCommissionCardData";
 import CpCommissionCard from "./CpCommissionCard";
 
-const CpCommissionTable = ({ data }) => {
-  const [cpCommissionData, setCpCommissionData] = useState([]);
-  const [dropData, setDropData] = useState([]);
+const CpCommissionTable = ({ cp }) => {
+  const [dropDownData, setDropDownData] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
   const [selectedChannelPartnerId, setSelectedChannelPartnerId] =
     useState(null);
-  const [cpCommissionCardDetails, setCpCommissionCardDetails] = useState([]);
+  const [receiptId, setReceiptId] = useState([]);
   const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
+  const [projectType, setProjectType] = useState([]);
 
-  useEffect(() => {
-    setCpCommissionData(cpCommission);
-  }, []);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    setDropData(cpCommissionDropData);
-  }, []);
+  const URL = "https://erp-phase2-bck.onrender.com";
 
-  useEffect(() => {
-    setCpCommissionCardDetails(cpCommissionCardData);
-  }, []);
+  let SNO = 0;
 
   useEffect(() => {
     const handleResize = () => {
@@ -38,29 +32,56 @@ const CpCommissionTable = ({ data }) => {
     };
   }, []);
 
-  const handleRowClick = (channelPartnerID) => {
-    setSelectedRow(channelPartnerID);
+  const handleRowClick = async (salesPersonID) => {
+    setSelectedRow(salesPersonID);
+    setLoading(true);
+    try {
+      const accessToken = localStorage.getItem("token");
+      const response = await fetch(
+        `${URL}/commissions/getPraticularCommissionHolderHistory?commissionFilter=cpcommission&commission_holder_id=${String(
+          salesPersonID
+        )}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      setLoading(false);
+      const responseData = await response.json();
+      setDropDownData(responseData.data);
+    } catch (error) {
+      setLoading(false);
+      console.error("Error fetching data:", error);
+    }
   };
 
   const handleCloseDropdown = () => {
     setSelectedRow(null);
   };
 
-  const handleDropDownRowClick = (channelPartnerID) => {
+  const handleDropDownRowClick = (channelPartnerID, receiptID, projectType) => {
     setSelectedChannelPartnerId(channelPartnerID);
-    // console.log(channelPartnerID);
+    setReceiptId(receiptID);
+    setProjectType(projectType);
   };
 
-  const handleCloseValidationCard = () => {
+  const handleCloseCPCommissionCard = () => {
     setSelectedChannelPartnerId(false);
   };
 
+  useEffect(() => {}, [
+    selectedChannelPartnerId,
+    handleCloseCPCommissionCard,
+    receiptId,
+    projectType,
+  ]);
+
   const renderDropdown = (channelPartnerID) => {
-    if (selectedRow === channelPartnerID) {
-      // console.log(selectedRow);
-      const selectedProject = dropData.find(
-        (item) => item.channelPartnerID === channelPartnerID
-      );
+    if (selectedRow === channelPartnerID && dropDownData.length > 0) {
       return (
         <tr className="dropdown" style={{ backgroundColor: "#D9D9D9" }}>
           <td colSpan="5">
@@ -80,21 +101,29 @@ const CpCommissionTable = ({ data }) => {
                       <th>Commission Received Till Now</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr
-                      onClick={() => handleDropDownRowClick(channelPartnerID)}
-                    >
-                      <td>{selectedProject.clientName}</td>
-                      <td>{selectedProject.projectID}</td>
-                      {viewportWidth >= 1024 && (
-                        <td>{selectedProject.projectType}</td>
-                      )}
-                      {viewportWidth >= 1024 && (
-                        <td>{selectedProject.totalCommission}</td>
-                      )}
-                      <td>{selectedProject.commissionReceived}</td>
-                    </tr>
-                  </tbody>
+                  {dropDownData.map((item, i) => (
+                    <tbody key={i}>
+                      <tr
+                        onClick={() =>
+                          handleDropDownRowClick(
+                            channelPartnerID,
+                            item.receipt_id,
+                            item.project.project_type
+                          )
+                        }
+                      >
+                        <td>{item.client_name}</td>
+                        <td>{item.project.project_id}</td>
+                        {viewportWidth >= 1024 && (
+                          <td>{item.project.project_type}</td>
+                        )}
+                        {viewportWidth >= 1024 && (
+                          <td>{item.commission.total_commission}</td>
+                        )}
+                        <td>{item.commission.commission_recived_till_now}</td>
+                      </tr>
+                    </tbody>
+                  ))}
                 </table>
               </div>
             </div>
@@ -116,17 +145,17 @@ const CpCommissionTable = ({ data }) => {
           </tr>
         </thead>
         <tbody>
-          {cpCommissionData.map((data, index) => (
+          {cp.map((data, index) => (
             <React.Fragment key={index}>
               <tr
                 key={index}
-                onClick={() => handleRowClick(data.channelPartnerID)}
+                onClick={() => handleRowClick(data.channel_partner_id)}
               >
-                <td>{data.sno}</td>
-                <td>{data.channelPartnerID}</td>
-                <td>{data.channelPartnerName}</td>
+                <td>{SNO++}</td>
+                <td>{data.channel_partner_id}</td>
+                <td>{data.sales_person_name}</td>
               </tr>
-              {renderDropdown(data.channelPartnerID)}
+              {renderDropdown(data.channel_partner_id)}
             </React.Fragment>
           ))}
         </tbody>
@@ -134,8 +163,9 @@ const CpCommissionTable = ({ data }) => {
       {selectedChannelPartnerId && (
         <CpCommissionCard
           channelPartnerID={selectedChannelPartnerId}
-          cpCommissionCardDetails={cpCommissionCardDetails}
-          onClose={handleCloseValidationCard}
+          receiptID={receiptId}
+          projectType={projectType}
+          onClose={handleCloseCPCommissionCard}
         />
       )}
     </div>

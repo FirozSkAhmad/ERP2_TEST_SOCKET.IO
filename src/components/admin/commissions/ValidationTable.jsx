@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
 import close from "../../../assets/menuClose.svg";
-import commissionData from "../../../data/commissionData";
-import commissionDropData from "../../../data/commissionDropData";
+// import commissionData from "../../../data/commissionData";
+// import commissionDropData from "../../../data/commissionDropData";
 import ValidationCard from "./ValidationCard";
-import commissionValSoldCardData from "../../../data/commissionValSoldCardData";
+// import commissionValSoldCardData from "../../../data/commissionValSoldCardData";
 
 const ValidationTable = ({ validation }) => {
   const [dropDownData, setDropDownData] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
   const [selectedSalesPersonId, setSelectedSalesPersonId] = useState(null);
-  const [validationCardDetails, setValidationCardDetails] = useState([]);
   const [receiptId, setReceiptId] = useState([]);
   const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
   const [projectType, setProjectType] = useState([]);
@@ -19,10 +18,6 @@ const ValidationTable = ({ validation }) => {
   const URL = "https://erp-phase2-bck.onrender.com";
 
   let SNO = 0;
-
-  useEffect(() => {
-    setValidationCardDetails(commissionValSoldCardData);
-  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -79,7 +74,6 @@ const ValidationTable = ({ validation }) => {
 
   useEffect(() => {}, [
     selectedSalesPersonId,
-    validationCardDetails,
     handleCloseValidationCard,
     receiptId,
     projectType,
@@ -173,7 +167,7 @@ const ValidationTable = ({ validation }) => {
       {selectedSalesPersonId && (
         <ValidationCard
           salesPersonID={selectedSalesPersonId}
-          validationCardDetails={validationCardDetails}
+          // validationCardDetails={validationCardDetails}
           onClose={handleCloseValidationCard}
           receiptID={receiptId}
           projectType={projectType}
