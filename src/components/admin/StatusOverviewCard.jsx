@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./style.css";
 import close from "../../assets/menuClose.svg";
+import Loader from "../Loader";
+import sharedContext from "../../context/SharedContext";
 
 const StatusOverviewCard = ({ selectedButton, onClose }) => {
+  const { setLoader } = useContext(sharedContext);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -10,6 +13,9 @@ const StatusOverviewCard = ({ selectedButton, onClose }) => {
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoader(true);
+      setData([]);
+
       try {
         const accessToken = localStorage.getItem("token");
         const response = await fetch(
@@ -30,6 +36,8 @@ const StatusOverviewCard = ({ selectedButton, onClose }) => {
       } catch (error) {
         console.error("Error fetching data:", error);
         setLoading(false);
+      } finally {
+        setLoader(false);
       }
     };
 
@@ -37,6 +45,7 @@ const StatusOverviewCard = ({ selectedButton, onClose }) => {
   }, [selectedButton]);
   return (
     <div className="stat-det">
+      <Loader />
       <div className="stat-sec">
         <div className="close">
           <img src={close} alt="Close card" onClick={onClose} />

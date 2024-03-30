@@ -6,25 +6,25 @@ const ProjectDetails = ({ project, getStatusColor, onClose }) => {
   if (!project) return null;
 
   const renderProjectDetails = () => {
-    switch (project.type) {
-      case "Apartments":
+    switch (project.project_type) {
+      case "APARTMENT":
         return (
           <>
             <div className="data-fld">
               <p>Project Name</p>
-              <p>{project.projectName}</p>
+              <p>{project.project_name}</p>
             </div>
             <div className="data-fld">
               <p>Tower Number</p>
-              <p>{project.towerNumber}</p>
+              <p>{project.tower_number}</p>
             </div>
             <div className="data-fld">
               <p>Flat Number</p>
-              <p>{project.flatNumber}</p>
+              <p>{project.flat_number}</p>
             </div>
             <div className="data-fld">
               <p>Project ID</p>
-              <p>{project.projectID}</p>
+              <p>{project.pid}</p>
             </div>
             <div className="data-fld">
               <p>Status</p>
@@ -35,20 +35,20 @@ const ProjectDetails = ({ project, getStatusColor, onClose }) => {
             {/* Add more fields specific to Apartments */}
           </>
         );
-      case "Villas":
+      case "VILLA":
         return (
           <>
             <div className="data-fld">
               <p>Project Name</p>
-              <p>{project.projectName}</p>
+              <p>{project.project_name}</p>
             </div>
             <div className="data-fld">
               <p>Villa Number</p>
-              <p>{project.villaNumber}</p>
+              <p>{project.villa_number}</p>
             </div>
             <div className="data-fld">
               <p>Project ID</p>
-              <p>{project.projectID}</p>
+              <p>{project.pid}</p>
             </div>
             <div className="data-fld">
               <p>Status</p>
@@ -59,20 +59,20 @@ const ProjectDetails = ({ project, getStatusColor, onClose }) => {
             {/* Add more fields specific to Villas */}
           </>
         );
-      case "Plots":
+      case "PLOT":
         return (
           <>
             <div className="data-fld">
               <p>Project Name</p>
-              <p>{project.projectName}</p>
+              <p>{project.project_name}</p>
             </div>
             <div className="data-fld">
               <p>Plot Number</p>
-              <p>{project.plotNumber}</p>
+              <p>{project.plot_number}</p>
             </div>
             <div className="data-fld">
               <p>Project ID</p>
-              <p>{project.projectID}</p>
+              <p>{project.pid}</p>
             </div>
             <div className="data-fld">
               <p>Status</p>
@@ -83,24 +83,24 @@ const ProjectDetails = ({ project, getStatusColor, onClose }) => {
             {/* Add more fields specific to Plots */}
           </>
         );
-      case "Farm lands":
+      case "FARM_LAND":
         return (
           <>
             <div className="data-fld">
               <p>Project Name</p>
-              <p>{project.projectName}</p>
+              <p>{project.project_name}</p>
             </div>
             <div className="data-fld">
               <p>Plot Number</p>
-              <p>{project.plotNumber}</p>
+              <p>{project.plot_number}</p>
             </div>
             <div className="data-fld">
               <p>Sq Yards</p>
-              <p>{project.sqYards}</p>
+              <p>{project.sq_yards}</p>
             </div>
             <div className="data-fld">
               <p>Project ID</p>
-              <p>{project.projectID}</p>
+              <p>{project.pid}</p>
             </div>
             <div className="data-fld">
               <p>Status</p>
@@ -117,7 +117,7 @@ const ProjectDetails = ({ project, getStatusColor, onClose }) => {
   };
 
   return (
-    <div className="proj-det" style={{ backgroundColor: "#cacaca" }}>
+    <div className="proj-det">
       <div className="det-sec">
         <div className="close">
           <img src={close} alt="Close card" onClick={onClose} />
