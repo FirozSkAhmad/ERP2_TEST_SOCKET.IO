@@ -14,7 +14,7 @@ const Discount = () => {
   const { loader, setLoader } = useContext(sharedContext);
   const [isOpen, setIsOpen] = useState(false);
   const [discount, setDiscount] = useState([]);
-  const [selectedProjectID, setSelectedProjectID] = useState(null);
+  const [selectedReceiptID, setSelectedReceiptID] = useState(null);
   const [selectedProjectType, setSelectedProjectType] = useState(null);
   const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
 
@@ -66,18 +66,10 @@ const Discount = () => {
     };
   }, []);
 
-  const handleRowClick = (projectID, projectType) => {
-    setSelectedProjectID(projectID);
+  const handleRowClick = (receiptID, projectType) => {
+    setSelectedReceiptID(receiptID);
     setSelectedProjectType(projectType);
   };
-
-  if (loader) {
-    return <Loader />;
-  }
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
 
   return (
     <div>
@@ -90,12 +82,14 @@ const Discount = () => {
                 }
             `}
       </style>
+      <Loader />
       <div className="mob-nav">
         <a href="">
           <img src={logo} alt="" />
         </a>
         <img src={menu} alt="" onClick={toggleModal} />
       </div>
+      {discount.length!== 0 ? (
       <div className="disc-table-container">
         <table>
           <thead>
@@ -110,17 +104,17 @@ const Discount = () => {
             </tr>
           </thead>
           <tbody>
-            {discount.map((disc) => (
+            {discount.map((disc, index) => (
               <tr
                 key={disc.receipt_id}
                 onClick={() =>
                   handleRowClick(
-                    disc.project.project_id,
+                    disc.receipt_id,
                     disc.project.project_type
                   )
                 }
               >
-                {viewportWidth >= 1024 && <td>{disc.receipt_id}</td>}
+                {viewportWidth >= 1024 && <td>{index + 1}</td>}
                 {viewportWidth >= 1024 && <td>{disc.client_name}</td>}
                 {viewportWidth >= 1024 && <td>{disc.client_phn_no}</td>}
                 <td>{disc.project.project_id}</td>
@@ -131,15 +125,16 @@ const Discount = () => {
             ))}
           </tbody>
         </table>
-      </div>
+      </div>) : loader == false ? ("No data to show") :
+      ("")}
       <NavBar />
       <WebMenu />
       <MobileModal isOpen={isOpen} onClose={toggleModal} />
-      {selectedProjectID && (
+      {selectedReceiptID && (
         <DiscountCard
-          projectID={selectedProjectID}
+          receiptID={selectedReceiptID}
           projectType={selectedProjectType}
-          onClose={() => setSelectedProjectID(null)}
+          onClose={() => setSelectedReceiptID(null)}
         />
       )}
     </div>

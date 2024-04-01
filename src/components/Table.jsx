@@ -22,6 +22,8 @@ const Table = ({ selectedButton, url }) => {
   const [scaleData, setScaleData] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const roleType = localStorage.getItem("role_type");
+
   useEffect(() => {
     const fetchData = async () => {
       setLoader(true);
@@ -157,7 +159,7 @@ const Table = ({ selectedButton, url }) => {
       <div className="table_Sec">
         <div className="table_Head">
           <h1>Projects</h1>
-          <div className="actions">
+          {(roleType === "SUPER ADMIN" || roleType === "MANAGER") && <div className="actions">
             <button onClick={handleAddProject}>Add Project</button>
             <div className="actions file-actions">
               <div>
@@ -167,7 +169,7 @@ const Table = ({ selectedButton, url }) => {
                 <button>Download</button>
               </div>
             </div>
-          </div>
+          </div>}
         </div>
         {displayedProjects.length !== 0 ? (
         <div className="table-container">

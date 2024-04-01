@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import close from "../../../assets/menuClose.svg";
-// import commissionData from "../../../data/commissionData";
-// import commissionDropData from "../../../data/commissionDropData";
-// import commissionValSoldCardData from "../../../data/commissionValSoldCardData";
 import SoldCard from "./SoldCard";
+import sharedContext from "../../../context/SharedContext";
 
 const SoldTable = ({ sold }) => {
+  const {setLoader} = useContext(sharedContext);
   const [dropDownData, setDropDownData] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
   const [selectedSalesPersonId, setSelectedSalesPersonId] = useState(null);
@@ -37,7 +36,8 @@ const SoldTable = ({ sold }) => {
 
   const handleRowClick = async (salesPersonID) => {
     setSelectedRow(salesPersonID);
-    setLoading(true);
+    setLoader(true);
+
     try {
       const accessToken = localStorage.getItem("token");
       const response = await fetch(
@@ -59,6 +59,8 @@ const SoldTable = ({ sold }) => {
     } catch (error) {
       setLoading(false);
       console.error("Error fetching data:", error);
+    } finally {
+      setLoader(false);
     }
   };
 
@@ -154,7 +156,7 @@ const SoldTable = ({ sold }) => {
                 key={index}
                 onClick={() => handleRowClick(data.sales_person_id)}
               >
-                <td>{SNO++}</td>
+                <td>{index + 1}</td>
                 <td>{data.sales_person_id}</td>
                 <td>{data.sales_person_name}</td>
               </tr>

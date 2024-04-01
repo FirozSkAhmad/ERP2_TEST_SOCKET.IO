@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ".//commissions.css";
 import logo from "../../../assets/logo.svg";
 import menu from "../../../assets/menu.svg";
@@ -8,8 +8,11 @@ import WebMenu from "../../menu/WebMenu";
 import ValidationTable from "./ValidationTable";
 import SoldTable from "./SoldTable";
 import CpCommissionTable from "./CpCommissionTable";
+import sharedContext from "../../../context/SharedContext";
+import Loader from "../../Loader";
 
 const Commissions = () => {
+  const {setLoader} = useContext(sharedContext);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedButton, setSelectedButton] = useState("Validation");
   const [data, setData] = useState([]);
@@ -18,6 +21,9 @@ const Commissions = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoader(true);
+      setData([]);
+
       try {
         const accessToken = localStorage.getItem("token");
         const response = await fetch(
@@ -35,6 +41,8 @@ const Commissions = () => {
         setData(responseData.data);
       } catch (error) {
         console.error("Error fetching data:", error);
+      } finally {
+        setLoader(false);
       }
     };
 
@@ -63,6 +71,7 @@ const Commissions = () => {
                 }
             `}
       </style>
+      <Loader />
       <div className="mob-nav">
         <a href="">
           <img src={logo} alt="" />

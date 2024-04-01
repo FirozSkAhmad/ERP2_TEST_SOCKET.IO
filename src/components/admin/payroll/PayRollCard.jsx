@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import './/payrollCard.css'
 import logo from '../../../assets/logo.svg';
 import menu from '../../../assets/menu.svg'
@@ -7,8 +7,12 @@ import MobileModal from "../../menu/MobileModal";
 import NavBar from '../../NavBar';
 import WebMenu from '../../menu/WebMenu';
 import ManageRoleInput from "./ManageRoleInput";
+import sharedContext from "../../../context/SharedContext";
+import Loader from "../../Loader";
+import toast from "react-hot-toast";
 
 const PayRollCard = () => {
+    const {setLoader} = useContext(sharedContext);
     const [isOpen, setIsOpen] = useState(false);
     const [showManageInput, setShowManageInput] = useState(false);
     const [roles, setRoles] = useState([]);
@@ -32,6 +36,9 @@ const PayRollCard = () => {
 
     useEffect(() => {
         const fetchRoleTypes = async () => {
+            setLoader(true);
+            setRoles([]);
+
           try {
             const accessToken = localStorage.getItem("token");
             const response = await fetch(
@@ -50,6 +57,8 @@ const PayRollCard = () => {
             console.log(result.roleTypes);
           } catch (error) {
             console.error("Error fetching role types", error);
+          } finally {
+            setLoader(false);
           }
         };
     
@@ -77,6 +86,7 @@ const PayRollCard = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoader(true);
 
         try {
           const accessToken = localStorage.getItem("token");
@@ -92,6 +102,7 @@ const PayRollCard = () => {
             throw new Error("Network error. Network response was not ok");
         }
         console.log("Successfully submitted payroll form data", payrollFormData);
+        toast.success("Payroll data submission successful")
         
         setpayrollFormData({
             name: "",
@@ -100,8 +111,14 @@ const PayRollCard = () => {
             salary: ""
         });
 
+        // Reset roleType to default value
+        setRoleType('');
+
         } catch (error) {
           console.error("Error submitting payroll  form:", error);
+          toast.error("Could not submit payroll data")
+        } finally {
+            setLoader(false);
         }
     };
 
@@ -114,6 +131,7 @@ const PayRollCard = () => {
                 }
             `}
         </style>
+        <Loader />
         <div className="mob-nav" >
             <a href=""><img src={logo} alt="" /></a>
             <img src={menu} alt="" onClick={toggleModal}/>

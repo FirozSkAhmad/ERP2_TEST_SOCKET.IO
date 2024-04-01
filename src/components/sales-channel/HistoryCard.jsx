@@ -287,6 +287,9 @@ const HistoryCard = ({ history, onClose }) => {
             <div className="his-data">
                 {renderFields()}
             </div>
+            <div className="sp-close">
+              <button onClick={onClose}>Close</button>
+            </div>
         </div>
     </div>
   );

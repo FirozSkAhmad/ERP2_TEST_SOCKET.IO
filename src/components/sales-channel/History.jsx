@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import '../sales-channel/history.css'
 import logo from '../../assets/logo.svg'
 import menu from '../../assets/menu.svg'
@@ -6,8 +6,11 @@ import MobileModal from "../menu/MobileModal";
 import WebMenu from "../menu/WebMenu";
 import NavBar from "../NavBar";
 import HistoryCard from "./HistoryCard";
+import sharedContext from "../../context/SharedContext";
+import Loader from "../Loader";
 
 const History = () => {
+  const {loader, setLoader} = useContext(sharedContext);
     const [isOpen, setIsOpen] = useState(false);
     const [clients, setClients] = useState([]);
     const [selectedHistory, setSelectedHistory] = useState(null);
@@ -17,6 +20,9 @@ const History = () => {
 
   useEffect(() => {
     const fetchHistory = async () => {
+      setLoader(true);
+      setClients([]);
+
       try {
         const accessToken = localStorage.getItem("token");
         const response = await fetch(
@@ -35,6 +41,8 @@ const History = () => {
         console.log(result.history);
       } catch (error) {
         console.error("Error fetching sales history data:", error);
+      } finally {
+        setLoader(false);
       }
     };
 
@@ -58,6 +66,8 @@ const History = () => {
     }, []);
 
     const handleHistoryClick = async (receiptId, projectType) => {
+      setLoader(true);
+
         try {
             const accessToken = localStorage.getItem("token");
             const userId = localStorage.getItem("user_id");
@@ -76,6 +86,8 @@ const History = () => {
         //   console.log(result.Details);
         } catch (error) {
           console.error('Error fetching history card data:', error);
+        } finally {
+          setLoader(false);
         }
     };
 
@@ -94,11 +106,13 @@ const History = () => {
                 }
             `}
         </style>
+        <Loader />
         <div className="mob-nav" >
             <a href=""><img src={logo} alt="" /></a>
             <img src={menu} alt="" onClick={toggleModal}/>
         </div >
         <div className="his-table">
+            {clients.length !== 0 ? (
             <div className="his-table-sec">
                 <div className="his-table-container">
                     <table>
@@ -124,7 +138,8 @@ const History = () => {
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </div>) : loader == false ? ("No data to show")
+            : ("")}
         </div>
         <NavBar />
         <WebMenu />

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ".//spHistory.css";
 import logo from "../../assets/logo.svg";
 import menu from "../../assets/menu.svg";
@@ -8,8 +8,11 @@ import MobileModal from "../menu/MobileModal";
 import SpHistoryCard from "./SpHistoryCard";
 import NavBar from "../NavBar";
 import WebMenu from "../menu/WebMenu";
+import sharedContext from "../../context/SharedContext";
+import Loader from "../Loader";
 
 const SpHistory = () => {
+  const {loader, setLoader} = useContext(sharedContext);
   const [isOpen, setIsOpen] = useState(false);
   const [history, setHistory] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
@@ -27,6 +30,9 @@ const SpHistory = () => {
 
   useEffect(() => {
     const fetchHistory = async () => {
+      setLoader(true);
+      setHistory([]);
+
         try {
             const accessToken = localStorage.getItem("token");
             const response = await fetch(`${BaseURL}/history/getCommissionHolderslist?role_type=SALES PERSON`, {
@@ -42,6 +48,8 @@ const SpHistory = () => {
             console.log(result.data);
         } catch (error) {
             console.error('Error fetching sales person history data:', error);
+        } finally {
+          setLoader(false);
         }
     };  
 
@@ -52,6 +60,8 @@ const SpHistory = () => {
 
   const handleRowClick = async (salesPersonID) => {
     setSelectedRow(salesPersonID); // Update selected salesperson ID
+    setLoader(true);
+    setClientData([]);
 
     try {
         const accessToken = localStorage.getItem("token");
@@ -68,6 +78,8 @@ const SpHistory = () => {
         console.log(result.data);
     } catch (error) {
         console.error('Error fetching sales person history dropdown data:', error);
+    } finally {
+      setLoader(false);
     }
   };
   
@@ -89,6 +101,8 @@ const SpHistory = () => {
 
 
   const handleDropDownRowClick = async (receiptId, projectType) => {
+    setLoader(true);
+
     try {
       const accessToken = localStorage.getItem("token");
       const response = await fetch(`${BaseURL}/history/getPraticularHistoryDetails?commissionHolderId=${selectedRow}&receipt_id=${receiptId}&projectType=${projectType}`, {
@@ -105,6 +119,8 @@ const SpHistory = () => {
       console.log(result.Details);
     } catch (error) {
       console.error('Error fetching SP history card data:', error);
+    } finally {
+      setLoader(false);
     }
   };
 // setSelectedSalesPersonId(salesPersonID);
@@ -170,6 +186,7 @@ const SpHistory = () => {
                 }
             `}
       </style>
+      <Loader />
       <div className="mob-nav">
         <a href="">
           <img src={logo} alt="" />
@@ -183,6 +200,7 @@ const SpHistory = () => {
         </div>
       </div>
       <div className="sp-table-container">
+      {history.length !== 0 ? (
         <table>
           <thead>
             <tr>
@@ -209,7 +227,8 @@ const SpHistory = () => {
               </React.Fragment>
             ))}
           </tbody>
-        </table>
+        </table>) : loader == false ? ("No data to show") : 
+      ("")}
       </div>
       <NavBar />
       <WebMenu />
