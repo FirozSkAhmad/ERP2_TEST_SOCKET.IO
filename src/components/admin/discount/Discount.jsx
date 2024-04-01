@@ -23,7 +23,7 @@ const Discount = () => {
   const toggleModal = () => {
     setIsOpen(!isOpen); // Toggle modal visibility
   };
-
+  
   useEffect(() => {
     const fetchDiscounts = async () => {
       try {
