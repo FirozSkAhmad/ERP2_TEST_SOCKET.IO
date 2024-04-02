@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../index.css";
+import {CircularProgress} from '@mui/material'
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -16,6 +17,8 @@ const SignUp = () => {
     bank_ac_no: "",
     bussiness_experience: "",
   });
+  const [loading, setLoading] = useState(false);
+
   const BaseURL = " https://erp-phase2-bck.onrender.com";
 
   const handleInputChange = (e) => {
@@ -24,6 +27,8 @@ const SignUp = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+
     console.log(formData);
     try {
       const response = await fetch(
@@ -65,6 +70,8 @@ const SignUp = () => {
       // Handle error here
       console.error("Error occurred during registration:", error.message);
       // You might show an error message to the user
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -224,7 +231,7 @@ const SignUp = () => {
             </>
           )}
           <div className="sbt_btn">
-            <button type="submit">Get Started</button>
+            <button type="submit">{loading ? (<CircularProgress size={20} color="inherit" />) : ("Get Started")}</button>
           </div>
           <div className="form_sign-up">
             <span>

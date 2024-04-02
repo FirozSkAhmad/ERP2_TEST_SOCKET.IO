@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
+import {CircularProgress} from '@mui/material'
 
 const HomeLogin = () => {
+  const [loading, setLoading] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   const togglePasswordVisibility = () => {
@@ -30,6 +32,7 @@ const HomeLogin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const response = await fetch(`${BaseUrl}/auth/login`, {
@@ -69,6 +72,8 @@ const HomeLogin = () => {
       }
     } catch (error) {
       console.error("Login error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -132,7 +137,7 @@ const HomeLogin = () => {
             </div>
           </div>
           <div className="sbt_btn">
-            <button type="submit">Sign in</button>
+            <button type="submit">{loading ? (<CircularProgress size={20} color="inherit" />) : ("Sign in")}</button>
           </div>
           <div className="form_sign-up">
             <span>
