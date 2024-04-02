@@ -22,6 +22,7 @@
 .approval-table-container table {
   width: 100%;
   border-collapse: collapse;
+  margin: 20px 0;
 }
 
 .approval-table-container tbody tr {
@@ -135,7 +136,7 @@ select {
 
   /* Table */
   .approval-table {
-    margin: 40px 20px 0 300px;
+    margin: 40px 20px 20px 300px;
   }
   .approval-table-container thead tr {
     background: #1366d9;
