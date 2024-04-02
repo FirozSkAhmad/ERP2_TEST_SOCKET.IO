@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../index.css";
 import {CircularProgress} from '@mui/material'
+import toast from "react-hot-toast";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -47,6 +48,7 @@ const SignUp = () => {
       }
 
       // Handle success response here
+      toast.success("Registration successful")
       console.log("Registration successful");
       // Redirect user based on their role
       switch (formData.role_type) {
@@ -68,6 +70,7 @@ const SignUp = () => {
       }
     } catch (error) {
       // Handle error here
+      toast.error("Registration failed")
       console.error("Error occurred during registration:", error.message);
       // You might show an error message to the user
     } finally {

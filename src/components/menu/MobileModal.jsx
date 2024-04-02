@@ -13,6 +13,7 @@ import receipts from '../../assets/receipts.svg';
 import customer from '../../assets/customer.svg';
 import logout from '../../assets/logout.svg';
 import { useNavigate, NavLink } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const MobileModal = ({ isOpen, onClose }) => {
     
@@ -27,6 +28,9 @@ const MobileModal = ({ isOpen, onClose }) => {
     const handleLogout = () => {
         localStorage.removeItem("role_type");
         localStorage.removeItem("token");
+        localStorage.removeItem("user_id");
+        localStorage.removeItem("user_name");
+        toast.success("Logout successful");
         navigate("/");
     };
 
