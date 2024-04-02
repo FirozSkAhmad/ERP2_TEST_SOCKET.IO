@@ -70,7 +70,7 @@ const MobileModal = ({ isOpen, onClose }) => {
                 return (
                     <>
                         <li><NavLink to="/admin/dashboard"><img src={home} alt="" /></NavLink><NavLink to="/admin/dashboard"><p>Dashboard</p></NavLink></li>
-                        <li><NavLink to="/admin/approval"><img src={approval} alt="" /></NavLink><NavLink to="/admin/approval"><p>Approval</p></NavLink></li>
+                        <li><NavLink to="/admin/approvals"><img src={approval} alt="" /></NavLink><NavLink to="/admin/approvals"><p>Approval</p></NavLink></li>
                         <li><NavLink to="/admin/receipts"><img src={receipts} alt="" /></NavLink><NavLink to="/admin/receipts"><p>Receipts</p></NavLink></li>
                         <li><NavLink to="/admin/payments"><img src={payments} alt="" /></NavLink><NavLink to="/admin/payments"><p>Payments</p></NavLink></li>
                         <li><NavLink to="/admin/payroll"><img src={home} alt="" /></NavLink><NavLink to="/admin/payrolls"><p>Payrolls</p></NavLink></li>

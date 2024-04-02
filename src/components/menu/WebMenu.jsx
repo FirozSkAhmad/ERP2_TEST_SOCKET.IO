@@ -256,7 +256,7 @@ const WebMenu = () => {
       <div className="menu_Sec">
         <div className="menu_List">
           <div className="menu-items">
-            <ul>{renderMenuItems()}</ul>
+            <ul className="list">{renderMenuItems()}</ul>
             <ul className="logout">
               <li onClick={handleLogout}>
                 <NavLink to="">

@@ -81,6 +81,10 @@
   padding: 11px 0;
 }
 
+.mn-items li a.active {
+  color: #1366d9;
+}
+
 .mn-items a p,
 .logout a p {
   margin-left: 10px;
