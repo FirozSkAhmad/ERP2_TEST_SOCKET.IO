@@ -104,6 +104,7 @@ const HomeLogin = () => {
               onChange={onChangeInput}
               name="password"
               autoComplete="on"
+              placeholder="Enter password"
             />
             <button className="btn-hide" type="button" onClick={togglePasswordVisibility}>
               {passwordVisible ?
