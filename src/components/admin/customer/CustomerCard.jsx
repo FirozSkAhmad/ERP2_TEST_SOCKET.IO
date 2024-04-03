@@ -1,13 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./customer.css";
 import close from "../../../assets/menuClose.svg";
 import BASEURL from "../../../data/baseurl";
+import sharedContext from "../../../context/SharedContext";
 const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
+  const {setLoader} = useContext(sharedContext);
   const [receiptData, setReceiptData] = useState([]);
   useEffect(() => {
     let isMounted = true;
     console.log(customers);
     const fetchData = async () => {
+      setLoader(true);
+      setReceiptData([]);
+
       try {
         const accessToken = localStorage.getItem("token");
         const response = await fetch(
@@ -29,6 +34,8 @@ const CustomerCard = ({ projectID, customers, projectType, onClose }) => {
         }
       } catch (error) {
         console.error("Error fetching data:", error);
+      } finally {
+        setLoader(false);
       }
     };
 

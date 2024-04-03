@@ -14,6 +14,8 @@ const ApprovalTable = ({ selectedStatus }) => {
   const [selectedRoles, setSelectedRoles] = useState({});
   const roles = ["SUPER ADMIN", "MANAGER", "CHANNEL PARTNER", "SALES PERSON"];
 
+  const BaseURL = "https://erp-phase2-bck.onrender.com";
+
   useEffect(() => {
     fetchUsersList(selectedStatus);
   }, [selectedStatus]);
@@ -51,8 +53,7 @@ const ApprovalTable = ({ selectedStatus }) => {
     setApprovals([]);
     try {
       // Token should be retrieved securely, e.g., from an environment variable or secure storage
-      const token =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MDkyNzQ3NzAsImV4cCI6MTc0MDgzMjM3MCwiYXVkIjoiMTpTVVBFUiBBRE1JTiIsImlzcyI6InZyY2FwcGxpY2F0aW9uIn0.dC7WAsdD5-leh-c3v-Xjmi-abnFTfgx6d9uvYf60Jck";
+      const token = localStorage.getItem("token");
       const headers = new Headers({
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -65,7 +66,7 @@ const ApprovalTable = ({ selectedStatus }) => {
       };
 
       const result = await makeRequest(
-        `https://erp-phase2-bck.onrender.com/admin/getUsersList?status_filter=${selectedStatus}`,
+        `${BaseURL}/admin/getUsersList?status_filter=${selectedStatus}`,
         requestOptions
       );
 
@@ -87,9 +88,9 @@ const ApprovalTable = ({ selectedStatus }) => {
   const handleAction = async (emailId, roleType, approveOrReject) => {
     setLoader(true);
     try {
-      const token = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MDkyNzQ3NzAsImV4cCI6MTc0MDgzMjM3MCwiYXVkIjoiMTpTVVBFUiBBRE1JTiIsImlzcyI6InZyY2FwcGxpY2F0aW9uIn0.dC7WAsdD5-leh-c3v-Xjmi-abnFTfgx6d9uvYf60Jck`; // Insert secure token retrieval method here
+      const token = localStorage.getItem("token");
       const headers = new Headers({
-        Authorization: token,
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       });
 
@@ -107,7 +108,7 @@ const ApprovalTable = ({ selectedStatus }) => {
       };
 
       const putResult = await makeRequest(
-        `https://erp-phase2-bck.onrender.com/admin/validateUser`,
+        `${BaseURL}/admin/validateUser`,
         putRequestOptions
       );
 

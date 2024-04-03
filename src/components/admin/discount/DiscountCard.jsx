@@ -2,47 +2,45 @@ import React, { useState, useEffect, useContext } from "react";
 import close from "../../../assets/menuClose.svg";
 
 import BASEURL from "../../../data/baseurl";
+import sharedContext from "../../../context/SharedContext";
 
-const DiscountCard = ({ projectID, projectType, onClose }) => {
+const DiscountCard = ({ receiptID, projectType, onClose }) => {
+  const {setLoader} = useContext(sharedContext);
   const [receiptData, setReceiptData] = useState(null);
   // const receiptData = discountCardData.find(item => item.projectID === projectID);
   const baseUrl = BASEURL.url;
   useEffect(() => {
-    let isMounted = true;
     const fetchData = async () => {
+      setLoader(true);
+
       try {
         const accessToken = localStorage.getItem("token");
         const response = await fetch(
-          `${baseUrl}/discounts/getPraticularDiscountDetails?receipt_id=${projectID}&projectType=${projectType}`,
+          `${baseUrl}/discounts/getPraticularDiscountDetails?receipt_id=${receiptID}&projectType=${projectType}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
             },
           }
         );
-        if (response.ok) {
-          const data = await response.json();
-          if (isMounted) {
-            setReceiptData(data.data);
-          }
-        } else {
-          throw new Error("Failed to fetch data");
+        if (!response.ok) {
+          throw new Error("Network error. Failed to fetch data");
         }
+        const data = await response.json();
+          setReceiptData(data.data);
       } catch (error) {
         console.error("Error fetching data:", error);
+      } finally {
+        setLoader(false);
       }
     };
 
     fetchData();
-    // Cleanup function to abort fetch request when component unmounts
-    return () => {
-      isMounted = false;
-    };
-  }, [projectID, projectType]);
+  }, [receiptID, projectType]);
 
   const renderFields = () => {
     if (!receiptData) {
-      return <div>Loading.....</div>;
+      return null;
     }
     switch (projectType) {
       case "APARTMENT":

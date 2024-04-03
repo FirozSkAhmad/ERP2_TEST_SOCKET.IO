@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ".//customer.css";
 import CustomerCard from "./CustomerCard";
 import BASEURL from "../../../data/baseurl";
+import sharedContext from "../../../context/SharedContext";
+import Loader from "../../Loader";
 const CustomerTable = ({ selectedButton }) => {
+  const {setLoader} = useContext(sharedContext);
   const [customers, setCustomers] = useState([]);
   const [selectedProjectID, setSelectedProjectID] = useState(null);
   const [selectedProjectType, setSelectedProjectType] = useState(null);
@@ -11,6 +14,9 @@ const CustomerTable = ({ selectedButton }) => {
   useEffect(() => {
     // Function to fetch customer data from the API
     const fetchCustomerData = async () => {
+      setLoader(true);
+      setCustomers([]);
+
       try {
         const accessToken = localStorage.getItem("token");
         const response = await fetch(
@@ -29,6 +35,8 @@ const CustomerTable = ({ selectedButton }) => {
         console.log(data);
       } catch (error) {
         console.error("Error fetching customer data:", error);
+      } finally {
+        setLoader(false);
       }
     };
 
@@ -58,6 +66,7 @@ const CustomerTable = ({ selectedButton }) => {
 
   return (
     <div className="cus-table-container">
+      <Loader />
       <table>
         <thead>
           <tr>

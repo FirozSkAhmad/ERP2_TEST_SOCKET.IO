@@ -13,6 +13,7 @@ import receipts from '../../assets/receipts.svg';
 import customer from '../../assets/customer.svg';
 import logout from '../../assets/logout.svg';
 import { useNavigate, NavLink } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const MobileModal = ({ isOpen, onClose }) => {
     
@@ -27,6 +28,9 @@ const MobileModal = ({ isOpen, onClose }) => {
     const handleLogout = () => {
         localStorage.removeItem("role_type");
         localStorage.removeItem("token");
+        localStorage.removeItem("user_id");
+        localStorage.removeItem("user_name");
+        toast.success("Logout successful");
         navigate("/");
     };
 
@@ -66,10 +70,10 @@ const MobileModal = ({ isOpen, onClose }) => {
                 return (
                     <>
                         <li><NavLink to="/admin/dashboard"><img src={home} alt="" /></NavLink><NavLink to="/admin/dashboard"><p>Dashboard</p></NavLink></li>
-                        <li><NavLink to="/admin/approval"><img src={approval} alt="" /></NavLink><NavLink to="/admin/approval"><p>Approval</p></NavLink></li>
+                        <li><NavLink to="/admin/approvals"><img src={approval} alt="" /></NavLink><NavLink to="/admin/approvals"><p>Approval</p></NavLink></li>
                         <li><NavLink to="/admin/receipts"><img src={receipts} alt="" /></NavLink><NavLink to="/admin/receipts"><p>Receipts</p></NavLink></li>
                         <li><NavLink to="/admin/payments"><img src={payments} alt="" /></NavLink><NavLink to="/admin/payments"><p>Payments</p></NavLink></li>
-                        <li><NavLink to="/admin/payroll"><img src={home} alt="" /></NavLink><NavLink to="/admin/payrolls"><p>Payrolls</p></NavLink></li>
+                        <li><NavLink to="/admin/payroll"><img src={home} alt="" /></NavLink><NavLink to="/admin/payroll"><p>Payrolls</p></NavLink></li>
                         <li><NavLink to="/admin/expenses"><img src={expenses} alt="" /></NavLink><NavLink to="/admin/expenses"><p>Expenses</p></NavLink></li>
                         <li><NavLink to="/admin/commissions"><img src={home} alt="" /></NavLink><NavLink to="/admin/commissions"><p>Commissions</p></NavLink></li>
                         <li><NavLink to="/admin/customer"><img src={customer} alt="" /></NavLink><NavLink to="/admin/customer"><p>Customer</p></NavLink></li>

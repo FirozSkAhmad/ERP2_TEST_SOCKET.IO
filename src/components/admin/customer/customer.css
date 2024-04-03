@@ -44,6 +44,10 @@
   border-collapse: collapse;
 }
 
+.cus-table-container tbody tr {
+  border-top: 20px solid #fff;
+}
+
 /* Customer Receipt Card */
 
 .cus-det {

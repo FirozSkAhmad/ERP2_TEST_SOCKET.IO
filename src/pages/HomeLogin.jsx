@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
+import {CircularProgress} from '@mui/material'
+import toast from "react-hot-toast";
 
 const HomeLogin = () => {
+  const [loading, setLoading] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   const togglePasswordVisibility = () => {
@@ -30,6 +33,7 @@ const HomeLogin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const response = await fetch(`${BaseUrl}/auth/login`, {
@@ -42,14 +46,16 @@ const HomeLogin = () => {
       });
 
       const data = await response.json();
-      const { accessToken, role_type, user_id } = data.data;
+      const { accessToken, role_type, user_id, user_name } = data.data;
       localStorage.setItem("token", accessToken);
 
       localStorage.setItem("user_id", user_id);
 
       localStorage.setItem("role_type", role_type);
 
+      localStorage.setItem("user_name", user_name);
 
+      toast.success(`Welcome ${user_name}`)
       switch (role_type) {
         case "SUPER ADMIN":
           navigate("/admin/dashboard");
@@ -68,7 +74,10 @@ const HomeLogin = () => {
           break;
       }
     } catch (error) {
+      toast.error("Login failed")
       console.error("Login error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -104,6 +113,7 @@ const HomeLogin = () => {
               onChange={onChangeInput}
               name="password"
               autoComplete="on"
+              placeholder="Enter password"
             />
             <button className="btn-hide" type="button" onClick={togglePasswordVisibility}>
               {passwordVisible ?
@@ -131,7 +141,7 @@ const HomeLogin = () => {
             </div>
           </div>
           <div className="sbt_btn">
-            <button type="submit">Sign in</button>
+            <button type="submit">{loading ? (<CircularProgress size={20} color="inherit" />) : ("Sign in")}</button>
           </div>
           <div className="form_sign-up">
             <span>

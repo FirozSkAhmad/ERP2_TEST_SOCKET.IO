@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import close from "../../../assets/menuClose.svg";
-import cpCommission from "../../../data/cpCommission";
-import cpCommissionDropData from "../../../data/cpCommissionDropData";
-import cpCommissionCardData from "../../../data/cpCommissionCardData";
 import CpCommissionCard from "./CpCommissionCard";
+import sharedContext from "../../../context/SharedContext";
 
 const CpCommissionTable = ({ cp }) => {
+  const {setLoader} = useContext(sharedContext);
   const [dropDownData, setDropDownData] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
   const [selectedChannelPartnerId, setSelectedChannelPartnerId] =
@@ -34,7 +33,7 @@ const CpCommissionTable = ({ cp }) => {
 
   const handleRowClick = async (salesPersonID) => {
     setSelectedRow(salesPersonID);
-    setLoading(true);
+    setLoader(true);
     try {
       const accessToken = localStorage.getItem("token");
       const response = await fetch(
@@ -56,6 +55,8 @@ const CpCommissionTable = ({ cp }) => {
     } catch (error) {
       setLoading(false);
       console.error("Error fetching data:", error);
+    } finally {
+      setLoader(fasle);
     }
   };
 

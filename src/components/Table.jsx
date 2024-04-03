@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./table.css";
 import dummyData from "../data/dummyData";
 import AddProject from "./admin/AddProject";
 import ProjectDetails from "./sales-channel/ProjectDetails";
 import UploadForm from "./admin/UploadForm";
+import sharedContext from "../context/SharedContext";
+import Loader from "./Loader";
 
 const Table = ({ selectedButton, url }) => {
+  const { setLoader, loader } = useContext(sharedContext);
   const [projects, setProjects] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [showAddProjectForm, setShowAddProjectForm] = useState(false);
@@ -19,8 +22,13 @@ const Table = ({ selectedButton, url }) => {
   const [scaleData, setScaleData] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const roleType = localStorage.getItem("role_type");
+
   useEffect(() => {
     const fetchData = async () => {
+      setLoader(true);
+      setScaleData([]);
+
       try {
         const accessToken = localStorage.getItem("token");
         const response = await fetch(url, {
@@ -37,6 +45,8 @@ const Table = ({ selectedButton, url }) => {
       } catch (error) {
         console.error("Error fetching data:", error);
         setLoading(false);
+      } finally {
+        setLoader(false);
       }
     };
 
@@ -145,10 +155,11 @@ const Table = ({ selectedButton, url }) => {
 
   return (
     <div className="table">
+      <Loader />
       <div className="table_Sec">
         <div className="table_Head">
           <h1>Projects</h1>
-          <div className="actions">
+          {(roleType === "SUPER ADMIN" || roleType === "MANAGER") && <div className="actions">
             <button onClick={handleAddProject}>Add Project</button>
             <div className="actions file-actions">
               <div>
@@ -158,8 +169,9 @@ const Table = ({ selectedButton, url }) => {
                 <button>Download</button>
               </div>
             </div>
-          </div>
+          </div>}
         </div>
+        {displayedProjects.length !== 0 ? (
         <div className="table-container">
           <table>
             <thead>
@@ -175,12 +187,13 @@ const Table = ({ selectedButton, url }) => {
               {displayedProjects?.map((project) => (
                 <tr
                   key={project.project_id}
+                  onClick={() => handleCellClick(project)}
                   className={selectedButton.toLowerCase() + "-row"}
                 >
-                  <td onClick={() => handleCellClick(project)}>
+                  <td>
                     {project.project_id}
                   </td>
-                  <td onClick={() => handleCellClick(project)}>
+                  <td>
                     {project.project_name}
                   </td>
                   {viewportWidth >= 1024 && selectedButton === "APARTMENT" && (
@@ -201,7 +214,7 @@ const Table = ({ selectedButton, url }) => {
                       <td className="sq-yards">{project.sqYards}</td>
                     </>
                   )}
-                  <td onClick={() => handleCellClick(project)}>
+                  <td>
                     {project.pid}
                   </td>
                   <td
@@ -214,7 +227,8 @@ const Table = ({ selectedButton, url }) => {
               ))}
             </tbody>
           </table>
-        </div>
+        </div>) : loader == false ? ("No data to show") :
+        ("")}
         <div className="pagination">
           <button onClick={handlePreviousPage} disabled={currentPage === 1}>
             Previous

@@ -28,6 +28,7 @@
   background: rgba(217, 217, 217, 0);
   padding: 10px;
   width: 120px;
+  cursor: pointer;
 }
 
 .manage-role p {
@@ -75,6 +76,7 @@
   margin-bottom: 1rem;
   padding: 10px 15px;
   outline: none;
+  cursor: pointer;
 }
 
 .payroll-actions {
@@ -92,6 +94,7 @@
   border: 1px solid #cccdce;
   background: #1366d9;
   padding: 10px 25px;
+  cursor: pointer;
 }
 
 /* Manage Role pop-up  */
@@ -123,6 +126,7 @@
   border: none;
   border-radius: 4px;
   padding: 10px 20px;
+  cursor: pointer;
 }
 
 /* Responsive */

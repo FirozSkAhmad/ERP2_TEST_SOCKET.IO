@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import close from "../../../assets/menuClose.svg";
-// import commissionData from "../../../data/commissionData";
-// import commissionDropData from "../../../data/commissionDropData";
 import ValidationCard from "./ValidationCard";
-// import commissionValSoldCardData from "../../../data/commissionValSoldCardData";
+import sharedContext from "../../../context/SharedContext";
 
 const ValidationTable = ({ validation }) => {
+  const {setLoader} = useContext(sharedContext);
   const [dropDownData, setDropDownData] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
   const [selectedSalesPersonId, setSelectedSalesPersonId] = useState(null);
@@ -33,7 +32,8 @@ const ValidationTable = ({ validation }) => {
 
   const handleRowClick = async (salesPersonID) => {
     setSelectedRow(salesPersonID);
-    setLoading(true);
+    setLoader(true);
+
     try {
       const accessToken = localStorage.getItem("token");
       const response = await fetch(
@@ -55,6 +55,8 @@ const ValidationTable = ({ validation }) => {
     } catch (error) {
       setLoading(false);
       console.error("Error fetching data:", error);
+    } finally {
+      setLoader(false);
     }
   };
 
@@ -155,7 +157,7 @@ const ValidationTable = ({ validation }) => {
                 key={index}
                 onClick={() => handleRowClick(data.sales_person_id)}
               >
-                <td>{SNO++}</td>
+                <td>{index + 1}</td>
                 <td>{data.sales_person_id}</td>
                 <td>{data.sales_person_name}</td>
               </tr>

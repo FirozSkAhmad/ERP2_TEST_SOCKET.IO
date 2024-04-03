@@ -5,12 +5,12 @@ import menu from '../../assets/menu.svg'
 import MobileModal from "../menu/MobileModal";
 import WebMenu from "../menu/WebMenu";
 import NavBar from "../NavBar";
-// import sharedContext from "../../context/SharedContext";
-// import toast from "react-hot-toast";
-// import Loader from "../Loader";
+import sharedContext from "../../context/SharedContext";
+import toast from "react-hot-toast";
+import Loader from "../Loader";
 
 const OnBoarding = () => {
-    // const { setLoader, loader } = useContext(sharedContext);
+    const { setLoader } = useContext(sharedContext);
     const [isOpen, setIsOpen] = useState(false);
     const [onBoardData, setOnBoardData] = useState({ project_type: "", status: "" });
     const [projectName, setProjectName] = useState([]);
@@ -50,6 +50,8 @@ const OnBoarding = () => {
 
     useEffect(() => {
         const fetchProjectType = async (proj_type) => {
+            setLoader(true);
+
           try {
             const accessToken = localStorage.getItem("token");
             const response = await fetch(
@@ -68,6 +70,8 @@ const OnBoarding = () => {
             console.log(result.projectNames);
           } catch (error) {
             console.error("Error fetching project names:", error);
+          } finally {
+            setLoader(false);
           }
         };
     
@@ -87,6 +91,8 @@ const OnBoarding = () => {
     // API to get Tower Numbers
 
     const fetchTowerNumber = async (selectedProjectName) => {
+        setLoader(true);
+
       try {
         const accessToken = localStorage.getItem("token");
         const response = await fetch(
@@ -105,6 +111,8 @@ const OnBoarding = () => {
             console.log(result.towerNumbers);
         } catch (error) {
             console.error("Error fetching tower numbers:", error);
+        } finally {
+            setLoader(false);
         }
     };
     
@@ -127,6 +135,8 @@ const OnBoarding = () => {
     // API to get Flat Numbers
 
     const fetchFlatNumber = async (selectedProjectName, selectedTowerNumber) => {
+        setLoader(true);
+
         try {
           const accessToken = localStorage.getItem("token");
           const response = await fetch(
@@ -145,6 +155,8 @@ const OnBoarding = () => {
               console.log(result.flatNumbers);
           } catch (error) {
               console.error("Error fetching flat numbers:", error);
+          } finally {
+            setLoader(false);
           }
     };
       
@@ -393,7 +405,8 @@ const OnBoarding = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // setLoader(true)
+        setLoader(true)
+
         console.log(onBoardFormData);
 
         if (!onBoardData.status) {
@@ -423,7 +436,7 @@ const OnBoarding = () => {
             throw new Error("Network error. Network response was not ok");
         }
         console.log("Successful", onBoardFormData);
-        // toast.success("Form submitted successfully!");
+        toast.success("Form submitted successfully!");
         // Reset form data
         setOnBoardFormData({
             sales_person_id: "",
@@ -447,11 +460,21 @@ const OnBoarding = () => {
             no_of_days_blocked: "",
             remark: ""
         });
+
+        setProjectNameType('');
+        setTowerNumberData('');
+        setFlatNumberData('');
+        setOnBoardData({
+            ...onBoardData,
+            project_type: "", // Resetting select fields
+            status: ""       // Resetting select fields
+        });
+
         } catch (error) {
           console.error("Error submitting form:", error);
-        //   toast.error("Could not submit the form");
+          toast.error("Could not submit the form");
         } finally {
-            // setLoader(false);
+            setLoader(false);
 
         }
     };
@@ -459,7 +482,7 @@ const OnBoarding = () => {
 
   return ( 
     <div>
-        {/* <Loader /> */}
+        <Loader />
         <style>
             {`
                 @media screen and (min-width: 1024px) {

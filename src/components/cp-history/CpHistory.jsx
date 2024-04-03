@@ -1,18 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./cpHistory.css";
 import logo from "../../assets/logo.svg";
 import menu from "../../assets/menu.svg";
 import close from "../../assets/menuClose.svg";
 import exportIcon from "../../assets/export.svg";
 import MobileModal from "../menu/MobileModal";
-import cpHistoryData from "../../data/cpHistoryData";
-import cpClientData from "../../data/cpClientData";
 import CpHistoryCard from "./CpHistoryCard";
 import cpHistoryCardData from "../../data/cpHistoryCardData";
 import NavBar from "../NavBar";
 import WebMenu from "../menu/WebMenu";
+import sharedContext from "../../context/SharedContext";
+import Loader from "../Loader";
 
 const CpHistory = () => {
+  const {loader, setLoader} = useContext(sharedContext);
   const [isOpen, setIsOpen] = useState(false);
   const [history, setHistory] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
@@ -35,6 +36,9 @@ const CpHistory = () => {
 
   useEffect(() => {
     const fetchHistory = async () => {
+      setLoader(true);
+      setHistory([]);
+
         try {
             const accessToken = localStorage.getItem("token");
             const response = await fetch(`${BaseURL}/history/getCommissionHolderslist?role_type=CHANNEL PARTNER`, {
@@ -50,6 +54,8 @@ const CpHistory = () => {
             console.log(result.data);
         } catch (error) {
             console.error('Error fetching channel partner history data:', error);
+        } finally {
+          setLoader(false);
         }
     };  
 
@@ -60,6 +66,8 @@ const CpHistory = () => {
 
   const handleRowClick = async (channelPartnerID) => {
     setSelectedRow(channelPartnerID); // Update selected channelPartner ID
+    setLoader(true);
+    setClientData([]);
 
     try {
         const accessToken = localStorage.getItem("token");
@@ -76,7 +84,9 @@ const CpHistory = () => {
           console.log(result.data);
         } catch (error) {
           console.error('Error fetching channel partner history dropdown data:', error);
-    }
+        } finally {
+          setLoader(false);
+        }
   };
 
   const handleCloseDropdown = () => {
@@ -98,6 +108,8 @@ const CpHistory = () => {
   // API to fetch Channel Partner history card data and Dropdown click
 
   const handleDropDownRowClick = async (receiptId, projectType) => {
+    setLoader(true);
+
     try {
       const accessToken = localStorage.getItem("token");
       const response = await fetch(`${BaseURL}/history/getPraticularHistoryDetails?commissionHolderId=${selectedRow}&receipt_id=${receiptId}&projectType=${projectType}`, {
@@ -114,6 +126,8 @@ const CpHistory = () => {
       console.log(result.Details);
     } catch (error) {
       console.error('Error fetching SP history card data:', error);
+    } finally {
+      setLoader(false);
     }
   };
 
@@ -183,6 +197,7 @@ const CpHistory = () => {
           }
         `}
       </style>
+      <Loader />
       <div className="mob-nav">
         <a href="">
           <img src={logo} alt="" />
@@ -196,6 +211,7 @@ const CpHistory = () => {
         </div>
       </div>
       <div className="cp-table-container">
+      {history.length !== 0 ? (
         <table>
           <thead>
             <tr>
@@ -222,7 +238,8 @@ const CpHistory = () => {
               </React.Fragment>
             ))}
           </tbody>
-        </table>
+        </table>) : loader == false ? ("No data to show") : 
+      ("")}
       </div>
       <NavBar />
       <WebMenu />

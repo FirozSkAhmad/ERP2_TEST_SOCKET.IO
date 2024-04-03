@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import './payrollCard.css';
 import { useNavigate } from "react-router-dom";
+import sharedContext from "../../../context/SharedContext";
 
 const ManageRoleInput = ({onClose}) => {
+  const {setLoader} = useContext(sharedContext);
 
     const BaseURL = "https://erp-phase2-bck.onrender.com";
 
@@ -10,6 +12,7 @@ const ManageRoleInput = ({onClose}) => {
 
     const handleRoleSubmit = async (e) => {
         e.preventDefault();
+        setLoader(true);
 
         try {
           const accessToken = localStorage.getItem("token");
@@ -29,6 +32,8 @@ const ManageRoleInput = ({onClose}) => {
         onClose();
         } catch (error) {
           console.error("Error submitting new role type:", error);
+        } finally {
+          setLoader(false);
         }
 
     };

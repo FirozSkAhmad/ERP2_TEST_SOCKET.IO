@@ -45,7 +45,7 @@
   color: #1366d9;
 }
 
-.menu-items a:active {
+.menu-items .list li a.active {
   color: #1366d9;
 }
 

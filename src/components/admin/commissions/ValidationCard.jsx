@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 // import "./pendingReceipts.css";
 import logo from "../../../assets/logo.svg";
 import close from "../../../assets/menuClose.svg";
+import sharedContext from "../../../context/SharedContext";
+import Loader from "../../Loader";
+import toast from "react-hot-toast";
 
 const ValidationCard = ({
   salesPersonID,
@@ -10,6 +13,7 @@ const ValidationCard = ({
   receiptID,
   projectType,
 }) => {
+  const {setLoader} = useContext(sharedContext);
   const [data, setData] = useState(null);
   const [enterCommission, setEnterCommission] = useState("");
 
@@ -18,6 +22,8 @@ const ValidationCard = ({
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoader(true);
+
       try {
         const response = await fetch(
           `${URL}/commissions/getPraticularCommissionDetails?receipt_id=${receiptID}&projectType=${projectType.toLowerCase()}`,
@@ -34,6 +40,8 @@ const ValidationCard = ({
         setData(responseData?.data);
       } catch (error) {
         console.error("Error fetching data:", error);
+      } finally {
+        setLoader(false);
       }
     };
 
@@ -56,6 +64,8 @@ const ValidationCard = ({
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoader(true);
+    
     fetch(`${URL}/commissions/payCommission`, {
       method: "PUT",
       body: raw,
@@ -69,13 +79,18 @@ const ValidationCard = ({
       })
       .then((data) => {
         console.log("PUT request successful:", data);
+        toast.success("Added commission successfully");
         onClose();
         // Add any further handling based on the response
       })
       .catch((error) => {
         console.error("Error making PUT request:", error);
+        toast.error("Could not add commission");
         onClose();
         // Handle errors appropriately
+      })
+      .finally(() => {
+        setLoader(false);
       });
   };
 
@@ -261,6 +276,7 @@ const ValidationCard = ({
                   type="number"
                   onChange={handleEnterCommissionHandler}
                   id="commission"
+                  placeholder="Enter commission"
                 />
               </div>
               <div className="rec-data-field">
@@ -432,6 +448,7 @@ const ValidationCard = ({
                   type="number"
                   onChange={handleEnterCommissionHandler}
                   id="commission"
+                  placeholder="Enter commission"
                 />
               </div>
               <div className="rec-data-field">
@@ -604,6 +621,7 @@ const ValidationCard = ({
                   type="number"
                   onChange={handleEnterCommissionHandler}
                   id="commission"
+                  placeholder="Enter commission"
                 />
               </div>
               <div className="rec-data-field">
@@ -785,6 +803,7 @@ const ValidationCard = ({
                   type="number"
                   onChange={handleEnterCommissionHandler}
                   id="commission"
+                  placeholder="Enter commission"
                 />
               </div>
               <div className="rec-data-field">
@@ -807,6 +826,7 @@ const ValidationCard = ({
 
   return (
     <div className="sp-det">
+      <Loader />
       <div className="sp-sec">
         <div className="sp-head">
           <div className="logo">

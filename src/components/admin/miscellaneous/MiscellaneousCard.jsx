@@ -46,22 +46,22 @@ const MiscellaneousCard = () => {
       const responseData = await response.json();
       if (response.ok) {
         setLoader(false);
-        toast.success(responseData.message);
-        console.log(responseData.message);
+        toast.success("Miscellaneous item added successfully");
         console.log("Miscellaneous item added successfully");
-        // Optionally, you can reset the form after successful submission
+        // Reset the form after successful submission
         setFormData({
           name: "",
           reason: "",
           amount: "",
         });
       } else {
-        toast.error(responseData.message);
-        setLoader(false);
+        toast.error("Could not add miscellaneous item");
         console.error("Failed to add miscellaneous item");
       }
     } catch (error) {
       console.error("Error:", error);
+    } finally {
+      setLoader(false);
     }
   };
 
