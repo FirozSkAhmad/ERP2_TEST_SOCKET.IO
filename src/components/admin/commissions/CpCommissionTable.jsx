@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import close from "../../../assets/menuClose.svg";
 import CpCommissionCard from "./CpCommissionCard";
 import sharedContext from "../../../context/SharedContext";
 
 const CpCommissionTable = ({ cp }) => {
-  const {setLoader} = useContext(sharedContext);
+  const { setLoader } = useContext(sharedContext);
   const [dropDownData, setDropDownData] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
   const [selectedChannelPartnerId, setSelectedChannelPartnerId] =
