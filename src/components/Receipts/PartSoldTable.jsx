@@ -21,6 +21,8 @@ const PartSoldTable = () => {
   const [selectedPartOption, setSelectedPartOption] = useState("Deleted Part");
   const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
 
+  const roleType = localStorage.getItem("role_type");
+
   const BaseURL = "https://erp-phase2-bck.onrender.com";
 
   // API to fetch part payment table data
@@ -258,10 +260,11 @@ const PartSoldTable = () => {
                         {viewportWidth >= 1024 && <td>{partSold.project.status}</td>}
                         {viewportWidth >= 1024 && (
                           <td>
-                            <div className="receipt-actions">
+                            {roleType === "SUPER ADMIN" && <div className="receipt-actions">
                               <img src={deleteIcon} onClick={() => handleDelete(partSold.project.project_id, partSold.PropertyDetail.pd_id)} alt="" />
                               <img src={exportIcon} alt="" />
-                            </div>
+                            </div>}
+                            {roleType === "MANAGER" && <img src={exportIcon} alt="" />}
                           </td>
                         )}
                       </tr>

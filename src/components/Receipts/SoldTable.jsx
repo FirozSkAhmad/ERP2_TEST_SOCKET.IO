@@ -30,6 +30,8 @@ const SoldTable = () => {
   // useEffect(() => {
   //   setSoldData(soldDataDummy);
   // }, []);
+  
+  const roleType = localStorage.getItem("role_type");
 
   const BaseURL = "https://erp-phase2-bck.onrender.com";
 
@@ -247,10 +249,11 @@ const SoldTable = () => {
                         {viewportWidth >= 1024 && <td>{data.project.status}</td>}
                         {viewportWidth >= 1024 && (
                           <td>
-                            <div className="receipt-actions">
+                            {roleType === "SUPER ADMIN" && <div className="receipt-actions">
                               <img src={deleteIcon} onClick={() => handleDelete(data.project.project_id, data.PropertyDetail.pd_id)} alt="" />
                               <img src={exportIcon} alt="" />
-                            </div>
+                            </div>}
+                            {roleType === "MANAGER" && <img src={exportIcon} alt="" />}
                           </td>
                         )}
                       </tr>

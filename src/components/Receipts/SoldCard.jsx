@@ -5,6 +5,8 @@ import close from "../../assets/menuClose.svg";
 const SoldCard = ({ cardData, onClose }) => {
   console.log(cardData);
 
+  const roleType = localStorage.getItem("role_type");
+
   const renderFields = () => {
     if (!cardData) return null;
 
@@ -607,14 +609,17 @@ const SoldCard = ({ cardData, onClose }) => {
           <h3>Sold Receipt</h3>
         </div>
         <div className="rec-data">{renderFields()}</div>
-        <div className="rec-actions">
+        {roleType === "SUPER ADMIN" && <div className="rec-actions">
           <div className="sold-close">
             <button onClick={onClose}>Close</button>
           </div>
           <div className="sold-export">
             <button>Export</button>
           </div>
-        </div>
+        </div>}
+        {roleType === "MANAGER" && <div className="sp-close">
+          <button onClick={onClose}>Close</button>
+        </div>}
       </div>
     </div>
   );

@@ -20,6 +20,14 @@ const ManagerDash = () => {
   const [showStatusOverview, setShowStatusOverview] = useState(false);
   const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
 
+  const BaseURL = "https://erp-phase2-bck.onrender.com";
+
+  const buildingType =
+    selectedButton.charAt(0).toUpperCase() +
+    selectedButton.slice(1).toLowerCase();
+
+  const URL = `${BaseURL}/project/getProjectsData?project_type=${buildingType}`;
+
   const toggleModal = () => {
     setIsOpen(!isOpen); // Toggle modal visibility
   };

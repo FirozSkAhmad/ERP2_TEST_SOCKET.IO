@@ -11,6 +11,8 @@ const PartPayReceiptCard = ({ cardData, reRenderPartpayments, onClose }) => {
     amount: cardData.partPaymentData.amount || "",
   });
 
+  const roleType = localStorage.getItem("role_type");
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -236,7 +238,7 @@ const PartPayReceiptCard = ({ cardData, reRenderPartpayments, onClose }) => {
                 readOnly
               />
             </div>
-            <div className="rec-data-field">
+            {roleType === "SUPER ADMIN" &&  <div className="rec-data-field">
               <label htmlFor="amount">Amount</label>
               <input
                 type="text"
@@ -244,7 +246,16 @@ const PartPayReceiptCard = ({ cardData, reRenderPartpayments, onClose }) => {
                 value={formData.amount}
                 onChange={handleChange}
               />
-            </div>
+            </div>}
+            {roleType === "MANAGER" && <div className="rec-data-field">
+              <label htmlFor="amount">Amount</label>
+              <input
+                type="text"
+                id="amount"
+                value={formData.amount}
+                readOnly
+              />
+            </div>}
           </>
         );
       case "VILLA":
@@ -376,7 +387,7 @@ const PartPayReceiptCard = ({ cardData, reRenderPartpayments, onClose }) => {
                 readOnly
               />
             </div>
-            <div className="rec-data-field">
+            {roleType === "SUPER ADMIN" &&  <div className="rec-data-field">
               <label htmlFor="amount">Amount</label>
               <input
                 type="text"
@@ -384,7 +395,16 @@ const PartPayReceiptCard = ({ cardData, reRenderPartpayments, onClose }) => {
                 value={formData.amount}
                 onChange={handleChange}
               />
-            </div>
+            </div>}
+            {roleType === "MANAGER" && <div className="rec-data-field">
+              <label htmlFor="amount">Amount</label>
+              <input
+                type="text"
+                id="amount"
+                value={formData.amount}
+                readOnly
+              />
+            </div>}
             {/* Render fields for Villas type */}
           </>
         );
@@ -517,7 +537,7 @@ const PartPayReceiptCard = ({ cardData, reRenderPartpayments, onClose }) => {
                 readOnly
               />
             </div>
-            <div className="rec-data-field">
+            {roleType === "SUPER ADMIN" &&  <div className="rec-data-field">
               <label htmlFor="amount">Amount</label>
               <input
                 type="text"
@@ -525,7 +545,16 @@ const PartPayReceiptCard = ({ cardData, reRenderPartpayments, onClose }) => {
                 value={formData.amount}
                 onChange={handleChange}
               />
-            </div>
+            </div>}
+            {roleType === "MANAGER" && <div className="rec-data-field">
+              <label htmlFor="amount">Amount</label>
+              <input
+                type="text"
+                id="amount"
+                value={formData.amount}
+                readOnly
+              />
+            </div>}
             {/* Render fields for Plots type */}
           </>
         );
@@ -667,7 +696,7 @@ const PartPayReceiptCard = ({ cardData, reRenderPartpayments, onClose }) => {
                 readOnly
               />
             </div>
-            <div className="rec-data-field">
+            {roleType === "SUPER ADMIN" &&  <div className="rec-data-field">
               <label htmlFor="amount">Amount</label>
               <input
                 type="text"
@@ -675,7 +704,16 @@ const PartPayReceiptCard = ({ cardData, reRenderPartpayments, onClose }) => {
                 value={formData.amount}
                 onChange={handleChange}
               />
-            </div>
+            </div>}
+            {roleType === "MANAGER" && <div className="rec-data-field">
+              <label htmlFor="amount">Amount</label>
+              <input
+                type="text"
+                id="amount"
+                value={formData.amount}
+                readOnly
+              />
+            </div>}
             {/* Render fields for Farm land type */}
           </>
         );
@@ -696,7 +734,7 @@ const PartPayReceiptCard = ({ cardData, reRenderPartpayments, onClose }) => {
           <h3>Part-Payment Receipt</h3>
         </div>
         <div className="rec-data">{renderFields()}</div>
-        <div className="rec-actions">
+        {roleType === "SUPER ADMIN" && <div className="rec-actions">
           <div className="rec-delete">
             <button onClick={handleDelete}>Delete</button>
           </div>
@@ -708,7 +746,10 @@ const PartPayReceiptCard = ({ cardData, reRenderPartpayments, onClose }) => {
               <button>Export</button>
             </div>
           </div>
-        </div>
+        </div>}
+        {roleType === "MANAGER" && <div className="sp-close">
+          <button onClick={onClose}>Close</button>
+        </div>}
       </div>
     </div>
     </>
