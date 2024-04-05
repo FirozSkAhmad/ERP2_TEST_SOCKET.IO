@@ -17,8 +17,6 @@ const Commissions = () => {
   const [selectedButton, setSelectedButton] = useState("Validation");
   const [data, setData] = useState([]);
 
-  const URL = "https://erp-phase2-bck.onrender.com";
-
   useEffect(() => {
     const fetchData = async () => {
       setLoader(true);
@@ -27,7 +25,7 @@ const Commissions = () => {
       try {
         const accessToken = localStorage.getItem("token");
         const response = await fetch(
-          `${URL}/commissions/getCommissionHoldersList?commissionFilter=${selectedButton.toLocaleLowerCase()}`,
+          `${import.meta.env.VITE_BASE_URL}/commissions/getCommissionHoldersList?commissionFilter=${selectedButton.toLocaleLowerCase()}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,

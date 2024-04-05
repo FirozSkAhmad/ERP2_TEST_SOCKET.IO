@@ -6,15 +6,13 @@ const SalaryTable = () => {
   const { setLoader, loader } = useContext(sharedContext);
   const [salaryData, setSalaryData] = useState([]);
 
-  const BaseURL = "https://erp-phase2-bck.onrender.com";
-
   useEffect(() => {
     const fetchSalaryData = async () => {
       setLoader(true);
       setSalaryData([]);
         try {
             const accessToken = localStorage.getItem("token");
-            const response = await fetch(`${BaseURL}/expenses/getExpenses?expensesFilter=SALARY`, {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/expenses/getExpenses?expensesFilter=SALARY`, {
                 headers: {
                     "Authorization": `Bearer ${accessToken}`,
                 },

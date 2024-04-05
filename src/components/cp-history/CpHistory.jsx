@@ -11,6 +11,7 @@ import NavBar from "../NavBar";
 import WebMenu from "../menu/WebMenu";
 import sharedContext from "../../context/SharedContext";
 import Loader from "../Loader";
+import BASEURL from "../../data/baseurl";
 
 const CpHistory = () => {
   const {loader, setLoader} = useContext(sharedContext);
@@ -30,8 +31,6 @@ const CpHistory = () => {
     setIsOpen(!isOpen); // Toggle modal visibility
   };
 
-  const BaseURL = "https://erp-phase2-bck.onrender.com";
-
   // API to fetch Channel Partner data
 
   useEffect(() => {
@@ -41,7 +40,7 @@ const CpHistory = () => {
 
         try {
             const accessToken = localStorage.getItem("token");
-            const response = await fetch(`${BaseURL}/history/getCommissionHolderslist?role_type=CHANNEL PARTNER`, {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/history/getCommissionHolderslist?role_type=CHANNEL PARTNER`, {
                 headers: {
                     "Authorization": `Bearer ${accessToken}`,
                 },
@@ -71,7 +70,7 @@ const CpHistory = () => {
 
     try {
         const accessToken = localStorage.getItem("token");
-        const response = await fetch(`${BaseURL}/history/getPraticularCommissionHolderHistory?commission_holder_id=${channelPartnerID}`, {
+        const response = await fetch(`${import.meta.env.VITE_BASE_URL}/history/getPraticularCommissionHolderHistory?commission_holder_id=${channelPartnerID}`, {
             headers: {
                 "Authorization": `Bearer ${accessToken}`,
             },
@@ -112,7 +111,7 @@ const CpHistory = () => {
 
     try {
       const accessToken = localStorage.getItem("token");
-      const response = await fetch(`${BaseURL}/history/getPraticularHistoryDetails?commissionHolderId=${selectedRow}&receipt_id=${receiptId}&projectType=${projectType}`, {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/history/getPraticularHistoryDetails?commissionHolderId=${selectedRow}&receipt_id=${receiptId}&projectType=${projectType}`, {
           headers: {
             "Authorization": `Bearer ${accessToken}`,
       },

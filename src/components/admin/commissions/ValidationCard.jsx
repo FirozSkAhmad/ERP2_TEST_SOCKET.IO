@@ -17,7 +17,6 @@ const ValidationCard = ({
   const [data, setData] = useState(null);
   const [enterCommission, setEnterCommission] = useState("");
 
-  const URL = "https://erp-phase2-bck.onrender.com";
   const accessToken = localStorage.getItem("token");
 
   useEffect(() => {
@@ -26,7 +25,7 @@ const ValidationCard = ({
 
       try {
         const response = await fetch(
-          `${URL}/commissions/getPraticularCommissionDetails?receipt_id=${receiptID}&projectType=${projectType.toLowerCase()}`,
+          `${import.meta.env.VITE_BASE_URL}/commissions/getPraticularCommissionDetails?receipt_id=${receiptID}&projectType=${projectType.toLowerCase()}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -66,7 +65,7 @@ const ValidationCard = ({
     event.preventDefault();
     setLoader(true);
     
-    fetch(`${URL}/commissions/payCommission`, {
+    fetch(`${import.meta.env.VITE_BASE_URL}/commissions/payCommission`, {
       method: "PUT",
       body: raw,
       headers: myHeaders,

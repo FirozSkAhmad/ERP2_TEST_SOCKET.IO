@@ -32,8 +32,6 @@ const PayRollCard = () => {
         setIsOpen(!isOpen); // Toggle modal visibility
     };
 
-    const BaseURL = "https://erp-phase2-bck.onrender.com";
-
     useEffect(() => {
         const fetchRoleTypes = async () => {
             setLoader(true);
@@ -42,7 +40,7 @@ const PayRollCard = () => {
           try {
             const accessToken = localStorage.getItem("token");
             const response = await fetch(
-              `${BaseURL}/payroll/getRoleTypes`,
+              `${import.meta.env.VITE_BASE_URL}/payroll/getRoleTypes`,
               {
                 headers: {
                   Authorization: `Bearer ${accessToken}`,
@@ -90,7 +88,7 @@ const PayRollCard = () => {
 
         try {
           const accessToken = localStorage.getItem("token");
-          const response = await fetch(`${BaseURL}/payroll/addNewPayRoll`, {
+          const response = await fetch(`${import.meta.env.VITE_BASE_URL}/payroll/addNewPayRoll`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

@@ -9,8 +9,6 @@ const StatusOverviewCard = ({ selectedButton, onClose }) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const BaseURL = "https://erp-phase2-bck.onrender.com";
-
   useEffect(() => {
     const fetchData = async () => {
       setLoader(true);
@@ -19,7 +17,7 @@ const StatusOverviewCard = ({ selectedButton, onClose }) => {
       try {
         const accessToken = localStorage.getItem("token");
         const response = await fetch(
-          `${BaseURL}/project/status-count?project_type=${selectedButton}`,
+          `${import.meta.env.VITE_BASE_URL}/project/status-count?project_type=${selectedButton}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,

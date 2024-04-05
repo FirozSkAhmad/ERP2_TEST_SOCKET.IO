@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import '../sales-channel/onBoarding.css'
 import logo from '../../assets/logo.svg'
 import menu from '../../assets/menu.svg'
@@ -44,8 +44,6 @@ const OnBoarding = () => {
         setIsOpen(!isOpen); // Toggle modal visibility
       };
 
-    const BaseURL = "https://erp-phase2-bck.onrender.com";
-
     // API to get Apartment Project Names
 
     useEffect(() => {
@@ -55,7 +53,7 @@ const OnBoarding = () => {
           try {
             const accessToken = localStorage.getItem("token");
             const response = await fetch(
-              `${BaseURL}/project/getAvailableFilteredProjectNames?project_type=${proj_type}`,
+              `${import.meta.env.VITE_BASE_URL}/project/getAvailableFilteredProjectNames?project_type=${proj_type}`,
               {
                 headers: {
                   Authorization: `Bearer ${accessToken}`,
@@ -96,7 +94,7 @@ const OnBoarding = () => {
       try {
         const accessToken = localStorage.getItem("token");
         const response = await fetch(
-          `${BaseURL}/project/getFilteredTowerNumbers?project_name=${selectedProjectName}`,
+          `${import.meta.env.VITE_BASE_URL}/project/getFilteredTowerNumbers?project_name=${selectedProjectName}`,
               {
                 headers: {
                   Authorization: `Bearer ${accessToken}`,
@@ -140,7 +138,7 @@ const OnBoarding = () => {
         try {
           const accessToken = localStorage.getItem("token");
           const response = await fetch(
-            `${BaseURL}/project/getFilteredFlatNumbers?project_name=${selectedProjectName}&tower_number=${selectedTowerNumber}`,
+            `${import.meta.env.VITE_BASE_URL}/project/getFilteredFlatNumbers?project_name=${selectedProjectName}&tower_number=${selectedTowerNumber}`,
                 {
                   headers: {
                     Authorization: `Bearer ${accessToken}`,
@@ -181,7 +179,7 @@ const OnBoarding = () => {
         try {
           const accessToken = localStorage.getItem("token");
           const response = await fetch(
-            `${BaseURL}/project/getFilteredVillaNumbers?project_name=${selectedProjectName}`,
+            `${import.meta.env.VITE_BASE_URL}/project/getFilteredVillaNumbers?project_name=${selectedProjectName}`,
                 {
                   headers: {
                     Authorization: `Bearer ${accessToken}`,
@@ -221,7 +219,7 @@ const OnBoarding = () => {
         try {
           const accessToken = localStorage.getItem("token");
           const response = await fetch(
-            `${BaseURL}/project/getFilteredPlotNumbers?project_name=${selectedProjectName}`,
+            `${import.meta.env.VITE_BASE_URL}/project/getFilteredPlotNumbers?project_name=${selectedProjectName}`,
                 {
                   headers: {
                     Authorization: `Bearer ${accessToken}`,
@@ -261,7 +259,7 @@ const OnBoarding = () => {
         try {
           const accessToken = localStorage.getItem("token");
           const response = await fetch(
-            `${BaseURL}/project/getFilteredPlotNumbersOfFLs?project_name=${selectedProjectName}`,
+            `${import.meta.env.VITE_BASE_URL}/project/getFilteredPlotNumbersOfFLs?project_name=${selectedProjectName}`,
                 {
                   headers: {
                     Authorization: `Bearer ${accessToken}`,
@@ -301,7 +299,7 @@ const OnBoarding = () => {
         try {
           const accessToken = localStorage.getItem("token");
           const response = await fetch(
-            `${BaseURL}/project/getSqYards?project_name=${selectedProjectName}&plot_number=${selectedFarmPlotNumber}`,
+            `${import.meta.env.VITE_BASE_URL}/project/getSqYards?project_name=${selectedProjectName}&plot_number=${selectedFarmPlotNumber}`,
                 {
                   headers: {
                     Authorization: `Bearer ${accessToken}`,
@@ -424,7 +422,7 @@ const OnBoarding = () => {
 
         try {
           const accessToken = localStorage.getItem("token");
-          const response = await fetch(`${BaseURL}/receipt/createReceipt`, {
+          const response = await fetch(`${import.meta.env.VITE_BASE_URL}/receipt/createReceipt`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

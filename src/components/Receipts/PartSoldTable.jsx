@@ -23,8 +23,6 @@ const PartSoldTable = () => {
 
   const roleType = localStorage.getItem("role_type");
 
-  const BaseURL = "https://erp-phase2-bck.onrender.com";
-
   // API to fetch part payment table data
 
 
@@ -33,7 +31,7 @@ const PartSoldTable = () => {
       setPartSoldData([]);
         try {
             const accessToken = localStorage.getItem("token");
-            const response = await fetch(`${BaseURL}/receipt/getList?statusFilter=Part Payment`, {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/receipt/getList?statusFilter=Part Payment`, {
                 headers: {
                     "Authorization": `Bearer ${accessToken}`,
                 },
@@ -80,7 +78,7 @@ const PartSoldTable = () => {
 
     try {
       const accessToken = localStorage.getItem("token");
-      const response = await fetch(`${BaseURL}/receipt/getParticularPartPaymentHistoryList?project_id=${projectID}`, {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/receipt/getParticularPartPaymentHistoryList?project_id=${projectID}`, {
           headers: {
               "Authorization": `Bearer ${accessToken}`,
           },
@@ -110,7 +108,7 @@ const PartSoldTable = () => {
 
     try {
       const accessToken = localStorage.getItem("token");
-      const response = await fetch(`${BaseURL}/receipt/getParticularPartPaymentHistoryDetails?receipt_id=${selectedReceiptId}&pp_id=${partPayID}`, {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/receipt/getParticularPartPaymentHistoryDetails?receipt_id=${selectedReceiptId}&pp_id=${partPayID}`, {
           headers: {
             "Authorization": `Bearer ${accessToken}`,
       },
@@ -150,7 +148,7 @@ const PartSoldTable = () => {
 
     try {
       const accessToken = localStorage.getItem("token");
-      const response = await fetch(`${BaseURL}/receipt/deleteParticularProjectPartPayments?project_id=${projectID}&pd_id=${projDetID}`, {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/receipt/deleteParticularProjectPartPayments?project_id=${projectID}&pd_id=${projDetID}`, {
         method: "PUT",
         headers: {
           "Authorization": `Bearer ${accessToken}`,
@@ -170,10 +168,6 @@ const PartSoldTable = () => {
       setLoader(false);
     }
   }
-
-  // useEffect(() => {
-  //   console.log(selectedOption);
-  // }, [selectedOption]);
 
   const renderDropdown = () => {
       return (

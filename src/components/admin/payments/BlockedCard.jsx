@@ -25,8 +25,6 @@ const BlockedCard = ({ receiptID, fetchBlockedList, onClose }) => {
     remark: "",
   });
 
-  const BaseURL = "https://erp-phase2-bck.onrender.com";
-
   const makeRequest = async (url, options) => {
     const response = await fetch(url, options);
     if (!response.ok) {
@@ -52,7 +50,7 @@ const BlockedCard = ({ receiptID, fetchBlockedList, onClose }) => {
       };
 
       const result = await makeRequest(
-        `${BaseURL}/receipt/getParticularReceiptData?receipt_id=${receiptID}`,
+        `${import.meta.env.VITE_BASE_URL}/receipt/getParticularReceiptData?receipt_id=${receiptID}`,
         requestOptions
       );
 
@@ -244,7 +242,7 @@ const BlockedCard = ({ receiptID, fetchBlockedList, onClose }) => {
       };
 
       const postResult = await makeRequest(
-        `${BaseURL}/payments/payPartPayment`,
+        `${import.meta.env.VITE_BASE_URL}/payments/payPartPayment`,
         postRequestOptions
       );
 

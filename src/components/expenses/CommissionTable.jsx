@@ -13,8 +13,6 @@ const CommissionTable = () => {
   const [selectedCommissionHolderId, setSelectedCommissionHolderId] = useState(null);
   const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
 
-  const BaseURL = "https://erp-phase2-bck.onrender.com";
-
   // API to get commission table data
 
   useEffect(() => {
@@ -23,7 +21,7 @@ const CommissionTable = () => {
       setCommission([]);
         try {
             const accessToken = localStorage.getItem("token");
-            const response = await fetch(`${BaseURL}/expenses/getExpenses?expensesFilter=COMMISSIONS`, {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/expenses/getExpenses?expensesFilter=COMMISSIONS`, {
                 headers: {
                     "Authorization": `Bearer ${accessToken}`,
                 },
@@ -70,7 +68,7 @@ const CommissionTable = () => {
 
     try {
       const accessToken = localStorage.getItem("token");
-      const response = await fetch(`${BaseURL}/history/getPraticularCommissionHolderHistory?commission_holder_id=${commissionHolderID}`, {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/history/getPraticularCommissionHolderHistory?commission_holder_id=${commissionHolderID}`, {
           headers: {
               "Authorization": `Bearer ${accessToken}`,
           },
@@ -100,7 +98,7 @@ const CommissionTable = () => {
 
     try {
       const accessToken = localStorage.getItem("token");
-      const response = await fetch(`${BaseURL}/expenses/getPraticularCommisionDetails?receipt_id=${receiptId}&projectType=${projectType}`, {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/expenses/getPraticularCommisionDetails?receipt_id=${receiptId}&projectType=${projectType}`, {
           headers: {
             "Authorization": `Bearer ${accessToken}`,
       },

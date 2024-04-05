@@ -20,8 +20,6 @@ const PartPayReceiptCard = ({ cardData, reRenderPartpayments, onClose }) => {
     });
   };
 
-  const BaseURL = "https://erp-phase2-bck.onrender.com";
-
   // API to update amount
 
   const handleSave = async () => {
@@ -35,7 +33,7 @@ const PartPayReceiptCard = ({ cardData, reRenderPartpayments, onClose }) => {
       }
 
       const accessToken = localStorage.getItem("token");
-      const response = await fetch(`${BaseURL}/receipt/editParticularPartPaymentAmount`, {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/receipt/editParticularPartPaymentAmount`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -72,7 +70,7 @@ const PartPayReceiptCard = ({ cardData, reRenderPartpayments, onClose }) => {
 
     try {
       const accessToken = localStorage.getItem("token");
-      const response = await fetch(`${BaseURL}/receipt/deleteParticularPartPaymentAmount?pp_id=${partPayID}&pd_id=${projDetID}`, {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/receipt/deleteParticularPartPaymentAmount?pp_id=${partPayID}&pd_id=${projDetID}`, {
         method: "PUT",
         headers: {
           "Authorization": `Bearer ${accessToken}`,

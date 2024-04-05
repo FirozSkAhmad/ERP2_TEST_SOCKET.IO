@@ -1,8 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import partPayRecData from "../../data/partPayRecData";
-import partSoldPayments from "../../data/partSoldPayments";
 import close from "../../assets/menuClose.svg";
-import partSoldDataDummy from "../../data/partSoldData";
 import SoldDeletedProjectsCard from "./SoldDeletedProjectsCard";
 import sharedContext from "../../context/SharedContext";
 import Loader from "../Loader";
@@ -16,16 +13,6 @@ const SoldDeletedProjects = () => {
   const [selectedReceiptData, setSelectedReceiptData] = useState(null);
   const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
 
-  // useEffect(() => {
-  //   setDeletedProjects(partSoldDataDummy);
-  // }, []);
-
-  // useEffect(() => {
-  //   setPartPaymentsData(partPayRecData);
-  // }, []);
-
-  const BaseURL = "https://erp-phase2-bck.onrender.com";
-
   // API to get deleted sold projects table data
 
   useEffect(() => {
@@ -35,7 +22,7 @@ const SoldDeletedProjects = () => {
 
         try {
             const accessToken = localStorage.getItem("token");
-            const response = await fetch(`${BaseURL}/receipt/getDeletedHistoryList?deletedFilter=COMPLETELY DELETED&statusFilter=SOLD`, {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/receipt/getDeletedHistoryList?deletedFilter=COMPLETELY DELETED&statusFilter=SOLD`, {
                 headers: {
                     "Authorization": `Bearer ${accessToken}`,
                 },
@@ -81,7 +68,7 @@ const SoldDeletedProjects = () => {
 
     try {
       const accessToken = localStorage.getItem("token");
-      const response = await fetch(`${BaseURL}/receipt/getParticularPartPaymentDeletedHistoryList?project_id=${projectID}`, {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/receipt/getParticularPartPaymentDeletedHistoryList?project_id=${projectID}`, {
           headers: {
               "Authorization": `Bearer ${accessToken}`,
           },
@@ -111,7 +98,7 @@ const SoldDeletedProjects = () => {
 
     try {
       const accessToken = localStorage.getItem("token");
-      const response = await fetch(`${BaseURL}/receipt/getParticularPartPaymentHistoryDetails?receipt_id=${selectedReceiptId}&pp_id=${partPayID}`, {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/receipt/getParticularPartPaymentHistoryDetails?receipt_id=${selectedReceiptId}&pp_id=${partPayID}`, {
           headers: {
             "Authorization": `Bearer ${accessToken}`,
       },
@@ -128,7 +115,6 @@ const SoldDeletedProjects = () => {
     } finally {
       setLoader(false);
     }
-    // setSelectedReceiptId(receiptID);
   };
 
   const handleClosePartPayReceiptCard = () => {

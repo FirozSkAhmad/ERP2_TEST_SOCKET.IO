@@ -9,8 +9,6 @@ const DeletedReceiptsTable = () => {
   const { setLoader, loader, deletedReceiptsData, setDeletedReceiptsData } =
     useContext(sharedContext);
 
-  const BaseURL = "https://erp-phase2-bck.onrender.com";
-
   const makeRequest = async (url, options) => {
     const response = await fetch(url, options);
     if (!response.ok) {
@@ -37,7 +35,7 @@ const DeletedReceiptsTable = () => {
       };
 
       const result = await makeRequest(
-        `${BaseURL}/receipt/getRejectedReceiptsList`,
+        `${import.meta.env.VITE_BASE_URL}/receipt/getRejectedReceiptsList`,
         requestOptions
       );
 

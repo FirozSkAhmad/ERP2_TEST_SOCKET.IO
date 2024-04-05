@@ -5,6 +5,7 @@ import close from "../../../assets/menuClose.svg";
 import sharedContext from "../../../context/SharedContext";
 import Loader from "../../Loader";
 import toast from "react-hot-toast";
+import BASEURL from "../../../data/baseurl";
 
 const PaymentsCard = ({ receiptID, fetchPaymentsList, onClose }) => {
   const { setLoader, loader } = useContext(sharedContext);
@@ -20,8 +21,6 @@ const PaymentsCard = ({ receiptID, fetchPaymentsList, onClose }) => {
     discount_percent: "",
     amount: "",
   });
-
-  const BaseURL = "https://erp-phase2-bck.onrender.com";
 
   const makeRequest = async (url, options) => {
     const response = await fetch(url, options);
@@ -48,7 +47,7 @@ const PaymentsCard = ({ receiptID, fetchPaymentsList, onClose }) => {
       };
 
       const result = await makeRequest(
-        `${BaseURL}/receipt/getParticularReceiptData?receipt_id=${receiptID}`,
+        `${import.meta.env.VITE_BASE_URL}/receipt/getParticularReceiptData?receipt_id=${receiptID}`,
         requestOptions
       );
 
@@ -194,7 +193,7 @@ const PaymentsCard = ({ receiptID, fetchPaymentsList, onClose }) => {
       };
 
       const postResult = await makeRequest(
-        `${BaseURL}/payments/payPartPayment`,
+        `${import.meta.env.VITE_BASE_URL}/payments/payPartPayment`,
         postRequestOptions
       );
 

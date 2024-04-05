@@ -1,12 +1,9 @@
 import React, { useContext } from "react";
 import './payrollCard.css';
-import { useNavigate } from "react-router-dom";
 import sharedContext from "../../../context/SharedContext";
 
 const ManageRoleInput = ({onClose}) => {
   const {setLoader} = useContext(sharedContext);
-
-    const BaseURL = "https://erp-phase2-bck.onrender.com";
 
     // Add New Role Type
 
@@ -17,7 +14,7 @@ const ManageRoleInput = ({onClose}) => {
         try {
           const accessToken = localStorage.getItem("token");
           const roleType = e.target.role.value;
-          const response = await fetch(`${BaseURL}/payroll/addRoleType`, {
+          const response = await fetch(`${import.meta.env.VITE_BASE_URL}/payroll/addRoleType`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

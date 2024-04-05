@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
 import "../../admin/approval/pending.css";
-// import approvalData from "../../../data/pendingApproval";
 import PendingApprovalCard from "./PendingApprovalCard";
 import sharedContext from "../../../context/SharedContext";
 import Loader from "../../Loader";
@@ -13,8 +12,6 @@ const ApprovalTable = ({ selectedStatus }) => {
   const [selectedApproval, setSelectedApproval] = useState(null);
   const [selectedRoles, setSelectedRoles] = useState({});
   const roles = ["SUPER ADMIN", "MANAGER", "CHANNEL PARTNER", "SALES PERSON"];
-
-  const BaseURL = "https://erp-phase2-bck.onrender.com";
 
   useEffect(() => {
     fetchUsersList(selectedStatus);
@@ -66,7 +63,7 @@ const ApprovalTable = ({ selectedStatus }) => {
       };
 
       const result = await makeRequest(
-        `${BaseURL}/admin/getUsersList?status_filter=${selectedStatus}`,
+        `${import.meta.env.VITE_BASE_URL}/admin/getUsersList?status_filter=${selectedStatus}`,
         requestOptions
       );
 
@@ -108,7 +105,7 @@ const ApprovalTable = ({ selectedStatus }) => {
       };
 
       const putResult = await makeRequest(
-        `${BaseURL}/admin/validateUser`,
+        `${import.meta.env.VITE_BASE_URL}/admin/validateUser`,
         putRequestOptions
       );
 

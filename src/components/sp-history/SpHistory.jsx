@@ -24,8 +24,6 @@ const SpHistory = () => {
     setIsOpen(!isOpen); // Toggle modal visibility
   };
 
-  const BaseURL = "https://erp-phase2-bck.onrender.com";
-
   // API to fetch Sales Person data
 
   useEffect(() => {
@@ -35,7 +33,7 @@ const SpHistory = () => {
 
         try {
             const accessToken = localStorage.getItem("token");
-            const response = await fetch(`${BaseURL}/history/getCommissionHolderslist?role_type=SALES PERSON`, {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/history/getCommissionHolderslist?role_type=SALES PERSON`, {
                 headers: {
                     "Authorization": `Bearer ${accessToken}`,
                 },
@@ -65,7 +63,7 @@ const SpHistory = () => {
 
     try {
         const accessToken = localStorage.getItem("token");
-        const response = await fetch(`${BaseURL}/history/getPraticularCommissionHolderHistory?commission_holder_id=${salesPersonID}`, {
+        const response = await fetch(`${import.meta.env.VITE_BASE_URL}/history/getPraticularCommissionHolderHistory?commission_holder_id=${salesPersonID}`, {
             headers: {
                 "Authorization": `Bearer ${accessToken}`,
             },
@@ -105,7 +103,7 @@ const SpHistory = () => {
 
     try {
       const accessToken = localStorage.getItem("token");
-      const response = await fetch(`${BaseURL}/history/getPraticularHistoryDetails?commissionHolderId=${selectedRow}&receipt_id=${receiptId}&projectType=${projectType}`, {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/history/getPraticularHistoryDetails?commissionHolderId=${selectedRow}&receipt_id=${receiptId}&projectType=${projectType}`, {
           headers: {
             "Authorization": `Bearer ${accessToken}`,
       },

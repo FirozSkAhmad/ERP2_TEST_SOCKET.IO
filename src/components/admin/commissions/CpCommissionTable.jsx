@@ -15,7 +15,6 @@ const CpCommissionTable = ({ cp }) => {
 
   const [loading, setLoading] = useState(true);
 
-  const URL = "https://erp-phase2-bck.onrender.com";
 
   let SNO = 0;
 
@@ -37,7 +36,7 @@ const CpCommissionTable = ({ cp }) => {
     try {
       const accessToken = localStorage.getItem("token");
       const response = await fetch(
-        `${URL}/commissions/getPraticularCommissionHolderHistory?commissionFilter=cpcommission&commission_holder_id=${String(
+        `${import.meta.env.VITE_BASE_URL}/commissions/getPraticularCommissionHolderHistory?commissionFilter=cpcommission&commission_holder_id=${String(
           salesPersonID
         )}`,
         {

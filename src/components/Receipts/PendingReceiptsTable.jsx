@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
 import "./pendingReceipts.css";
-// import receiptsDataDummy from "../../data/receiptsDataDummy";
 import PendingReceiptCard from "./PendingReceiptCard";
 import DeletedReceiptsTable from "./DeletedReceiptsTable";
 import sharedContext from "../../context/SharedContext";
@@ -12,8 +11,6 @@ const PendingReceiptsTable = ({ onDeletedReceiptsClick }) => {
   const [receiptsData, setReceiptsData] = useState([]);
   const [selectedReceiptID, setSelectedReceiptID] = useState(null);
   const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
-
-  const BaseURL = "https://erp-phase2-bck.onrender.com";
 
   const makeRequest = async (url, options) => {
     const response = await fetch(url, options);
@@ -41,7 +38,7 @@ const PendingReceiptsTable = ({ onDeletedReceiptsClick }) => {
       };
 
       const result = await makeRequest(
-        `${BaseURL}/receipt/getPendingReceiptsList`,
+        `${import.meta.env.VITE_BASE_URL}/receipt/getPendingReceiptsList`,
         requestOptions
       );
 
@@ -71,7 +68,7 @@ const PendingReceiptsTable = ({ onDeletedReceiptsClick }) => {
       };
 
       const result = await makeRequest(
-        `${BaseURL}/receipt/getRejectedReceiptsList`,
+        `${import.meta.env.VITE_BASE_URL}/receipt/getRejectedReceiptsList`,
         requestOptions
       );
 
