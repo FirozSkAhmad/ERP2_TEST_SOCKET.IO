@@ -1,9 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import "./pendingReceipts.css";
-import partSoldPayments from "../../data/partSoldPayments";
-import partPayRecData from "../../data/partPayRecData";
 import close from "../../assets/menuClose.svg";
-import abcd from "../../data/abcd";
 import DeletedPartCard from "./DeletedPartCard";
 import sharedContext from "../../context/SharedContext";
 
@@ -17,12 +14,6 @@ const DeletedPartTable = () => {
   const [selectedReceiptData, setSelectedReceiptData] = useState(null);
   const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
 
-  const BaseURL = "https://erp-phase2-bck.onrender.com";
-
-  useEffect(() => {
-    setPartPaymentsData(partPayRecData);
-  }, []);
-
   // API to fetch deleted part payment table data
 
   useEffect(() => {
@@ -31,7 +22,7 @@ const DeletedPartTable = () => {
       setDeletedpartpayments([]);
         try {
             const accessToken = localStorage.getItem("token");
-            const response = await fetch(`${BaseURL}/receipt/getDeletedHistoryList?deletedFilter=semi deleted&statusFilter=Part Payment`, {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/receipt/getDeletedHistoryList?deletedFilter=semi deleted&statusFilter=Part Payment`, {
                 headers: {
                     "Authorization": `Bearer ${accessToken}`,
                 },
@@ -77,7 +68,7 @@ const DeletedPartTable = () => {
 
     try {
       const accessToken = localStorage.getItem("token");
-      const response = await fetch(`${BaseURL}/receipt/getParticularPartPaymentDeletedHistoryList?project_id=${projectID}`, {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/receipt/getParticularPartPaymentDeletedHistoryList?project_id=${projectID}`, {
           headers: {
               "Authorization": `Bearer ${accessToken}`,
           },
@@ -105,7 +96,7 @@ const DeletedPartTable = () => {
 
     try {
       const accessToken = localStorage.getItem("token");
-      const response = await fetch(`${BaseURL}/receipt/getParticularPartPaymentHistoryDetails?receipt_id=${selectedReceiptId}&pp_id=${partPayID}`, {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/receipt/getParticularPartPaymentHistoryDetails?receipt_id=${selectedReceiptId}&pp_id=${partPayID}`, {
           headers: {
             "Authorization": `Bearer ${accessToken}`,
       },

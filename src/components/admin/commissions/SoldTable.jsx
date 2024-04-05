@@ -14,8 +14,6 @@ const SoldTable = ({ sold }) => {
 
   const [loading, setLoading] = useState(true);
 
-  const URL = "https://erp-phase2-bck.onrender.com";
-
   let SNO = 0;
 
   // useEffect(() => {
@@ -41,7 +39,7 @@ const SoldTable = ({ sold }) => {
     try {
       const accessToken = localStorage.getItem("token");
       const response = await fetch(
-        `${URL}/commissions/getPraticularCommissionHolderHistory?commissionFilter=sold&commission_holder_id=${String(
+        `${import.meta.env.VITE_BASE_URL}/commissions/getPraticularCommissionHolderHistory?commissionFilter=sold&commission_holder_id=${String(
           salesPersonID
         )}`,
         {

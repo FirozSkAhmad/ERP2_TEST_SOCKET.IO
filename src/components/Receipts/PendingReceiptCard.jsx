@@ -23,8 +23,6 @@ const PendingReceiptCard = ({
 
   const roleType = localStorage.getItem("role_type");
 
-  const BaseURL = "https://erp-phase2-bck.onrender.com";
-
   const makeRequest = async (url, options) => {
     const response = await fetch(url, options);
     if (!response.ok) {
@@ -50,7 +48,7 @@ const PendingReceiptCard = ({
       };
 
       const result = await makeRequest(
-        `${BaseURL}/receipt/getParticularReceiptData?receipt_id=${receiptID}`,
+        `${import.meta.env.VITE_BASE_URL}/receipt/getParticularReceiptData?receipt_id=${receiptID}`,
         requestOptions
       );
 
@@ -115,7 +113,7 @@ const PendingReceiptCard = ({
       };
 
       const putResult = await makeRequest(
-        `${BaseURL}/receipt/validateReceipt/${approveOrReject}`,
+        `${import.meta.env.VITE_BASE_URL}/receipt/validateReceipt/${approveOrReject}`,
         putRequestOptions
       );
 

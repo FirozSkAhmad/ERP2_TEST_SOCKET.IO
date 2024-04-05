@@ -8,8 +8,6 @@ const DeletedReceiptsCard = ({ receiptID, onClose }) => {
   const { setLoader, loader } = useContext(sharedContext);
   const [receiptData, setReceiptData] = useState({});
 
-  const BaseURL = "https://erp-phase2-bck.onrender.com";
-
   const makeRequest = async (url, options) => {
     const response = await fetch(url, options);
     if (!response.ok) {
@@ -35,7 +33,7 @@ const DeletedReceiptsCard = ({ receiptID, onClose }) => {
       };
 
       const result = await makeRequest(
-        `${BaseURL}/receipt/getParticularReceiptData?receipt_id=${receiptID}`,
+        `${import.meta.env.VITE_BASE_URL}/receipt/getParticularReceiptData?receipt_id=${receiptID}`,
         requestOptions
       );
 

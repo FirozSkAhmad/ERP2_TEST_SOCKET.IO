@@ -11,15 +11,13 @@ const SalesDash = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("APARTMENT");
 
-  const BaseURL = "https://erp-phase2-bck.onrender.com";
-
   const buildingType =
     selectedOption.charAt(0).toUpperCase() +
     selectedOption.slice(1).toLowerCase();
 
   console.log(buildingType);
 
-  const URL = `${BaseURL}/project/getAvailableProjectsData?project_type=${buildingType}`;
+  const URL = `${import.meta.env.VITE_BASE_URL}/project/getAvailableProjectsData?project_type=${buildingType}`;
 
   const handleSelectChange = (event) => {
     setSelectedOption(event.target.value);

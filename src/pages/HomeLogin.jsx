@@ -19,8 +19,6 @@ const HomeLogin = () => {
     rememberMe: false,
   });
 
-  const BaseUrl = "https://erp-phase2-bck.onrender.com";
-
   const navigate = useNavigate();
 
   const onChangeInput = (e) => {
@@ -36,7 +34,7 @@ const HomeLogin = () => {
     setLoading(true);
 
     try {
-      const response = await fetch(`${BaseUrl}/auth/login`, {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -141,7 +139,7 @@ const HomeLogin = () => {
             </div>
           </div>
           <div className="sbt_btn">
-            <button type="submit">{loading ? (<CircularProgress size={20} color="inherit" />) : ("Sign in")}</button>
+            <button type="submit">{loading ? (<CircularProgress size={15} color="inherit" />) : ("Sign in")}</button>
           </div>
           <div className="form_sign-up">
             <span>

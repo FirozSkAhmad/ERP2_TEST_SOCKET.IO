@@ -16,8 +16,6 @@ const History = () => {
     const [selectedHistory, setSelectedHistory] = useState(null);
     const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
 
-  const BaseURL = "https://erp-phase2-bck.onrender.com";
-
   useEffect(() => {
     const fetchHistory = async () => {
       setLoader(true);
@@ -26,7 +24,7 @@ const History = () => {
       try {
         const accessToken = localStorage.getItem("token");
         const response = await fetch(
-          `${BaseURL}/history/getHistory`,
+          `${import.meta.env.VITE_BASE_URL}/history/getHistory`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -72,7 +70,7 @@ const History = () => {
             const accessToken = localStorage.getItem("token");
             const userId = localStorage.getItem("user_id");
 
-            const response = await fetch(`${BaseURL}/history/getPraticularHistoryDetails?commissionHolderId=${userId}&receipt_id=${receiptId}&projectType=${projectType}`, {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/history/getPraticularHistoryDetails?commissionHolderId=${userId}&receipt_id=${receiptId}&projectType=${projectType}`, {
                 headers: {
                   "Authorization": `Bearer ${accessToken}`,
             },

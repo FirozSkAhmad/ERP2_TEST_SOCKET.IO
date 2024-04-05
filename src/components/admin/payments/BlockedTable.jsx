@@ -9,8 +9,6 @@ const BlockedTable = () => {
   const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
   const { setLoader, loader } = useContext(sharedContext);
 
-  const BaseURL = "https://erp-phase2-bck.onrender.com";
-
   const makeRequest = async (url, options) => {
     const response = await fetch(url, options);
     if (!response.ok) {
@@ -37,7 +35,7 @@ const BlockedTable = () => {
       };
 
       const result = await makeRequest(
-        `${BaseURL}/payments/getPaymentsList?statusFilter=BLOCK`,
+        `${import.meta.env.VITE_BASE_URL}/payments/getPaymentsList?statusFilter=BLOCK`,
         requestOptions
       );
 

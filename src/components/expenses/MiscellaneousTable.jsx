@@ -6,15 +6,13 @@ const MiscellaneousTable = () => {
   const { setLoader, loader } = useContext(sharedContext);
   const [miscellaneousData, setMiscellaneousData] = useState([]);
 
-  const BaseURL = "https://erp-phase2-bck.onrender.com";
-
   useEffect(() => {
     const fetchMiscellaneousData = async () => {
       setLoader(true);
       setMiscellaneousData([]);
         try {
             const accessToken = localStorage.getItem("token");
-            const response = await fetch(`${BaseURL}/expenses/getExpenses?expensesFilter=MISCELLANEOUS`, {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/expenses/getExpenses?expensesFilter=MISCELLANEOUS`, {
                 headers: {
                     "Authorization": `Bearer ${accessToken}`,
                 },

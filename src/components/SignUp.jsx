@@ -20,8 +20,6 @@ const SignUp = () => {
   });
   const [loading, setLoading] = useState(false);
 
-  const BaseURL = " https://erp-phase2-bck.onrender.com";
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -33,7 +31,7 @@ const SignUp = () => {
     console.log(formData);
     try {
       const response = await fetch(
-        `https://erp-phase2-bck.onrender.com/auth/register`,
+        `${import.meta.env.VITE_BASE_URL}/auth/register`,
         {
           method: "POST",
           headers: {
@@ -234,7 +232,7 @@ const SignUp = () => {
             </>
           )}
           <div className="sbt_btn">
-            <button type="submit">{loading ? (<CircularProgress size={20} color="inherit" />) : ("Get Started")}</button>
+            <button type="submit">{loading ? (<CircularProgress size={15} color="inherit" />) : ("Get Started")}</button>
           </div>
           <div className="form_sign-up">
             <span>

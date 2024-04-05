@@ -24,13 +24,11 @@ const ManagerDash = () => {
     setIsOpen(!isOpen); // Toggle modal visibility
   };
 
-  const BaseURL = "https://erp-phase2-bck.onrender.com";
-
   const buildingType =
     selectedButton.charAt(0).toUpperCase() +
     selectedButton.slice(1).toLowerCase();
 
-  const URL = `${BaseURL}/project/getProjectsData?project_type=${buildingType}`;
+  const URL = `${import.meta.env.VITE_BASE_URL}/project/getProjectsData?project_type=${buildingType}`;
 
   const handleRoleChange = (e) => {
     setSelectedRole(e.target.value);

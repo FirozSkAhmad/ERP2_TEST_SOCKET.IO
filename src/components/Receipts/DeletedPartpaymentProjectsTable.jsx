@@ -1,17 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
-import partSoldDataDummy from "../../data/partSoldData";
 import sharedContext from "../../context/SharedContext";
 
 const DeletedPartpaymentProjectsTable = () => {
   const { setLoader, loader } = useContext(sharedContext);
   const [deltedPartpaymentProjects, setDeletedpartpaymentProjects] = useState([]);
   const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
-
-  // useEffect(() => {
-  //   setDeletedpartpaymentProjects(partSoldDataDummy);
-  // }, []);
-
-  const BaseURL = "https://erp-phase2-bck.onrender.com";
 
   // API to fetch deleted part payment table data
 
@@ -22,7 +15,7 @@ const DeletedPartpaymentProjectsTable = () => {
 
         try {
             const accessToken = localStorage.getItem("token");
-            const response = await fetch(`${BaseURL}/receipt/getDeletedHistoryList?deletedFilter=COMPLETELY DELETED&statusFilter=Part Payment`, {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/receipt/getDeletedHistoryList?deletedFilter=COMPLETELY DELETED&statusFilter=Part Payment`, {
                 headers: {
                     "Authorization": `Bearer ${accessToken}`,
                 },
