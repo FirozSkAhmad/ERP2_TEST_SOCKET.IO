@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import "../components/admin/style.css";
 import logo from "../assets/logo.svg";
 import menu from "../assets/menu.svg";
@@ -11,6 +11,7 @@ import MobileModal from "../components/menu/MobileModal";
 import StatusOverviewCard from "../components/admin/StatusOverviewCard";
 import UploadForm from "../components/admin/UploadForm";
 import AddProject from "../components/admin/AddProject";
+import SharedContext from "../context/SharedContext";
 
 const AdminDash = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,12 +20,32 @@ const AdminDash = () => {
   const [showPopUp, setShowPopUp] = useState("");
   const [showStatusOverview, setShowStatusOverview] = useState(false);
   const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
+  const { socket } = useContext(SharedContext);
+
+  useEffect(() => {
+    if (socket == null) return;
+
+    // Listen for events
+    socket.on("new-user", (message) => {
+      console.log(message);
+    });
+
+    // Emit events as needed
+    // socket.emit('another event', { myData: 'hello' });
+
+    // Cleanup on unmount
+    return () => {
+      socket.off("new-user");
+    };
+  }, [socket]);
 
   const buildingType =
     selectedButton.charAt(0).toUpperCase() +
     selectedButton.slice(1).toLowerCase();
 
-  const URL = `${import.meta.env.VITE_BASE_URL}/project/getProjectsData?project_type=${buildingType}`;
+  const URL = `${
+    import.meta.env.VITE_BASE_URL
+  }/project/getProjectsData?project_type=${buildingType}`;
 
   const toggleModal = () => {
     setIsOpen(!isOpen); // Toggle modal visibility

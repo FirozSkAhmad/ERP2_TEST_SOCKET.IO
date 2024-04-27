@@ -1,13 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
-import {CircularProgress} from '@mui/material'
+import { CircularProgress } from "@mui/material";
 import toast from "react-hot-toast";
+import SharedContext from "../context/SharedContext";
 
 const HomeLogin = () => {
   const [loading, setLoading] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const { socket } = useContext(SharedContext);
+
+  useEffect(() => {
+    if (socket == null) return;
+
+    // Listen for events
+    socket.on("welcome", (message) => {
+      console.log(message);
+    });
+
+    // Emit events as needed
+    // socket.emit('another event', { myData: 'hello' });
+
+    // Cleanup on unmount
+    return () => {
+      socket.off("welcome");
+    };
+  }, [socket]);
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -34,16 +53,20 @@ const HomeLogin = () => {
     setLoading(true);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email_id: formData.email,
-          password: formData.password,
-        }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/auth/login`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email_id: formData.email,
+            password: formData.password,
+          }),
+        }
+      );
 
       const data = await response.json();
+      console.log(data.data)
       const { accessToken, role_type, user_id, user_name } = data.data;
       localStorage.setItem("token", accessToken);
 
@@ -53,7 +76,7 @@ const HomeLogin = () => {
 
       localStorage.setItem("user_name", user_name);
 
-      toast.success(`Welcome ${user_name}`)
+      toast.success(`Welcome ${user_name}`);
       switch (role_type) {
         case "SUPER ADMIN":
           navigate("/admin/dashboard");
@@ -72,7 +95,7 @@ const HomeLogin = () => {
           break;
       }
     } catch (error) {
-      toast.error("Login failed")
+      toast.error("Login failed");
       console.error("Login error:", error);
     } finally {
       setLoading(false);
@@ -113,15 +136,12 @@ const HomeLogin = () => {
               autoComplete="on"
               placeholder="Enter password"
             />
-            <button className="btn-hide" type="button" onClick={togglePasswordVisibility}>
-              {passwordVisible ?
-                (
-                  <FaEyeSlash />
-                ) :
-                (
-                  <FaEye />
-                )
-              }
+            <button
+              className="btn-hide"
+              type="button"
+              onClick={togglePasswordVisibility}
+            >
+              {passwordVisible ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
           <div className="form_check">
@@ -139,7 +159,13 @@ const HomeLogin = () => {
             </div>
           </div>
           <div className="sbt_btn">
-            <button type="submit">{loading ? (<CircularProgress size={15} color="inherit" />) : ("Sign in")}</button>
+            <button type="submit">
+              {loading ? (
+                <CircularProgress size={15} color="inherit" />
+              ) : (
+                "Sign in"
+              )}
+            </button>
           </div>
           <div className="form_sign-up">
             <span>
