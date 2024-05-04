@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../index.css";
-import {CircularProgress} from '@mui/material'
+import { CircularProgress } from "@mui/material";
 import toast from "react-hot-toast";
 
 const SignUp = () => {
@@ -46,29 +46,12 @@ const SignUp = () => {
       }
 
       // Handle success response here
-      toast.success("Registration successful")
-      console.log("Registration successful");
-      // Redirect user based on their role
-      switch (formData.role_type) {
-        case "SUPER ADMIN":
-          navigate("/admin/dashboard");
-          break;
-        case "MANAGER":
-          navigate("/manager/dashboard");
-          break;
-        case "CHANNEL PARTNER":
-          navigate("/channel/dashboard");
-          break;
-        case "SALES PERSON":
-          navigate("/sales/dashboard");
-          break;
-        default:
-          // Redirect to a default page if role is not recognized
-          navigate("/");
-      }
+      toast.success("Registration successful");
+
+      navigate("/");
     } catch (error) {
       // Handle error here
-      toast.error("Registration failed")
+      toast.error("Registration failed");
       console.error("Error occurred during registration:", error.message);
       // You might show an error message to the user
     } finally {
@@ -232,7 +215,13 @@ const SignUp = () => {
             </>
           )}
           <div className="sbt_btn">
-            <button type="submit">{loading ? (<CircularProgress size={15} color="inherit" />) : ("Get Started")}</button>
+            <button type="submit">
+              {loading ? (
+                <CircularProgress size={15} color="inherit" />
+              ) : (
+                "Get Started"
+              )}
+            </button>
           </div>
           <div className="form_sign-up">
             <span>

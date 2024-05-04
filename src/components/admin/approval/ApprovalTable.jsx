@@ -4,6 +4,9 @@ import PendingApprovalCard from "./PendingApprovalCard";
 import sharedContext from "../../../context/SharedContext";
 import Loader from "../../Loader";
 import toast from "react-hot-toast";
+import { toast as toastify } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import SharedContext from "../../../context/SharedContext";
 
 const ApprovalTable = ({ selectedStatus }) => {
   const { setLoader, loader } = useContext(sharedContext);
@@ -12,6 +15,9 @@ const ApprovalTable = ({ selectedStatus }) => {
   const [selectedApproval, setSelectedApproval] = useState(null);
   const [selectedRoles, setSelectedRoles] = useState({});
   const roles = ["SUPER ADMIN", "MANAGER", "CHANNEL PARTNER", "SALES PERSON"];
+  const { socket } = useContext(SharedContext);
+
+  const userName = localStorage.getItem("user_name");
 
   useEffect(() => {
     fetchUsersList(selectedStatus);
@@ -63,7 +69,9 @@ const ApprovalTable = ({ selectedStatus }) => {
       };
 
       const result = await makeRequest(
-        `${import.meta.env.VITE_BASE_URL}/admin/getUsersList?status_filter=${selectedStatus}`,
+        `${
+          import.meta.env.VITE_BASE_URL
+        }/admin/getUsersList?status_filter=${selectedStatus}`,
         requestOptions
       );
 
@@ -82,8 +90,34 @@ const ApprovalTable = ({ selectedStatus }) => {
     }
   };
 
+  useEffect(() => {
+    if (socket) {
+      // Clear previous new-validation event listener to prevent stacking up
+      socket.off("new-validation");
+
+      socket.on("new-validation", (data) => {
+        if (userName !== data.user_name) {
+          console.log(data);
+          toastify(data.message, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        }
+      });
+    } else {
+      console.log("Socket not initialized");
+    }
+  }, [socket]);
+
   const handleAction = async (emailId, roleType, approveOrReject) => {
     setLoader(true);
+
     try {
       const token = localStorage.getItem("token");
       const headers = new Headers({

@@ -4,29 +4,10 @@ import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { CircularProgress } from "@mui/material";
 import toast from "react-hot-toast";
-import SharedContext from "../context/SharedContext";
 
 const HomeLogin = () => {
   const [loading, setLoading] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const { socket } = useContext(SharedContext);
-
-  useEffect(() => {
-    if (socket == null) return;
-
-    // Listen for events
-    socket.on("welcome", (message) => {
-      console.log(message);
-    });
-
-    // Emit events as needed
-    // socket.emit('another event', { myData: 'hello' });
-
-    // Cleanup on unmount
-    return () => {
-      socket.off("welcome");
-    };
-  }, [socket]);
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -66,17 +47,15 @@ const HomeLogin = () => {
       );
 
       const data = await response.json();
-      console.log(data.data)
       const { accessToken, role_type, user_id, user_name } = data.data;
+      // Store session data
       localStorage.setItem("token", accessToken);
-
       localStorage.setItem("user_id", user_id);
-
       localStorage.setItem("role_type", role_type);
-
       localStorage.setItem("user_name", user_name);
-
+      // Success toast
       toast.success(`Welcome ${user_name}`);
+      // Redirect based on role
       switch (role_type) {
         case "SUPER ADMIN":
           navigate("/admin/dashboard");
@@ -95,8 +74,7 @@ const HomeLogin = () => {
           break;
       }
     } catch (error) {
-      toast.error("Login failed");
-      console.error("Login error:", error);
+      console.error("Login error:", error.message);
     } finally {
       setLoading(false);
     }
