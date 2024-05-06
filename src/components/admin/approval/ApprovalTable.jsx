@@ -92,10 +92,8 @@ const ApprovalTable = ({ selectedStatus }) => {
 
   useEffect(() => {
     if (socket) {
-      // Clear previous new-validation event listener to prevent stacking up
-      socket.off("new-validation");
-
-      socket.on("new-validation", (data) => {
+      // Define a new async function to handle the event
+      const handleNewValidation = async (data) => {
         if (userName !== data.user_name) {
           console.log(data);
           toastify(data.message, {
@@ -108,12 +106,41 @@ const ApprovalTable = ({ selectedStatus }) => {
             progress: undefined,
             theme: "light",
           });
+          const accessToken = localStorage.getItem("token");
+          try {
+            const response = await fetch(
+              `${
+                import.meta.env.VITE_BASE_URL
+              }/notifications/createNotification`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${accessToken}`,
+                },
+                body: JSON.stringify({ message: data.message }),
+              }
+            );
+            if (!response.ok) {
+              throw new Error("Network error. Network response was not ok");
+            }
+          } catch (error) {
+            console.error("Failed to send notification:", error);
+          }
         }
-      });
+      };
+
+      // Attach the event listener
+      socket.on("new-validation", handleNewValidation);
+
+      // Cleanup by removing the event listener
+      return () => {
+        socket.off("new-validation", handleNewValidation);
+      };
     } else {
       console.log("Socket not initialized");
     }
-  }, [socket]);
+  }, [socket]); // Make sure to include all dependencies in the dependency array
 
   const handleAction = async (emailId, roleType, approveOrReject) => {
     setLoader(true);
